@@ -23,3 +23,6 @@ use App\Http\Controllers\{
 
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
+Route::post('/logout', [UserController::class, 'logout']);
+Route::post('/send-email-forgot-password', [UserController::class, 'sendEmailPassword']);
+Route::post('/update-password', [UserController::class, 'updatePassword']);

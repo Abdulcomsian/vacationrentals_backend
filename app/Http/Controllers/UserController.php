@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Repository\UserHandler;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Notifications\SendEmailForgotPassword;
+use Illuminate\Support\Facades\Notification;
 use App\Models\User;
 
 class UserController extends Controller
@@ -63,19 +65,85 @@ class UserController extends Controller
                 if(!$token = auth()->attempt(["email" => $email, "password" => $password])){
                     return response()->json(['error' => 'Unauthorized'], 401);
                 }
-                return $this->respondWithToken($token);
+                $jwt =  $this->respondWithToken($token);
+                return response()->json(["success"=>true, "msg"=>"User Login Successfully", "token"=>$jwt], 200);
             }
         }catch(\Exception $e){
             return response()->json(['succcess' => false, "msg" => "Something Went Wrong", "error" => $e->getMessage()], 401);
         }
     }
 
-
+    /**
+     * Get the token array structure.
+     *
+     * @param  string $token
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function respondWithToken($token){
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
+    }
+
+    /**
+     * Log the user out (Invalidate the token).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout(){
+        auth()->logout();
+        return response()->json(["success"=>true, "msg"=>"User Logout Successfully"], 200);
+    }
+
+     /**
+     * Refresh a token.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh()
+    {
+        return $this->respondWithToken(auth()->refresh());
+    }
+
+    public function sendEmailPassword(Request $request){
+        try{
+            $validator = Validator::make($request->all(), [
+                "email" => "required|string|email",
+            ]);
+    
+            if($validator->fails()){
+                return response()->json(["success"=>false, "msg"=>"Validation Error", "error"=>$validator->getMessageBag()]);
+            }else{
+                $email = $request->email;
+                Notification::route('mail', $email)->notify(new SendEmailForgotPassword());
+                return response()->json(["success"=>true, "msg"=>"Email sent successfully"], 200);
+            }
+        }catch(\Exception $e){
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error" => $e->getMessage()]);
+        }
+    }
+
+
+    public function updatePassword(Request $request){
+        $validator = Validator::make($request->all(),[
+            "email" => "required|string|email",
+            "new_password" => "required|string",
+        ]);
+
+        if($validator->fails()){
+            return response()->json(["success"=>false, "msg"=>"Validation Error", "error"=>$validator->getMessageBag()]);
+        }else{
+            $email = $request->email;
+            $newPassword = $request->new_password;
+
+            $user = User::where('email', $email)->first();
+            $user->password = Hash::make($newPassword);
+            if($user->save()){
+                return response()->json(["success"=>true, "msg"=>"Password changed successfully"], 200);
+            }
+        }
     }
 }
