@@ -15,12 +15,17 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-       $user = [
-            ["type" => "user", "name" => "muneeb", "email" => "muneeb@gmail.com","password" => Hash::make('muneeb123'),"tc_status" => "1", "created_at" => Carbon::now(), "updated_at" => Carbon::now()],
-            ["type" => "user", "name" => "sohail", "email" => "sohail@gmail.com","password" => Hash::make('muneeb123'),"tc_status" => "1", "created_at" => Carbon::now(), "updated_at" => Carbon::now()],
-            ["type" => "user", "name" => "ali", "email" => "ali@gmail.com","password" => Hash::make('muneeb123'),"tc_status" => "1", "created_at" => Carbon::now(), "updated_at" => Carbon::now()],
+       $users = [
+            ["type" => "user", "name" => "muneeb", "email" => "muneeb@gmail.com","password" => Hash::make('muneeb123'),"tc_status" => "1"],
+            ["type" => "user", "name" => "sohail", "email" => "sohail@gmail.com","password" => Hash::make('muneeb123'),"tc_status" => "1"],
+            ["type" => "user", "name" => "ali", "email" => "ali@gmail.com","password" => Hash::make('muneeb123'),"tc_status" => "1"],
        ];
 
-       User::insert($user);
+       
+       // assigning role to each of the user
+       foreach($users as $userData){
+        $user = User::create($userData);
+        $user->assignRole('user');
+       }
     }
 }

@@ -7,6 +7,8 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\{
     AdminSeeder,
     UserSeeder,
+    RoleSeeder,
+    PlanSeeder,
 };
 
 class DatabaseSeeder extends Seeder
@@ -16,7 +18,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(RoleSeeder::class);
         $this->call(AdminSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(PlanSeeder::class);
     }
 }

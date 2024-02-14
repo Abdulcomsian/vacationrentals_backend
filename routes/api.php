@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     UserController,
+    BillingController,
+    PlanController,
 };
 
 /*
@@ -17,12 +19,17 @@ use App\Http\Controllers\{
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/logout', [UserController::class, 'logout']);
 Route::post('/send-email-forgot-password', [UserController::class, 'sendEmailPassword']);
 Route::post('/update-password', [UserController::class, 'updatePassword']);
+
+
+Route::middleware('check.authentication')->group(function(){
+    Route::post('/checkout', [BillingController::class, 'checkout']);
+    Route::get('/plans', [PlanController::class, 'showPlans']);
+});
+
+
+Route::get('/payment_success/{sessionId}', [BillingController::class, 'handleSuccess'])->name('payment.success');

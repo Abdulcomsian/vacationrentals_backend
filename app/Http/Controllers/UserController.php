@@ -13,14 +13,6 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    // protected $userHandler;
-
-    // public function __construct(UserHandler $userHandler)
-    // {
-    //     $this->userHandler = $userHandler;
-    //     // $this->middleware('auth:api', ['except' => ['login' , 'register' ,'verifyUser']]);
-    // }
-
     public function register(Request $request){
         try {
             $validator = Validator::make($request->all(), [
@@ -36,12 +28,13 @@ class UserController extends Controller
                 $email = $request->email;
                 $password = $request->password;
                 $tcStatus = $request->tc_status;
-                User::create([
+                $user = User::create([
                     "name" => $name,
                     "email" => $email,
                     "password" => Hash::make($password),
                     "tc_status" => $tcStatus,
                 ]);
+                $user->assignRole('user');
                 // return $this->userHandler->findUser($email, $password , "register");
                 return response()->json(["success" => true, "msg" => "User Created Successfully", 200]);
             }
