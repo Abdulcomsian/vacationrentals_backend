@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     UserController,
     BillingController,
     PlanController,
+    ListingController,
 };
 
 /*
@@ -29,7 +30,9 @@ Route::post('/update-password', [UserController::class, 'updatePassword']);
 Route::middleware('check.authentication')->group(function(){
     Route::post('/checkout', [BillingController::class, 'checkout']);
     Route::get('/plans', [PlanController::class, 'showPlans']);
+    // Listing Route
+    Route::get('/listing-detail', [ListingController::class, 'showListingDetail']);
+    Route::post('/add-listing', [ListingController::class, 'addListing']);
+
 });
 
-
-Route::get('/payment_success/{sessionId}', [BillingController::class, 'handleSuccess'])->name('payment.success');
