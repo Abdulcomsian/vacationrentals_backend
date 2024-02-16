@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     UserController,
     BillingController,
     PlanController,
+    HomeController
 };
 
 /*
@@ -26,6 +27,20 @@ Route::get('/', function () {
 // Callback URLs of STRIPE after payment
 Route::get('/payment_success', [BillingController::class, 'handleSuccess'])->name('payment.success');
 Route::get('/payment_cancel', [BillingController::class, 'handleCancel'])->name('payment.cancel');
+
+
+
+
+
+
+
+
+
+Route::get('dashboard', [HomeController::class, 'index'])->name('index');
+Route::get('login', [HomeController::class, 'login'])->name('login');
+Route::get('categories', [HomeController::class, 'categories'])->name('categories');
+Route::get('companies', [HomeController::class, 'companies'])->name('companies');
+Route::get('packages', [HomeController::class, 'packages'])->name('packages');
 
 
 // Route::get('test', function(Request $request){
