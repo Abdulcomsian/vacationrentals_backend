@@ -21,7 +21,7 @@ use App\Http\Controllers\{
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('login');
 });
 
 // Callback URLs of STRIPE after payment
