@@ -3,6 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\{
+    User,
+    Plan,
+    Subscription,
+    Listing,
+    Category,
+
+};
 
 class HomeController extends Controller
 {
@@ -13,7 +21,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->gaurd('web');
     }
 
     /**
@@ -23,6 +31,19 @@ class HomeController extends Controller
     */
     public function index()
     {
-        return view('home');
+        return view('index');
+    }
+
+    public function categories(){
+        $categories = Category::get();
+        return view('categories', compact('categories'));
+    }
+
+    public function companies(){
+        return view('companies');
+    }
+
+    public function packages(){
+        return view('packages');
     }
 }
