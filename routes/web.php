@@ -71,3 +71,10 @@ Route::get('packages', [HomeController::class, 'packages'])->name('packages');
 //     dd($sessionData);
 //     // dd($request->all());
 // });
+Auth::routes();
+
+
+
+Route::middleware('Admin')->group(function(){
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
