@@ -35,10 +35,10 @@ class UserController extends Controller
                     "tc_status" => $tcStatus,
                 ]);
                 $user->assignRole('user');
-                return response()->json(["success" => true, "msg" => "User Created Successfully"], 200);
+                return response()->json(["success" => true, "msg" => "User Created Successfully", "status" => 200]);
             }
         } catch (\Exception $e) {
-            return response()->json(["success" => false, "msg" => "Something went wrong", "error" => $e->getMessage()] , 401);        
+            return response()->json(["success" => false, "msg" => "Something went wrong", "error" => $e->getMessage()]);        
         }
     }
 
@@ -58,10 +58,10 @@ class UserController extends Controller
                     return response()->json(['error' => 'Unauthorized'], 401);
                 }
                 $jwt =  $this->respondWithToken($token);
-                return response()->json(["success"=>true, "msg"=>"User Login Successfully", "token"=>$jwt], 200);
+                return response()->json(["success"=>true, "msg"=>"User Login Successfully", "token"=>$jwt, "status"=>200]);
             }
         }catch(\Exception $e){
-            return response()->json(['succcess' => false, "msg" => "Something Went Wrong", "error" => $e->getMessage()], 401);
+            return response()->json(['succcess' => false, "msg" => "Something Went Wrong", "error" => $e->getMessage()]);
         }
     }
 
@@ -87,7 +87,7 @@ class UserController extends Controller
      */
     public function logout(){
         auth()->logout();
-        return response()->json(["success"=>true, "msg"=>"User Logout Successfully"], 200);
+        return response()->json(["success"=>true, "msg"=>"User Logout Successfully", "status"=>200]);
     }
 
      /**
@@ -111,7 +111,7 @@ class UserController extends Controller
             }else{
                 $email = $request->email;
                 Notification::route('mail', $email)->notify(new SendEmailForgotPassword());
-                return response()->json(["success"=>true, "msg"=>"Email sent successfully"], 200);
+                return response()->json(["success"=>true, "msg"=>"Email sent successfully", "status"=>200]);
             }
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error" => $e->getMessage()]);
@@ -134,7 +134,7 @@ class UserController extends Controller
             $user = User::where('email', $email)->first();
             $user->password = Hash::make($newPassword);
             if($user->save()){
-                return response()->json(["success"=>true, "msg"=>"Password changed successfully"], 200);
+                return response()->json(["success"=>true, "msg"=>"Password changed successfully", "status"=>200]);
             }
         }
     }
