@@ -24,10 +24,10 @@ class UserController extends Controller
             $name = $validator->errors()->get('name');
             $email = $validator->errors()->get('email');
             foreach($name as $n){
-                return response()->json(["success" => false, "msg" => $n, "status" => 400]);            
+                return response()->json(["success" => false, "msg" => $n, "status" => 400], 400);            
             }
             foreach($email as $em){
-                return response()->json(["success" => false, "msg" => $em, "status" => 400]);            
+                return response()->json(["success" => false, "msg" => $em, "status" => 400], 400);            
             }
             
             $name = $request->name;
@@ -41,7 +41,7 @@ class UserController extends Controller
                 "tc_status" => $tcStatus,
             ]);
             $user->assignRole('user');
-            return response()->json(["success" => true, "msg" => "User Created Successfully", "status" => 200]);
+            return response()->json(["success" => true, "msg" => "User Created Successfully", "status" => 200], 200);
         } catch (\Exception $e) {
             return response()->json(["success" => false, "msg" => "Something went wrong", "error" => $e->getMessage()]);        
         }
@@ -55,7 +55,7 @@ class UserController extends Controller
             ]);
             $email = $validator->errors()->get('email');
             foreach($email as $em){
-                return response()->json(["success" => false, "msg" => $em, "status" => 400]);            
+                return response()->json(["success" => false, "msg" => $em, "status" => 400], 400);            
             }
             
             $email =  $request->email;
@@ -64,7 +64,7 @@ class UserController extends Controller
                 return response()->json(['error' => 'Email or password is incorrect'], 401);
             }
             $jwt =  $this->respondWithToken($token);
-            return response()->json(["success"=>true, "msg"=>"User Login Successfully", "token"=>$jwt, "status"=>200]);
+            return response()->json(["success"=>true, "msg"=>"User Login Successfully", "token"=>$jwt, "status"=>200], 200);
         }catch(\Exception $e){
             return response()->json(['succcess' => false, "msg" => "Something Went Wrong", "error" => $e->getMessage()]);
         }
@@ -92,7 +92,7 @@ class UserController extends Controller
      */
     public function logout(){
         auth()->logout();
-        return response()->json(["success"=>true, "msg"=>"User Logout Successfully", "status"=>200]);
+        return response()->json(["success"=>true, "msg"=>"User Logout Successfully", "status"=>200], 200);
     }
 
      /**
