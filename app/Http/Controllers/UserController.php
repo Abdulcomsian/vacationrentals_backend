@@ -22,7 +22,7 @@ class UserController extends Controller
             ]);
 
             if ($validator->fails()) {                
-                return response()->json(["success" => false, "msg" => "Validation error", "error" => $validator->getMessageBag()] , 400);            
+                return response()->json(["success" => false, "msg" => $validator->getMessageBag(), "status" => 400]);            
             } else {
                 $name = $request->name;
                 $email = $request->email;
