@@ -21,24 +21,27 @@ class UserController extends Controller
                 "password" => "required|string",
             ]);
 
-            if ($validator->errors()->has('name')) {                
-                return response()->json(["success" => false, "msg" => "Name field is required", "status" => 400]);            
-            }elseif($validator->errors()->has('email')){
-                return response()->json(["success" => false, "msg" => "This email has already been taken", "status" => 400]);            
-            } else {
-                $name = $request->name;
-                $email = $request->email;
-                $password = $request->password;
-                $tcStatus = $request->tc_status;
-                $user = User::create([
-                    "name" => $name,
-                    "email" => $email,
-                    "password" => Hash::make($password),
-                    "tc_status" => $tcStatus,
-                ]);
-                $user->assignRole('user');
-                return response()->json(["success" => true, "msg" => "User Created Successfully", "status" => 200]);
+            $name = $validator->errors()->get('name');
+            $email = $validator->errors()->get('email');
+            foreach($name as $n){
+                return response()->json(["success" => false, "msg" => $n, "status" => 400]);            
             }
+            foreach($email as $em){
+                return response()->json(["success" => false, "msg" => $em, "status" => 400]);            
+            }
+            
+            $name = $request->name;
+            $email = $request->email;
+            $password = $request->password;
+            $tcStatus = $request->tc_status;
+            $user = User::create([
+                "name" => $name,
+                "email" => $email,
+                "password" => Hash::make($password),
+                "tc_status" => $tcStatus,
+            ]);
+            $user->assignRole('user');
+            return response()->json(["success" => true, "msg" => "User Created Successfully", "status" => 200]);
         } catch (\Exception $e) {
             return response()->json(["success" => false, "msg" => "Something went wrong", "error" => $e->getMessage()]);        
         }
@@ -50,18 +53,18 @@ class UserController extends Controller
                 "email" => "required|string|email",
                 "password" => "required|string",
             ]);
-
-            if($validator->fails()){
-                return response()->json(["success" => false, "msg" => "Validation error", "error" => $validator->getMessageBag()], 400);
-            }else{
-                $email =  $request->email;
-                $password = $request->password;
-                if(!$token = auth()->attempt(["email" => $email, "password" => $password])){
-                    return response()->json(['error' => 'Unauthorized'], 401);
-                }
-                $jwt =  $this->respondWithToken($token);
-                return response()->json(["success"=>true, "msg"=>"User Login Successfully", "token"=>$jwt, "status"=>200]);
+            $email = $validator->errors()->get('email');
+            foreach($email as $em){
+                return response()->json(["success" => false, "msg" => $em, "status" => 400]);            
             }
+            
+            $email =  $request->email;
+            $password = $request->password;
+            if(!$token = auth()->attempt(["email" => $email, "password" => $password])){
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+            $jwt =  $this->respondWithToken($token);
+            return response()->json(["success"=>true, "msg"=>"User Login Successfully", "token"=>$jwt, "status"=>200]);
         }catch(\Exception $e){
             return response()->json(['succcess' => false, "msg" => "Something Went Wrong", "error" => $e->getMessage()]);
         }
