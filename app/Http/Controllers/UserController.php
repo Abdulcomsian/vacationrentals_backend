@@ -35,7 +35,7 @@ class UserController extends Controller
                     "tc_status" => $tcStatus,
                 ]);
                 $user->assignRole('user');
-                return response()->json(["success" => true, "msg" => "User Created Successfully", 200]);
+                return response()->json(["success" => true, "msg" => "User Created Successfully"], 200);
             }
         } catch (\Exception $e) {
             return response()->json(["success" => false, "msg" => "Something went wrong", "error" => $e->getMessage()] , 401);        
