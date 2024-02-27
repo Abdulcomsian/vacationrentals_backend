@@ -55,10 +55,43 @@ class CategoryController extends Controller
     public function deleteCategory(Request $request){
         try{
             $id = $request->category_id;
-            $deleteCategory = Category::where('id', $id)->delete();
-            return redirect()->back()->with(['success' => "Category deleted Succesfully"]);
+            $deleteCategory = Category::where('id', $id)->update(["status" => "deactivate"]);
+            return redirect()->back()->with(['success' => "Category deactivated Succesfully"]);
         }catch(\Exception $e){
             return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
+        }
+    }
+
+    public function showEditCategory(Request $request){
+        $id = $request->id;
+        $categoryData = Category::where('id', $id)->first();
+        return response()->json(["categoryData" => $categoryData]);
+    }
+
+    public function updateCategory(Request $request){
+        try{
+            $id = $request->category_id;
+
+            // Converting String for Slug
+            $categorySlug = $request->categoryName;
+            $categorySlug = strtolower($categorySlug);
+            $categorySlug = str_replace(' ', '_', $categorySlug);
+
+            $categoryData = Category::find($id);
+            $categoryData->category_name = $request->categoryName;
+            $categoryData->slug = $categorySlug;
+            if($request->file('categoryImage')){
+                $file = $request->file('categoryImage');
+                $fileDestination = public_path('assets/category_images');
+                $fileName = uniqid() . '_' . time() . '.' . $file->extension();
+                $file->move($fileDestination, $fileName);
+                $categoryData->category_image = $fileName;
+            }
+            if($categoryData->save()){
+                return redirect()->back()->with(['success' => "Category Updated Succesfully"]);
+            }
+        }catch(\Exception $e){
+            return redirect()->back()->with(['success' => "Category Updated Succesfully"]);
         }
     }
 }

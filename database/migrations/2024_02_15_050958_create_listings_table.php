@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::create('listings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('tool_name')->nullable();
-            $table->string('tool_link')->nullable();
-            $table->string('short_description')->nullable();
-            $table->longText('long_description')->nullable();
-            $table->string('tool_image')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('category_id');
+            $table->string('company_name')->nullable();
+            $table->string('company_link')->nullable();
+            $table->string('company_tagline')->nullable();
+            $table->longText('short_description')->nullable();
+            $table->string('company_logo')->nullable();
             $table->enum('status', ['0','1'])->default('0')->comment('0 means pending 1 means approved from Admin');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('category_id')->references('id')->on('categories');
             $table->softDeletes();
             $table->timestamps();
         });

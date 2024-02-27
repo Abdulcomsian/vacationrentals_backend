@@ -44,8 +44,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="companies">
-                    <i class="las la-robot"></i>All Companies
+                    <a class="nav-link menu-link" href="listings">
+                    <i class="las la-robot"></i>All Listings
                         </span>
                     </a>
                 </li>

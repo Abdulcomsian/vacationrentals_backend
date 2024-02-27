@@ -35,7 +35,7 @@
                             <form action="javascript:void(0);">
                                 <div class="row g-3 mb-0 align-items-center">
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-danger shadow-none" data-bs-toggle="modal" data-bs-target=".bs-edit-modal-center"><i class="ri-add-circle-line align-middle me-1"></i> Add new Company</button>
+                                        <a href="{{url('add-listings')}}" type="button" class="btn btn-danger shadow-none"><i class="ri-add-circle-line align-middle me-1"></i> Add new listing</a>
                                     </div>
                                 </div>
                                 <!--end row-->
@@ -50,7 +50,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">All Companies</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">All Listings</h4>
                         </div><!-- end card header -->
 
                         <div class="card-body">
@@ -73,7 +73,7 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>Company Name</td>
+                                            <td>listing Name</td>
                                             <td>
                                                 <span class="text-success">105</span>
                                             </td>
@@ -109,7 +109,7 @@
                     <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
                     <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
                         <h4>Are you sure ?</h4>
-                        <p class="text-muted mx-4 mb-0">Are you sure you want to delete this Company?</p>
+                        <p class="text-muted mx-4 mb-0">Are you sure you want to delete this listing?</p>
                     </div>
                 </div>
                 <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
@@ -134,19 +134,19 @@
                             <div class="col-xxl-12 text-center">
                                 <div>
                                     <img src="{{ URL::asset('build/images/users/avatar-4.jpg') }}" alt="" class="rounded avatar-md shadow rounded-circle">
-                                    <label for="lastName" class="form-label d-block">Company Image</label>
+                                    <label for="lastName" class="form-label d-block">listing Image</label>
                                     <input type="file" class="form-control" style="display: none;">
                                 </div>
                             </div>
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="lastName" class="form-label">Company Name</label>
+                                    <label for="lastName" class="form-label">listing Name</label>
                                     <input type="text" class="form-control" id="lastName" placeholder="Enter lastname">
                                 </div>
                             </div>
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="lastName" class="form-label">Company Url</label>
+                                    <label for="lastName" class="form-label">listing Url</label>
                                     <input type="text" class="form-control" id="lastName" placeholder="Enter lastname">
                                 </div>
                             </div>
@@ -154,7 +154,7 @@
                             <div class="col-lg-12">
                                 <div class="hstack gap-2 justify-content-end">
                                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-danger">Update Company</button>
+                                    <button type="submit" class="btn btn-danger">Update listing</button>
                                 </div>
                             </div>
                             <!--end col-->

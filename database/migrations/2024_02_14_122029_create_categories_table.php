@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('slug');
             $table->string('category_name');
             $table->string('category_image');
+            $table->enum('status', ['deactivate', 'activate'])->default("activate");
             $table->timestamps();
         });
     }

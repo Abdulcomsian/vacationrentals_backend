@@ -35,12 +35,12 @@ class HomeController extends Controller
     }
 
     public function categories(){
-        $categories = Category::get();
+        $categories = Category::with('listings')->where('status', 'activate')->get();
         return view('categories', compact('categories'));
     }
 
-    public function companies(){
-        return view('companies');
+    public function listings(){
+        return view('listings/listings');
     }
 
     public function packages(){
