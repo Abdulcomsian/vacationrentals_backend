@@ -21,8 +21,10 @@ class UserController extends Controller
                 "password" => "required|string",
             ]);
 
-            if ($validator->fails()) {                
-                return response()->json(["success" => false, "msg" => $validator->getMessageBag(), "status" => 400]);            
+            if ($validator->errors()->has('name')) {                
+                return response()->json(["success" => false, "msg" => "Name field is required", "status" => 400]);            
+            }elseif($validator->errors()->has('email')){
+                return response()->json(["success" => false, "msg" => "This email has already been taken", "status" => 400]);            
             } else {
                 $name = $request->name;
                 $email = $request->email;
