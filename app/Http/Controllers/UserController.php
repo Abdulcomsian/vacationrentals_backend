@@ -14,8 +14,6 @@ use App\Models\User;
 class UserController extends Controller
 {
     public function register(Request $request){
-        dd($request->all(), $request['name']);
-        // dd($request->all());
         try {
             $validator = Validator::make($request->all(), [
                 "name" => "required|string",
@@ -37,7 +35,6 @@ class UserController extends Controller
                     "tc_status" => $tcStatus,
                 ]);
                 $user->assignRole('user');
-                // return $this->userHandler->findUser($email, $password , "register");
                 return response()->json(["success" => true, "msg" => "User Created Successfully", 200]);
             }
         } catch (\Exception $e) {
