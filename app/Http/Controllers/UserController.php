@@ -14,10 +14,12 @@ use App\Models\User;
 class UserController extends Controller
 {
     public function register(Request $request){
+        dd($request->all(), $request['name']);
+        // dd($request->all());
         try {
             $validator = Validator::make($request->all(), [
                 "name" => "required|string",
-                "email" => "required|string|unique:users,email",
+                "email" => "required|email|unique:users,email",
                 "password" => "required|string",
             ]);
 
