@@ -110,19 +110,43 @@ class UserController extends Controller
             $validator = Validator::make($request->all(), [
                 "email" => "required|string|email",
             ]);
-    
-            if($validator->fails()){
-                return response()->json(["success"=>false, "msg"=>"Validation Error", "error"=>$validator->getMessageBag()]);
+
+            $emailVal = $validator->errors()->get('email');
+            foreach($emailVal as $em){
+                return response()->json(["success" => false, "msg" => $em, "status" => 400], 400);            
+            }
+            $email = $request->email;
+            // Check if email is exist in Database
+            $userEmail = User::where('email', $email)->count();
+            if($userEmail > 0){
+                $verificationCode = rand(1111, 9999);
+                User::where('email', $email)->update(['verification_code'=>$verificationCode]);
+                Notification::route('mail', $email)->notify(new SendEmailForgotPassword($verificationCode));
+                return response(["success"=>true, "msg"=>"Email exists in database and Email Sent", "status"=>200], 200);
             }else{
-                $email = $request->email;
-                Notification::route('mail', $email)->notify(new SendEmailForgotPassword());
-                return response()->json(["success"=>true, "msg"=>"Email sent successfully", "status"=>200]);
+                return response(["success"=>false, "msg"=>"Email doesn`t exists in database", "status"=>400], 400);
             }
         }catch(\Exception $e){
-            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error" => $e->getMessage()]);
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error" => $e->getMessage()], 400);
         }
     }
 
+
+    public function verifyCode(Request $request){
+        try{
+            $verificationCode = $request->verificationCode;
+            $email = $request->email;
+
+            $user = User::where('email', $email)->first();
+            if($user['verification_code'] == $verificationCode){
+                return response()->json(["success"=>true, "msg"=>"Email Verified Successfully", "status"=> 200], 200);
+            }else{
+                return response()->json(["success"=>false, "msg"=>"Code doesn`t matched... Incorrect Code", "status" => 400], 400);
+            }
+        }catch(\Exception $e){
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong" ,"error"=>$e->getMessage()], 400);
+        }
+    }
 
     public function updatePassword(Request $request){
         $validator = Validator::make($request->all(),[
@@ -130,17 +154,21 @@ class UserController extends Controller
             "new_password" => "required|string",
         ]);
 
-        if($validator->fails()){
-            return response()->json(["success"=>false, "msg"=>"Validation Error", "error"=>$validator->getMessageBag()]);
-        }else{
-            $email = $request->email;
-            $newPassword = $request->new_password;
+        $email = $validator->errors()->get('email');
+        $new_password = $validator->errors()->get('new_password');
+        foreach($email as $em){
+            return response()->json(["success" => false, "msg" => $em, "status" => 400], 400);            
+        }
+        foreach($new_password as $pass){
+            return response()->json(["success" => false, "msg" => $pass, "status" => 400], 400);
+        }
+        $email = $request->email;
+        $newPassword = $request->new_password;
 
-            $user = User::where('email', $email)->first();
-            $user->password = Hash::make($newPassword);
-            if($user->save()){
-                return response()->json(["success"=>true, "msg"=>"Password changed successfully", "status"=>200]);
-            }
+        $user = User::where('email', $email)->first();
+        $user->password = Hash::make($newPassword);
+        if($user->save()){
+            return response()->json(["success"=>true, "msg"=>"Password changed successfully", "status"=>200]);
         }
     }
 }

@@ -14,9 +14,9 @@ class SendEmailForgotPassword extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($verificationCode)
     {
-        //
+        $this->verficationCode = $verificationCode;
     }
 
     /**
@@ -36,7 +36,7 @@ class SendEmailForgotPassword extends Notification
     {
         return (new MailMessage)
                     ->line('Please click the link below to reset the password')
-                    ->action('Reset Link', url('/'))
+                    ->line('Your Verfication Code is: ' . $this->verficationCode)
                     ->line('Thank you for using our application!');
     }
 
