@@ -8,7 +8,7 @@ use App\Http\Controllers\{
     PlanController,
     HomeController,
     CategoryController,
-    ListingController
+    ListingController,
 };
 Auth::routes();
 
@@ -46,6 +46,10 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
     Route::post('store-listing', [ListingController::class, 'storeListing'])->name('store.listing');
     Route::post('update-listing', [ListingController::class, 'updateListing'])->name('update.listing');
     Route::post('delete-listing', [ListingController::class, 'deleteListing'])->name('delete.listing');
+
+    // Plan or Package Routes
+    Route::post('update-plan', [PlanController::class, 'updatePlan'])->name('update.plan');
+    Route::post('show-edit-plan' ,[PlanController::class, 'showEdit'])->name('show.edit.plan');
 });
 
 // Admin Routes ends here

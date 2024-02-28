@@ -16,8 +16,18 @@
 
 @section('content')
 
-@if(session('toastr'))
-{!! session('toastr') !!}
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Success! </strong>{{session('success')}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+@if(session('error'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Error! </strong>{{session('error')}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 @endif
 <div class="row">
     <div class="col">
@@ -31,16 +41,16 @@
                             <p class="text-muted mb-0">Here's what's happening with your store
                                 today.</p> -->
                         </div>
-                        <div class="mt-3 mt-lg-0">
+                        {{-- <div class="mt-3 mt-lg-0">
                             <form action="javascript:void(0);">
                                 <div class="row g-3 mb-0 align-items-center">
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-danger shadow-none" data-bs-toggle="modal" data-bs-target=".bs-edit-modal-center"><i class="ri-add-circle-line align-middle me-1"></i> Add new Category</button>
+                                        <button type="button" class="btn btn-danger shadow-none" data-bs-toggle="modal" data-bs-target=".bs-add-modal-center"><i class="ri-add-circle-line align-middle me-1"></i> Add new Package</button>
                                     </div>
                                 </div>
                                 <!--end row-->
                             </form>
-                        </div>
+                        </div> --}}
                     </div><!-- end card header -->
                 </div>
                 <!--end col-->
@@ -58,30 +68,32 @@
                                 <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
                                     <thead class="text-muted table-light">
                                         <tr>
-                                            <th scope="col">Validity</th>
-                                            <th scope="col">Is Featured</th>
+                                            <th scope="col">Name</th>
                                             <th scope="col">Price</th>
+                                            <th scope="col">Description</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Monthly</td>
-                                            <td>
-                                                <span class="text-success">Yes</span>
-                                            </td>
-                                            <td>
-                                                $100
-                                            </td>
-                                            <td>
-                                                <a href="#" class="edit-cat text-success" data-bs-toggle="modal" data-bs-target=".bs-edit-modal-center">
-                                                    <i class="las la-pencil-alt fs-20"></i>
-                                                </a>
-                                                <a href="#" class="del-cat text-danger mx-2" data-bs-toggle="modal" data-bs-target=".bs-delete-modal-center">
-                                                    <i class="lar la-trash-alt fs-20"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        @foreach($plans as $plan)
+                                            <tr>
+                                                <td>{{$plan->plan_name}}</td>
+                                                <td>
+                                                    {{$plan->price}}$
+                                                </td>
+                                                <td>
+                                                   {{$plan->description}}
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="edit-cat text-success" data-id="{{$plan->id}}">
+                                                        <i class="las la-pencil-alt fs-20"></i>
+                                                    </a>
+                                                    {{-- <a href="#" class="del-cat text-danger mx-2" data-bs-toggle="modal" data-bs-target=".bs-delete-modal-center">
+                                                        <i class="lar la-trash-alt fs-20"></i>
+                                                    </a> --}}
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody><!-- end tbody -->
                                 </table><!-- end table -->
                             </div>
@@ -94,7 +106,7 @@
 
     </div> <!-- end col -->
 </div>
-<div class="modal fade bs-delete-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+{{-- <div class="modal fade bs-delete-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
             <div class="modal-header">
@@ -116,8 +128,9 @@
 
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-</div>
-<div class="modal fade bs-edit-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+</div> --}}
+
+{{-- <div class="modal fade bs-add-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
             <div class="modal-header">
@@ -125,7 +138,8 @@
             </div>
             <div class="modal-body">
                 <div class="addtool">
-                    <form action="javascript:void(0);">
+                    <form action="#" method="POST" enctype="multipart/form-data">
+                        @csrf
                         <div class="row g-3">
                             <div class="col-xxl-12">
                                 <div>
@@ -139,20 +153,74 @@
                             </div>
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="lastName" class="form-label">Acctual Price</label>
-                                    <input type="text" class="form-control" id="lastName" placeholder="Enter lastname">
+                                    <label for="price" class="form-label">Price</label>
+                                    <input type="text" name="price" class="form-control" id="price" placeholder="Enter Price">
                                 </div>
                             </div>
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="lastName" class="form-label">Sale Price</label>
-                                    <input type="text" class="form-control" id="lastName" placeholder="Enter lastname">
+                                    <label for="validity" class="form-label">Validity</label>
+                                    <input type="text" class="form-control" name="validity" id="lastName" placeholder="Enter lastname">
                                 </div>
                             </div>
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="lastName" class="form-label">Sale Price</label>
-                                    <textarea class="form-control" id="VertimeassageInput" rows="3" placeholder="Enter Description"></textarea>
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" rows="3" name="description" placeholder="Enter Description"></textarea>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-lg-12">
+                                <div class="hstack gap-2 justify-content-end">
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger">Add</button>
+                                </div>
+                            </div>
+                            <!--end col-->
+                        </div>
+                        <!--end row-->
+                    </form>
+                </div>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div> --}}
+
+
+<div class="modal fade bs-edit-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="NotificationModalbtn-close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="addtool">
+                    <form action="{{route('update.plan')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="plan_id" id="planId" value="">
+                        <div class="row g-3">
+                            <div class="col-xxl-12">
+                                <div>
+                                    <label for="lastName" class="form-label">Package</label>
+                                    <select class="form-select planSelect" name="plan_name" aria-label="Default select example">
+                                        <option selected="">Select your Status </option>
+                                        <option value="Monthly">Monthly</option>
+                                        <option value="Yearly">Yearly</option>
+                                        <option value="Featured">Featured</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xxl-12">
+                                <div>
+                                    <label for="price" class="form-label">Price</label>
+                                    <input type="text" name="price" class="form-control" id="price" placeholder="Enter Price">
+                                </div>
+                            </div>
+                            <div class="col-xxl-12">
+                                <div>
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter Description"></textarea>
                                 </div>
                             </div>
                             <!--end col-->
@@ -173,4 +241,28 @@
     </div><!-- /.modal-dialog -->
 </div>
 
+@endsection
+
+@section('script')
+<script>
+    $(document).on("click", ".edit-cat", function(){
+        let csrfToken = $('meta[name="csrf-token"]').attr('content');
+        let id = $(this).attr('data-id');
+        $("#planId").val(id);
+        $.ajax({
+            method: "POST",
+            url: "{{ route('show.edit.plan') }}",
+            data: { id: id, _token: csrfToken },
+            dataType: 'json',
+            success: function(response) {
+                let plan = response.plan;
+                $('#price').val(plan.price);
+                $('#description').val(plan.description);
+                $('.planSelect').val(plan.plan_name);
+                $(".bs-edit-modal-center").modal("show");
+            }
+        });
+        
+    });
+</script>
 @endsection

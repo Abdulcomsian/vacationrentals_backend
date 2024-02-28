@@ -45,6 +45,7 @@ class HomeController extends Controller
     }
 
     public function packages(){
-        return view('packages');
+        $plans = Plan::get();
+        return view('packages', compact('plans'));
     }
 }
