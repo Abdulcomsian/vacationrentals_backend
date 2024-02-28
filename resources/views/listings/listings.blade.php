@@ -16,8 +16,18 @@
 
 @section('content')
 
-@if(session('toastr'))
-{!! session('toastr') !!}
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Success! </strong>{{session('success')}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+@if(session('error'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Error! </strong>{{session('error')}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 @endif
 <div class="row">
     <div class="col">
@@ -58,34 +68,40 @@
                                 <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
                                     <thead class="text-muted table-light">
                                         <tr>
-                                            <th scope="col">Icon</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">No of Referrals</th>
+                                            <th scope="col">Company Logo</th>
+                                            <th scope="col">Company Name</th>
+                                            <th scope="col">Company Tagline</th>
+                                            <th scope="col">Short Description</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-shrink-0 me-2">
-                                                        <img src="{{ URL::asset('build/images/users/avatar-1.jpg') }}" alt="" class="avatar-xs rounded-circle shadow" />
+                                        @isset($listings)
+                                        @foreach($listings as $listing)
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0 me-2">
+                                                            <img src="{{ asset("assets/listing_images/" . $listing->company_logo) }}" alt="" class="avatar-xs rounded-circle shadow" />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td>listing Name</td>
-                                            <td>
-                                                <span class="text-success">105</span>
-                                            </td>
-                                            <td>
-                                                <a href="#" class="edit-cat text-success" data-bs-toggle="modal" data-bs-target=".bs-edit-modal-center">
-                                                    <i class="las la-pencil-alt fs-20"></i>
-                                                </a>
-                                                <a href="#" class="del-cat text-danger mx-2" data-bs-toggle="modal" data-bs-target=".bs-delete-modal-center">
-                                                    <i class="lar la-trash-alt fs-20"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                                <td>{{$listing->company_name}}</td>
+                                                <td>
+                                                   {{$listing->company_tagline}}
+                                                </td>
+                                                <td>{!!$listing->short_description!!}</td>
+                                                <td>
+                                                    <a href="{{url('edit-listing', ["id"=>$listing->id])}}" class="edit-cat text-success">
+                                                        <i class="las la-pencil-alt fs-20"></i>
+                                                    </a>
+                                                    <a href="#" class="del-cat text-danger mx-2" data-id="{{$listing->id}}">
+                                                        <i class="lar la-trash-alt fs-20"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        @endisset                                        
                                     </tbody><!-- end tbody -->
                                 </table><!-- end table -->
                             </div>
@@ -100,27 +116,32 @@
 </div>
 <div class="modal fade bs-delete-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="NotificationModalbtn-close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mt-2 text-center">
-                    <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
-                    <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                        <h4>Are you sure ?</h4>
-                        <p class="text-muted mx-4 mb-0">Are you sure you want to delete this listing?</p>
+        <div class="modal-content">
+            <form action="{{route('delete.listing')}}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" id="listingId" name="listing_id" value="">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="NotificationModalbtn-close"></button>
                     </div>
-                </div>
-                <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
-                    <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn w-sm btn-danger" id="delete-notification">Yes, Delete It!</button>
-                </div>
-            </div>
-
+                    <div class="modal-body">
+                        <div class="mt-2 text-center">
+                            <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
+                            <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                                <h4>Are you sure ?</h4>
+                                <p class="text-muted mx-4 mb-0">Are you sure you want to delete this listing?</p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                            <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn w-sm btn-danger" id="delete-notification">Yes, Delete It!</button>
+                        </div>
+                    </div>
+            </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
+
+
 <div class="modal fade bs-edit-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -198,4 +219,13 @@
   border-color: #E30B0B;
 }
 </style>
+@endsection
+@section('script')
+<script>
+    $(document).on("click", ".del-cat", function(){
+        let id = $(this).attr("data-id");
+        $("#listingId").val(id);
+        $(".bs-delete-modal-center").modal("show");
+    });
+</script>
 @endsection

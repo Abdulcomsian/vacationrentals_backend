@@ -4,17 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes; 
 
 class Listing extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $fillable = [
         'user_id',
-        'tool_name',
-        'tool_link',
+        'category_id',
+        'company_name',
+        'company_link',
+        'company_tagline',
         'short_description',
-        'long_description',
-        'tool_image',
+        'company_logo',
+        'status',
     ];
 }

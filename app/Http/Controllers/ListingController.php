@@ -74,6 +74,81 @@ class ListingController extends Controller
     }
 
     public function storeListing(Request $request){
-        dd($request->all());
+        $request->validate([
+            "companyImage" => "required|mimes:jpeg,png,jpg,gif|max:2048",
+            "companyName" => "required",
+            "companyTagLine" => "required",
+        ],[
+            "companyImage.required" => "Company image is required.",
+            "companyImage.image" => "The file must be an image.",
+            "companyImage.mimes" => "The image must be a file of type: jpeg, png, jpg, gif.",
+            "companyImage.max" => "The image may not be greater than 2048 kilobytes in size.",
+            "companyName.required" => "Company name is required.",
+            "companyTagLine.required" => "Company tagline is required.",
+        ]);
+        try{
+            $user_id = Auth::user()->id;
+            $storeListing = new Listing();
+            $storeListing->user_id = $user_id;
+            $storeListing->category_id = $request->category;
+            if($request->file('companyImage')){
+                $file = $request->file('companyImage');
+                $fileName = time() .'_' .  rand() . '.' . $file->getClientOriginalExtension();
+                $destinationPath = public_path('assets/listing_images'); // Use public_path() to get the physical file system path
+                $file->move($destinationPath, $fileName);
+                $storeListing->company_logo = $fileName;
+            }
+            $storeListing->company_name = $request->companyName;
+            $storeListing->company_tagline = $request->companyTagLine;
+            $storeListing->short_description = $request->short_description;
+            $storeListing->status = 1;
+            if($storeListing->save()){
+                return redirect()->route('listings')->with(['success'=>"Listing Added Successfully"]);
+            }
+        }catch(\Exception $e){
+            return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
+        }
+    }
+
+    public function editListing($id){
+        $categories = Category::where('status', 'activate')->get();
+        $listingData = Listing::where('id', $id)->first();
+        return view('listings/edit-listings', compact('listingData', 'categories'));
+    }
+
+    public function updateListing(Request $request){
+        try{
+            $id = $request->listing_id;
+            $user_id = Auth::user()->id;
+            $storeListing = Listing::find($id);
+            $storeListing->user_id = $user_id;
+            $storeListing->category_id = $request->category;
+            if($request->file('companyImage')){
+                $file = $request->file('companyImage');
+                $fileName = time() .'_' .  rand() . '.' . $file->getClientOriginalExtension();
+                $destinationPath = public_path('assets/listing_images'); // Use public_path() to get the physical file system path
+                $file->move($destinationPath, $fileName);
+                $storeListing->company_logo = $fileName;
+            }
+            $storeListing->company_name = $request->companyName;
+            $storeListing->company_tagline = $request->companyTagLine;
+            $storeListing->short_description = $request->short_description;
+            $storeListing->status = 1;
+            if($storeListing->save()){
+                return redirect()->route('listings')->with(['success'=>"Listing Updated Successfully"]);
+            }
+        }catch(\Exception $e){
+            return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
+        }
+    }
+
+    public function deleteListing(Request $request){
+        try{
+            $id = $request->listing_id;
+            $deleteListing = Listing::where('id', $id)->delete();
+            return redirect()->back()->with(['success'=>"Listing deleted Successfully"]);
+        }catch(\Exception $e){
+            return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
+        }        
     }
 }

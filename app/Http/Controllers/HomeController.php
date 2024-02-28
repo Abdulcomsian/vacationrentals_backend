@@ -40,7 +40,8 @@ class HomeController extends Controller
     }
 
     public function listings(){
-        return view('listings/listings');
+        $listings = Listing::get();
+        return view('listings/listings', compact('listings'));
     }
 
     public function packages(){

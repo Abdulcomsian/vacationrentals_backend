@@ -42,7 +42,10 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
 
     // Listing Routes
     Route::get('add-listings', [ListingController::class, 'add_listing']);
-    Route::get('store-listing', [ListingController::class, 'storeListing'])->name('store.listing');
+    Route::get('edit-listing/{id}', [ListingController::class, 'editListing']);
+    Route::post('store-listing', [ListingController::class, 'storeListing'])->name('store.listing');
+    Route::post('update-listing', [ListingController::class, 'updateListing'])->name('update.listing');
+    Route::post('delete-listing', [ListingController::class, 'deleteListing'])->name('delete.listing');
 });
 
 // Admin Routes ends here

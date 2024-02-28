@@ -42,7 +42,7 @@ class UserController extends Controller
             ]);
             $user->assignRole('user');
             return response()->json(["success" => true, "msg" => "User Created Successfully", "status" => 200], 200);
-        } catch (\Exception $e) {
+        }catch (\Exception $e) {
             return response()->json(["success" => false, "msg" => "Something went wrong", "error" => $e->getMessage()]);        
         }
     }

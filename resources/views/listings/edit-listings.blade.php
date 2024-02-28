@@ -35,10 +35,11 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                        <form action="{{route('store.listing')}}" method="POST" enctype="multipart/form-data">
+                        <form action="{{route('update.listing')}}" method="POST" enctype="multipart/form-data">
                             @csrf
+                            <input type="hidden" value="{{$listingData['id']}}" name="listing_id">
                             <div class="card-header align-items-center d-flex">
-                                <h4 class="card-title mb-0 flex-grow-1">Add Listing</h4>
+                                <h4 class="card-title mb-0 flex-grow-1">Update Listing</h4>
                             </div><!-- end card header -->
     
                             <div class="card-body">
@@ -52,17 +53,22 @@
                                             <option value="">Select Category</option>
                                             @isset($categories)
                                                 @foreach($categories as $category)
-                                                    <option value="{{$category->id}}">{{$category->category_name}}</option>
+                                                    <option value="{{$category->id}}" {{isset($listingData['category_id']) && $listingData['category_id']==$category->id ? 'selected' : ''}}>{{$category->category_name}}</option>
                                                 @endforeach
                                             @endisset
                                         </select>
                                     </div>
-                                    <div class="col-xl-6 d-flex flex-column">
+                                    <div class="col-xl-5 d-flex flex-column">
                                         <label for="" class="form-label">Choose Company Logo</label>
                                         @error('companyImage')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
                                         <input class="form-control" type="file" name="companyImage" value="">
+                                    </div>
+                                    <div class="col-xl-1 mt-4">
+                                        @if(isset($listingData['company_logo']))
+                                            <img src="{{asset('assets/listing_images/' . $listingData['company_logo'])}}"  class="avatar-xs rounded-circle shadow" alt="">
+                                        @endif
                                     </div>
                                 </div>
     
@@ -72,7 +78,7 @@
                                         @error('companyName')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
-                                        <input type="text" class="form-control" name="companyName" placeholder="Enter company here...">
+                                        <input type="text" class="form-control" name="companyName" value="{{$listingData['company_name'] ?? ''}}" placeholder="Enter company here...">
                                     </div>
     
                                     <div class="col-xl-6 d-flex flex-column">
@@ -80,14 +86,14 @@
                                         @error('companyTagLine')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
-                                        <input type="text" class="form-control" name="companyTagLine" placeholder="Enter company tag line here...">
+                                        <input type="text" class="form-control" name="companyTagLine" value="{{$listingData['company_tagline'] ?? ''}}" placeholder="Enter company tag line here...">
                                     </div>
                                 </div>
                                 <div class="row mt-4">
                                     <div class="col-xl-12">
                                         <label for="" class="form-label">Add Short Description</label>
                                         
-                                        <textarea name="short_description" id="editor" cols="30" rows="10"></textarea>
+                                        <textarea name="short_description" id="editor" cols="30" rows="10">{{$listingData['short_description'] ?? ''}}</textarea>
                                     </div>
                                 </div>
                                 <div class="row mt-4 text-right">
@@ -146,12 +152,5 @@
            .catch( error => {
                console.error( error );
            } );
-// $(document).on("click", "#submitButton", function(){
-//     var editorContent = CKEDITOR.instances.short_description.getData();
-//            console.log(editorContent);
-// })
-           
-
-
 </script>
 @endsection
