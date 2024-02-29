@@ -30,6 +30,11 @@ class LoginController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
+    protected function guard()
+    {
+        return Auth::guard('web');
+    }
+
     /**
      * Create a new controller instance.
      *
