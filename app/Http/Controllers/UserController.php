@@ -163,12 +163,8 @@ class UserController extends Controller
             return response()->json(["success" => false, "msg" => $pass, "status" => 400], 400);
         }
         $email = $request->email;
-        $newPassword = $request->new_password;
-
-        $user = User::where('email', $email)->first();
-        $user->password = Hash::make($newPassword);
-        if($user->save()){
-            return response()->json(["success"=>true, "msg"=>"Password changed successfully", "status"=>200]);
-        }
+        $newPassword = Hash::make($request->new_password);
+        $user = User::where('email', $email)->update(["password"=>$newPassword]);
+        return response()->json(["success"=>true, "msg"=>"Password changed successfully", "status"=>200]);
     }
 }
