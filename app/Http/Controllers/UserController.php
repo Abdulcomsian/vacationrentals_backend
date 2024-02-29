@@ -122,9 +122,9 @@ class UserController extends Controller
                 $verificationCode = rand(1111, 9999);
                 User::where('email', $email)->update(['verification_code'=>$verificationCode]);
                 Notification::route('mail', $email)->notify(new SendEmailForgotPassword($verificationCode));
-                return response(["success"=>true, "msg"=>"Email exists in database and Email Sent", "status"=>200], 200);
+                return response(["success"=>true, "msg"=>"OTP has been sent to the given email address", "status"=>200], 200);
             }else{
-                return response(["success"=>false, "msg"=>"Email doesn`t exists in database", "status"=>400], 400);
+                return response(["success"=>false, "msg"=>"Email doesn`t exists", "status"=>400], 400);
             }
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error" => $e->getMessage()], 400);
