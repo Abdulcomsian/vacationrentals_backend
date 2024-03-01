@@ -37,6 +37,6 @@ Route::middleware('check.authentication')->group(function(){
     Route::get('/listing-detail', [ListingController::class, 'showListingDetail']);
     Route::post('/add-listing', [ListingController::class, 'addListing']);
 
-    // Categories Apis
-    Route::get('/show-category', [CategoryController::class, 'showCategory']);
 });
+// Categories Apis
+Route::get('/show-category', [CategoryController::class, 'showCategory']);
