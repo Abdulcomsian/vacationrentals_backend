@@ -722,7 +722,11 @@
                         <a class="dropdown-item" href="pages-profile"><i class="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Balance : <b>$5971.67</b></span></a>
                         <a class="dropdown-item" href="pages-profile-settings"><span class="badge bg-success-subtle text-success mt-1 float-end">New</span><i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Settings</span></a>
                         <a class="dropdown-item" href="auth-lockscreen-basic"><i class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Lock screen</span></a>
-                        <a class="dropdown-item " href="javascript:void();" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bx bx-power-off font-size-16 align-middle me-1"></i> <span key="t-logout">@lang('translation.logout')</span></a>
+                        {{-- using form because Laravel ui auth have a route of POST  --}}
+                        <form action="{{route('logout')}}" method="POST">
+                            @csrf
+                            <button type="submit" class="dropdown-item "><i class="bx bx-power-off font-size-16 align-middle me-1"></i> <span key="t-logout">Logout</span></button>
+                        </form>
                         
                     </div>
                 </div>

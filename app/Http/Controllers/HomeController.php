@@ -3,31 +3,49 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
-use App\Http\Repository\UserHandler;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Notifications\SendEmailForgotPassword;
-use Illuminate\Support\Facades\Notification;
-use App\Models\User;
+use App\Models\{
+    User,
+    Plan,
+    Subscription,
+    Listing,
+    Category,
+
+};
 
 class HomeController extends Controller
 {
-      
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        // $this->gaurd('web');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+    */
     public function index()
     {
         return view('index');
     }
-    public function categories()
-    {
-        return view('categories');
+
+    public function categories(){
+        $categories = Category::with('listings')->where('status', 'activate')->get();
+        return view('categories', compact('categories'));
     }
-    public function companies()
-    {
-        return view('companies');
+
+    public function listings(){
+        $listings = Listing::get();
+        return view('listings/listings', compact('listings'));
     }
-    public function packages()
-    {
-        return view('packages');
+
+    public function packages(){
+        $plans = Plan::get();
+        return view('packages', compact('plans'));
     }
 }

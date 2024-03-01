@@ -16,8 +16,18 @@
 
 @section('content')
 
-@if(session('toastr'))
-{!! session('toastr') !!}
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Success! </strong>{{session('success')}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+@if(session('error'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Error! </strong>{{session('error')}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 @endif
 <div class="row">
     <div class="col">
@@ -35,7 +45,7 @@
                             <form action="javascript:void(0);">
                                 <div class="row g-3 mb-0 align-items-center">
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-danger shadow-none" data-bs-toggle="modal" data-bs-target=".bs-edit-modal-center"><i class="ri-add-circle-line align-middle me-1"></i> Add new Category</button>
+                                        <button type="button" class="btn btn-danger shadow-none" data-bs-toggle="modal" data-bs-target=".bs-add-modal-center"><i class="ri-add-circle-line align-middle me-1"></i> Add new Category</button>
                                     </div>
                                 </div>
                                 <!--end row-->
@@ -60,32 +70,36 @@
                                         <tr>
                                             <th scope="col">Icon</th>
                                             <th scope="col">Name</th>
-                                            <th scope="col">No of Products</th>
+                                            <th scope="col">No of Listings</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @isset($categories)
+                                        @foreach($categories as $category)
                                         <tr>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="flex-shrink-0 me-2">
-                                                        <img src="{{ URL::asset('build/images/users/avatar-1.jpg') }}" alt="" class="avatar-xs rounded-circle shadow" />
+                                                        <img src="{{ asset('assets/category_images/' . $category->category_image) }}" alt="" class="avatar-xs rounded-circle shadow" />
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>Category Name</td>
+                                            <td>{{$category->category_name}}</td>
                                             <td>
-                                                <span class="text-success">105</span>
+                                                <span class="text-success">{{count($category->listings)}}</span>
                                             </td>
                                             <td>
-                                                <a href="#" class="edit-cat text-success" data-bs-toggle="modal" data-bs-target=".bs-edit-modal-center">
+                                                <a href="#" class="edit-cat text-success" onclick="editModal({{$category->id}})">
                                                     <i class="las la-pencil-alt fs-20"></i>
                                                 </a>
-                                                <a href="#" class="del-cat text-danger mx-2" data-bs-toggle="modal" data-bs-target=".bs-delete-modal-center">
+                                                <a href="#" class="del-cat text-danger mx-2" onclick="deleteModal({{$category->id}})">
                                                     <i class="lar la-trash-alt fs-20"></i>
                                                 </a>
                                             </td>
                                         </tr>
+                                        @endforeach
+                                        @endisset                  
                                     </tbody><!-- end tbody -->
                                 </table><!-- end table -->
                             </div>
@@ -98,29 +112,89 @@
 
     </div> <!-- end col -->
 </div>
+<!-- delete Modal starts here  -->
 <div class="modal fade bs-delete-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <form action="{{route('delete.category')}}" method="POST">    
+            @csrf
+            <input type="hidden" name="category_id" id="categoryId" value="">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="NotificationModalbtn-close"></button>
+            </div>
+                <div class="modal-body">
+                    <div class="mt-2 text-center">
+                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
+                        <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                            <h4>Are you sure ?</h4>
+                            <p class="text-muted mx-4 mb-0">Are you sure you want to delete this Category?</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                        <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn w-sm btn-danger" id="delete-notification">Yes, Delete It!</button>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </form>
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- delete modal ends here -->
+
+<!-- Add Modal Start -->
+<div class="modal fade bs-add-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="NotificationModalbtn-close"></button>
             </div>
             <div class="modal-body">
-                <div class="mt-2 text-center">
-                    <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
-                    <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                        <h4>Are you sure ?</h4>
-                        <p class="text-muted mx-4 mb-0">Are you sure you want to delete this Category?</p>
-                    </div>
-                </div>
-                <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
-                    <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn w-sm btn-danger" id="delete-notification">Yes, Delete It!</button>
+                <div class="addtool">
+                    <form action="{{route('store.category')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row g-3">
+                            <div class="col-xxl-12 text-center">
+                                <h4>Add Category</h4>
+                            </div>
+                            <div class="col-xxl-12">
+                                <div>
+                                    {{-- <img src="{{ URL::asset('build/images/users/avatar-4.jpg') }}" alt="" class="rounded avatar-md shadow rounded-circle"> --}}
+                                    <label for="categoryImage" class="form-label d-block">Choose Image</label>
+                                    @error('categoryImage')
+                                        <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                    <input type="file" class="form-control" id="categoryImage" name="categoryImage">
+                                </div>
+                            </div>
+                            <div class="col-xxl-12">
+                                <div>
+                                    <label for="categoryName" class="form-label d-block">Category Name</label>
+                                    @error('categoryName')
+                                        <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                    <input type="text" class="form-control" name="categoryName" id="categoryName" placeholder="Enter Category Name">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-lg-12">
+                                <div class="hstack gap-2 justify-content-end">
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger">Add</button>
+                                </div>
+                            </div>
+                            <!--end col-->
+                        </div>
+                        <!--end row-->
+                    </form>
                 </div>
             </div>
 
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
+<!-- Add Modal ends Here  -->
+
+<!-- Edit modal starts here -->
 <div class="modal fade bs-edit-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -129,19 +203,32 @@
             </div>
             <div class="modal-body">
                 <div class="addtool">
-                    <form action="javascript:void(0);">
+                    <form action="{{route('update.category')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="category_id" id="categoryEditId" value="">
                         <div class="row g-3">
                             <div class="col-xxl-12 text-center">
+                                <h4>Edit Category</h4>
+                            </div>
+                            <div class="col-xxl-12">
                                 <div>
-                                    <img src="{{ URL::asset('build/images/users/avatar-4.jpg') }}" alt="" class="rounded avatar-md shadow rounded-circle">
-                                    <label for="lastName" class="form-label d-block">Category Image</label>
-                                    <input type="file" class="form-control" style="display: none;">
+                                    <div class="text-center">
+                                        <img src ="" alt="" id="categoryEditImage" class="rounded avatar-md shadow rounded-circle">
+                                    </div>
+                                    <label for="categoryImage" class="form-label d-block">Choose New Image</label>
+                                    @error('categoryImage')
+                                        <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                    <input type="file" class="form-control" id="categoryEditImage" name="categoryImage" value="">
                                 </div>
                             </div>
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="lastName" class="form-label">Category Name</label>
-                                    <input type="text" class="form-control" id="lastName" placeholder="Enter lastname">
+                                    <label for="categoryName" class="form-label d-block">Category Name</label>
+                                    @error('categoryName')
+                                        <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                    <input type="text" class="form-control" name="categoryName" id="categoryEditName" placeholder="Enter Category Name">
                                 </div>
                             </div>
                             <!--end col-->
@@ -161,6 +248,8 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
+<!-- Edit modal ends here -->
+
 <style>
     .addtool form label{
     font-weight: 600;
@@ -192,4 +281,31 @@
   border-color: #E30B0B;
 }
 </style>
+@endsection
+
+@section('script')
+<script>
+    function deleteModal(id){
+        $(".bs-delete-modal-center").modal("show");
+        $("#categoryId").val(id);
+    }
+
+    function editModal(id) {
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        $.ajax({
+            method: "POST",
+            url: "{{ route('show.edit') }}",
+            data: { id: id, _token: csrfToken },
+            dataType: 'json',
+            success: function(response) {
+                let categoryData = response.categoryData;
+                let url = "{{asset('assets/category_images')}}" + "/"  + categoryData.category_image;
+                $("#categoryEditName").val(categoryData.category_name);
+                $('#categoryEditImage').attr("src", url);
+                $('#categoryEditId').val(categoryData.id);
+                $(".bs-edit-modal-center").modal("show");
+            }
+        });
+    }
+</script>
 @endsection

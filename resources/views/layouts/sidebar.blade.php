@@ -32,25 +32,25 @@
             </div>
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="dashboard">
+                    <a class="nav-link menu-link" href="{{route('home')}}">
                         <i class="las la-tachometer-alt"></i> <span>Dashboard
                         </span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="categories">
+                    <a class="nav-link menu-link" href="{{route('categories')}}">
                     <i class="las la-file-alt"></i> <span>All Categories
                         </span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="companies">
-                    <i class="las la-robot"></i>All Companies
+                    <a class="nav-link menu-link" href="{{route('listings')}}">
+                    <i class="las la-robot"></i>All Listings
                         </span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="packages">
+                    <a class="nav-link menu-link" href="{{route('packages')}}">
                     <i class="las la-money-check-alt"></i> <span>Packages
                         </span>
                     </a>

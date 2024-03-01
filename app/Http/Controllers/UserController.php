@@ -17,29 +17,33 @@ class UserController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 "name" => "required|string",
-                "email" => "required|string|unique:users,email",
+                "email" => "required|email|unique:users,email",
                 "password" => "required|string",
             ]);
 
-            if ($validator->fails()) {                
-                return response()->json(["success" => false, "msg" => "Validation error", "error" => $validator->getMessageBag()] , 400);            
-            } else {
-                $name = $request->name;
-                $email = $request->email;
-                $password = $request->password;
-                $tcStatus = $request->tc_status;
-                $user = User::create([
-                    "name" => $name,
-                    "email" => $email,
-                    "password" => Hash::make($password),
-                    "tc_status" => $tcStatus,
-                ]);
-                $user->assignRole('user');
-                // return $this->userHandler->findUser($email, $password , "register");
-                return response()->json(["success" => true, "msg" => "User Created Successfully", 200]);
+            $name = $validator->errors()->get('name');
+            $email = $validator->errors()->get('email');
+            foreach($name as $n){
+                return response()->json(["success" => false, "msg" => $n, "status" => 400], 400);            
             }
-        } catch (\Exception $e) {
-            return response()->json(["success" => false, "msg" => "Something went wrong", "error" => $e->getMessage()] , 401);        
+            foreach($email as $em){
+                return response()->json(["success" => false, "msg" => $em, "status" => 400], 400);            
+            }
+            
+            $name = $request->name;
+            $email = $request->email;
+            $password = $request->password;
+            $tcStatus = $request->tc_status;
+            $user = User::create([
+                "name" => $name,
+                "email" => $email,
+                "password" => Hash::make($password),
+                "tc_status" => $tcStatus,
+            ]);
+            $user->assignRole('user');
+            return response()->json(["success" => true, "msg" => "User Created Successfully", "status" => 200], 200);
+        }catch (\Exception $e) {
+            return response()->json(["success" => false, "msg" => "Something went wrong", "error" => $e->getMessage()]);        
         }
     }
 
@@ -49,20 +53,20 @@ class UserController extends Controller
                 "email" => "required|string|email",
                 "password" => "required|string",
             ]);
-
-            if($validator->fails()){
-                return response()->json(["success" => false, "msg" => "Validation error", "error" => $validator->getMessageBag()], 400);
-            }else{
-                $email =  $request->email;
-                $password = $request->password;
-                if(!$token = auth()->attempt(["email" => $email, "password" => $password])){
-                    return response()->json(['error' => 'Unauthorized'], 401);
-                }
-                $jwt =  $this->respondWithToken($token);
-                return response()->json(["success"=>true, "msg"=>"User Login Successfully", "token"=>$jwt], 200);
+            $email = $validator->errors()->get('email');
+            foreach($email as $em){
+                return response()->json(["success" => false, "msg" => $em, "status" => 400], 400);            
             }
+            
+            $email =  $request->email;
+            $password = $request->password;
+            if(!$token = auth()->attempt(["email" => $email, "password" => $password])){
+                return response()->json(['error' => 'Email or password is incorrect'], 401);
+            }
+            $jwt =  $this->respondWithToken($token);
+            return response()->json(["success"=>true, "msg"=>"User Login Successfully", "token"=>$jwt, "status"=>200], 200);
         }catch(\Exception $e){
-            return response()->json(['succcess' => false, "msg" => "Something Went Wrong", "error" => $e->getMessage()], 401);
+            return response()->json(['succcess' => false, "msg" => "Something Went Wrong", "error" => $e->getMessage()]);
         }
     }
 
@@ -88,7 +92,7 @@ class UserController extends Controller
      */
     public function logout(){
         auth()->logout();
-        return response()->json(["success"=>true, "msg"=>"User Logout Successfully"], 200);
+        return response()->json(["success"=>true, "msg"=>"User Logout Successfully", "status"=>200], 200);
     }
 
      /**
@@ -106,19 +110,43 @@ class UserController extends Controller
             $validator = Validator::make($request->all(), [
                 "email" => "required|string|email",
             ]);
-    
-            if($validator->fails()){
-                return response()->json(["success"=>false, "msg"=>"Validation Error", "error"=>$validator->getMessageBag()]);
+
+            $emailVal = $validator->errors()->get('email');
+            foreach($emailVal as $em){
+                return response()->json(["success" => false, "msg" => $em, "status" => 400], 400);            
+            }
+            $email = $request->email;
+            // Check if email is exist in Database
+            $userEmail = User::where('email', $email)->count();
+            if($userEmail > 0){
+                $verificationCode = rand(1111, 9999);
+                User::where('email', $email)->update(['verification_code'=>$verificationCode]);
+                Notification::route('mail', $email)->notify(new SendEmailForgotPassword($verificationCode));
+                return response(["success"=>true, "msg"=>"OTP has been sent to the given email address", "status"=>200], 200);
             }else{
-                $email = $request->email;
-                Notification::route('mail', $email)->notify(new SendEmailForgotPassword());
-                return response()->json(["success"=>true, "msg"=>"Email sent successfully"], 200);
+                return response(["success"=>false, "msg"=>"Email doesn`t exists", "status"=>400], 400);
             }
         }catch(\Exception $e){
-            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error" => $e->getMessage()]);
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error" => $e->getMessage()], 400);
         }
     }
 
+
+    public function verifyCode(Request $request){
+        try{
+            $verificationCode = $request->verificationCode;
+            $email = $request->email;
+
+            $user = User::where('email', $email)->first();
+            if($user['verification_code'] == $verificationCode){
+                return response()->json(["success"=>true, "msg"=>"Email Verified Successfully", "status"=> 200], 200);
+            }else{
+                return response()->json(["success"=>false, "msg"=>"Code doesn`t matched... Incorrect Code", "status" => 400], 400);
+            }
+        }catch(\Exception $e){
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong" ,"error"=>$e->getMessage()], 400);
+        }
+    }
 
     public function updatePassword(Request $request){
         $validator = Validator::make($request->all(),[
@@ -126,17 +154,17 @@ class UserController extends Controller
             "new_password" => "required|string",
         ]);
 
-        if($validator->fails()){
-            return response()->json(["success"=>false, "msg"=>"Validation Error", "error"=>$validator->getMessageBag()]);
-        }else{
-            $email = $request->email;
-            $newPassword = $request->new_password;
-
-            $user = User::where('email', $email)->first();
-            $user->password = Hash::make($newPassword);
-            if($user->save()){
-                return response()->json(["success"=>true, "msg"=>"Password changed successfully"], 200);
-            }
+        $email = $validator->errors()->get('email');
+        $new_password = $validator->errors()->get('new_password');
+        foreach($email as $em){
+            return response()->json(["success" => false, "msg" => $em, "status" => 400], 400);            
         }
+        foreach($new_password as $pass){
+            return response()->json(["success" => false, "msg" => $pass, "status" => 400], 400);
+        }
+        $email = $request->email;
+        $newPassword = Hash::make($request->new_password);
+        $user = User::where('email', $email)->update(["password"=>$newPassword]);
+        return response()->json(["success"=>true, "msg"=>"Password changed successfully", "status"=>200]);
     }
 }

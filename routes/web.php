@@ -6,8 +6,11 @@ use App\Http\Controllers\{
     UserController,
     BillingController,
     PlanController,
-    HomeController
+    HomeController,
+    CategoryController,
+    ListingController,
 };
+Auth::routes();
 
 /*
 |--------------------------------------------------------------------------
@@ -19,55 +22,34 @@ use App\Http\Controllers\{
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('login');
-});
-
 // Callback URLs of STRIPE after payment
 Route::get('/payment_success', [BillingController::class, 'handleSuccess'])->name('payment.success');
 Route::get('/payment_cancel', [BillingController::class, 'handleCancel'])->name('payment.cancel');
 
 
+// Admin Routes Starts here
+Route::middleware(['auth:web', 'admin'])->group(function(){
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('categories', [HomeController::class, 'categories'])->name('categories');
+    Route::get('listings', [HomeController::class, 'listings'])->name('listings');
+    Route::get('packages', [HomeController::class, 'packages'])->name('packages');
 
+    // Categories Route
+    Route::post('add-category', [CategoryController::class, 'storeCategory'])->name('store.category');
+    Route::post('delete-modal', [CategoryController::class, 'deleteCategory'])->name('delete.category');
+    Route::post('show-edit-category', [CategoryController::class, 'showEditCategory'])->name('show.edit');
+    Route::post('store-edit-category', [CategoryController::class, 'updateCategory'])->name('update.category');
 
+    // Listing Routes
+    Route::get('add-listings', [ListingController::class, 'add_listing']);
+    Route::get('edit-listing/{id}', [ListingController::class, 'editListing']);
+    Route::post('store-listing', [ListingController::class, 'storeListing'])->name('store.listing');
+    Route::post('update-listing', [ListingController::class, 'updateListing'])->name('update.listing');
+    Route::post('delete-listing', [ListingController::class, 'deleteListing'])->name('delete.listing');
 
+    // Plan or Package Routes
+    Route::post('update-plan', [PlanController::class, 'updatePlan'])->name('update.plan');
+    Route::post('show-edit-plan' ,[PlanController::class, 'showEdit'])->name('show.edit.plan');
+});
 
-
-
-
-Route::get('dashboard', [HomeController::class, 'index'])->name('index');
-Route::get('login', [HomeController::class, 'login'])->name('login');
-Route::get('categories', [HomeController::class, 'categories'])->name('categories');
-Route::get('companies', [HomeController::class, 'companies'])->name('companies');
-Route::get('packages', [HomeController::class, 'packages'])->name('packages');
-
-
-// Route::get('test', function(Request $request){
-//     // dd($request->all());
-//     $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
-//     $checkout = $stripe->checkout->sessions->create([
-//     'success_url' => url('successTest', CHECKOUT_SESSION_ID),
-//     'line_items' => [
-//         [
-//         'price' => 'price_1OjJrqLyI7mncMRJxo1KhAy6',
-//         'quantity' => 1,
-//         ],
-//     ],
-//     'mode' => 'subscription',
-//     ]);
-    
-//     $sessionUrl = $checkout->url;
-//     // Session::create(['stripe_session' => $checkout->id]);
-//     return redirect()->route($sessionUrl);
-
-// });
-
-// Route::get('successTest/{id}', function(Request $request){
-//     dd($request->all());
-//     $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
-//     $stripeSession = Session::get('stripe_session');
-//     $sessionData = $stripe->checkout->sessions->retrieve($stripeSession , []);
-//     dd($sessionData);
-//     // dd($request->all());
-// });
+// Admin Routes ends here
