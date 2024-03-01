@@ -81,7 +81,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="flex-shrink-0 me-2">
-                                                        <img src="{{ asset('assets/category_images/' . $category->category_image) }}" alt="" class="avatar-xs rounded-circle shadow" />
+                                                        <img src="{{ asset($category->category_image) }}" alt="" class="avatar-xs rounded-circle shadow" />
                                                     </div>
                                                 </div>
                                             </td>
