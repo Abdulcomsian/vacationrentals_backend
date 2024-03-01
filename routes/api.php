@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     UserController,
     BillingController,
+    CategoryController,
     PlanController,
     ListingController,
 };
@@ -31,9 +32,11 @@ Route::post('/update-password', [UserController::class, 'updatePassword']);
 Route::middleware('check.authentication')->group(function(){
     Route::post('/checkout', [BillingController::class, 'checkout']);
     Route::get('/plans', [PlanController::class, 'showPlans']);
-    // Listing Route
+
+    // Listing Apis
     Route::get('/listing-detail', [ListingController::class, 'showListingDetail']);
     Route::post('/add-listing', [ListingController::class, 'addListing']);
 
+    // Categories Apis
+    Route::get('/show-category', [CategoryController::class, 'showCategory']);
 });
-
