@@ -45,7 +45,7 @@
                             <form action="javascript:void(0);">
                                 <div class="row g-3 mb-0 align-items-center">
                                     <div class="col-auto">
-                                        <button type="button" class="btn btn-danger shadow-none" data-bs-toggle="modal" data-bs-target=".bs-add-modal-center"><i class="ri-add-circle-line align-middle me-1"></i> Add new Category</button>
+                                        <button type="button" class="btn shadow-none" style="background-color: #e30b0b !important;color:#fff;" data-bs-toggle="modal" data-bs-target=".bs-add-modal-center"><i class="ri-add-circle-line align-middle me-1"></i> Add new Category</button>
                                     </div>
                                 </div>
                                 <!--end row-->
@@ -132,7 +132,7 @@
                     </div>
                     <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
                         <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn w-sm btn-danger" id="delete-notification">Yes, Delete It!</button>
+                        <button type="submit" class="btn w-sm" style="background-color: #e30b0b !important;color:#fff;" id="delete-notification">Yes, Delete It!</button>
                     </div>
                 </div>
             </div><!-- /.modal-content -->
@@ -179,7 +179,7 @@
                             <div class="col-lg-12">
                                 <div class="hstack gap-2 justify-content-end">
                                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-danger">Add</button>
+                                    <button type="submit" class="btn" style="background-color: #e30b0b !important;color:#fff;">Add</button>
                                 </div>
                             </div>
                             <!--end col-->
@@ -235,7 +235,7 @@
                             <div class="col-lg-12">
                                 <div class="hstack gap-2 justify-content-end">
                                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-danger">Update</button>
+                                    <button type="submit" class="btn" style="background-color: #e30b0b !important;color:#fff;">Update</button>
                                 </div>
                             </div>
                             <!--end col-->

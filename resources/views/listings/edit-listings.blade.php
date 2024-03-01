@@ -98,7 +98,7 @@
                                 </div>
                                 <div class="row mt-4 text-right">
                                     <div class="col-xl-12">
-                                        <button type="submit" id="submitButton" class="btn btn-success">Add Listing</button>
+                                        <button type="submit" id="submitButton" class="btn" style="background-color: #e30b0b !important;color:#fff;">Add Listing</button>
                                     </div>
                                 </div>
                             </div>
