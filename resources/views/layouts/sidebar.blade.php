@@ -55,6 +55,12 @@
                         </span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('profile')}}">
+                    <i class="las la-users"></i> <span>Profile
+                        </span>
+                    </a>
+                </li>
                 <!-- <li class="nav-item">
                     <a class="nav-link menu-link" href="#">
                         <i class="las la-users"></i> <span>User Accounts
