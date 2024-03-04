@@ -49,11 +49,17 @@
                                         @error('category')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
-                                        <select class="form-control" name="category" id="category">
+                                        <select class="form-control" name="category[]" id="category" multiple>
                                             <option value="">Select Category</option>
                                             @isset($categories)
-                                                @foreach($categories as $category)
-                                                    <option value="{{$category->id}}" {{isset($listingData['category_id']) && $listingData['category_id']==$category->id ? 'selected' : ''}}>{{$category->category_name}}</option>
+                                                @foreach($categories as $index => $category)
+                                                    <option value="{{$category->id}}" 
+                                                        @foreach($categoryId as $id)
+                                                            @if($id == $category->id)
+                                                            selected
+                                                            @endif
+                                                        @endforeach
+                                                        >{{$category->category_name}}</option>
                                                 @endforeach
                                             @endisset
                                         </select>
@@ -94,7 +100,7 @@
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
                                         <select class="form-select mb-3" aria-label="Default select example">
-                                            <option selected="">Select Status </option>
+                                            <option selected="">Change Status </option>
                                             <option value="1">Approved</option>
                                             <option value="1">Pending</option>
                                             <option value="1">Rejected</option>

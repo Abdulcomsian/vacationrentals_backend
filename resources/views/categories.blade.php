@@ -107,7 +107,11 @@
                     </div> <!-- .card-->
                 </div> <!-- .col-->
             </div> <!-- end row-->
-
+            @if(count($categories) >= 10)
+                <div class="row">
+                    {{$categories->links()}}
+                </div>
+            @endif
         </div> <!-- end .h-100-->
 
     </div> <!-- end col -->
@@ -299,7 +303,7 @@
             dataType: 'json',
             success: function(response) {
                 let categoryData = response.categoryData;
-                let url = "{{asset('assets/category_images')}}" + "/"  + categoryData.category_image;
+                let url = categoryData.category_image;
                 $("#categoryEditName").val(categoryData.category_name);
                 $('#categoryEditImage').attr("src", url);
                 $('#categoryEditId').val(categoryData.id);

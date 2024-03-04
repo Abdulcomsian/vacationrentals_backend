@@ -20,4 +20,8 @@ class Listing extends Model
         'company_logo',
         'status',
     ];
+
+    public function getCategories(){
+        return $this->hasMany(ListingCategory::class);
+    }
 }

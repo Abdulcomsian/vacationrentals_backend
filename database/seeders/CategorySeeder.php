@@ -14,6 +14,7 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
+            ["slug" => "", "category_name" => "All", "category_image" => "assets/category_images/default.svg", "status"=>"activate"],
             ["slug" => "3d_tours", "category_name" => "3D Tours", "category_image" => "assets/category_images/default.svg", "status"=>"activate"],
             ["slug" => "accounting", "category_name" => "Accounting", "category_image" => "assets/category_images/default.svg", "status"=>"activate"],
             ["slug" => "advertising", "category_name" => "Advertising", "category_image" => "assets/category_images/default.svg", "status"=>"activate"],

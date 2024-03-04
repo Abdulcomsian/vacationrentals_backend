@@ -28,7 +28,7 @@ class CategoryController extends Controller
             'categoryImage.max' => 'The category image may not be greater than 2048 kilobytes in size.'
         ]);
 
-        try{            
+        try{
             if($request->file('categoryImage')){
                 $file = $request->file('categoryImage');
                 $fileDestination = public_path('assets/category_images');
@@ -44,7 +44,7 @@ class CategoryController extends Controller
             $categoryData = new Category();
             $categoryData->category_name = $request->categoryName;
             $categoryData->slug = $categorySlug;
-            $categoryData->category_image = "assets/category_images". $fileName;
+            $categoryData->category_image = "assets/category_images/". $fileName;
             if($categoryData->save()){
                 return redirect()->back()->with(['success' => "Category Added Succesfully"]);
             }
@@ -86,7 +86,7 @@ class CategoryController extends Controller
                 $fileDestination = public_path('assets/category_images');
                 $fileName = uniqid() . '_' . time() . '.' . $file->extension();
                 $file->move($fileDestination, $fileName);
-                $categoryData->category_image = "assets/category_images" . $fileName;
+                $categoryData->category_image = "assets/category_images/" . $fileName;
             }
             if($categoryData->save()){
                 return redirect()->back()->with(['success' => "Category Updated Succesfully"]);
