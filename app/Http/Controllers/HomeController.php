@@ -33,6 +33,10 @@ class HomeController extends Controller
     {
         return view('index');
     }
+    public function users()
+    {
+        return view('users');
+    }
 
     public function categories(){
         $categories = Category::with('listings')->where('status', 'activate')->paginate(10);

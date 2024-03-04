@@ -32,6 +32,7 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('categories', [HomeController::class, 'categories'])->name('categories');
     Route::any('listings', [HomeController::class, 'listings'])->name('listings');
+    Route::any('users', [HomeController::class, 'users'])->name('users');
     Route::get('packages', [HomeController::class, 'packages'])->name('packages');
 
     // Categories Route
