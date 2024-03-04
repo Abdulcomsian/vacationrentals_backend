@@ -41,6 +41,10 @@ class HomeController extends Controller
     {
         return view('payments');
     }
+    public function profile()
+    {
+        return view('profile');
+    }
 
     public function categories(){
         $categories = Category::with('listings')->where('status', 'activate')->paginate(10);
