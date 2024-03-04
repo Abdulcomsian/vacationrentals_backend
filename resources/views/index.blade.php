@@ -30,8 +30,8 @@
                     <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                         <div class="flex-grow-1">
                             <h4 class="fs-16 mb-1">Good Morning, Admin!</h4>
-                            <p class="text-muted mb-0">Here's what's happening with your store
-                                today.</p>
+                            <!-- <p class="text-muted mb-0">Here's what's happening with your store
+                                today.</p> -->
                         </div>
                     </div><!-- end card header -->
                 </div>
@@ -47,21 +47,20 @@
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 overflow-hidden">
                                     <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                                        Total Earnings</p>
+                                        Payments</p>
                                 </div>
-                                <div class="flex-shrink-0">
+                                <!-- <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
                                         <i class="ri-arrow-right-up-line fs-13 align-middle"></i>
                                         +16.24 %
                                     </h5>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4">$<span class="counter-value" data-target="559.25">0</span>k
                                     </h4>
-                                    <a href="" class="text-decoration-underline">View net
-                                        earnings</a>
+                                    <a href="" class="text-decoration-underline">View Payments</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-success rounded fs-3">
@@ -82,17 +81,17 @@
                                     <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
                                         Orders</p>
                                 </div>
-                                <div class="flex-shrink-0">
+                                <!-- <div class="flex-shrink-0">
                                     <h5 class="text-danger fs-14 mb-0">
                                         <i class="ri-arrow-right-down-line fs-13 align-middle"></i>
                                         -3.57 %
                                     </h5>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="36894">0</span></h4>
-                                    <a href="" class="text-decoration-underline">View all orders</a>
+                                    <a href="" class="text-decoration-underline">View orders</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-info rounded fs-3">
@@ -113,18 +112,18 @@
                                     <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
                                         Users</p>
                                 </div>
-                                <div class="flex-shrink-0">
+                                <!-- <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
                                         <i class="ri-arrow-right-up-line fs-13 align-middle"></i>
                                         +29.08 %
                                     </h5>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="183.35">0</span>M
                                     </h4>
-                                    <a href="" class="text-decoration-underline">See details</a>
+                                    <a href="" class="text-decoration-underline">See Users</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-warning rounded fs-3">
@@ -143,7 +142,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 overflow-hidden">
                                     <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                                        Total Listings</p>
+                                         Listings</p>
                                 </div>
                                 <div class="flex-shrink-0">
                                     <h5 class="text-muted fs-14 mb-0">
