@@ -91,7 +91,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="36894">0</span></h4>
-                                    <a href="" class="text-decoration-underline">View orders</a>
+                                    <a href="" class="text-decoration-underline">View Orders</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-info rounded fs-3">
@@ -121,9 +121,9 @@
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="183.35">0</span>M
+                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="183.35">500</span>
                                     </h4>
-                                    <a href="" class="text-decoration-underline">See Users</a>
+                                    <a href="" class="text-decoration-underline">View Users</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-warning rounded fs-3">
@@ -144,17 +144,17 @@
                                     <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
                                          Listings</p>
                                 </div>
-                                <div class="flex-shrink-0">
+                                <!-- <div class="flex-shrink-0">
                                     <h5 class="text-muted fs-14 mb-0">
                                         +0.00 %
                                     </h5>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="165.89">100</span>
                                     </h4>
-                                    <a href="/listings" class="text-decoration-underline">View All Listings</a>
+                                    <a href="/listings" class="text-decoration-underline">View Listings</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-danger rounded fs-3">
