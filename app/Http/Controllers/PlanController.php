@@ -20,7 +20,7 @@ class PlanController extends Controller
             return response()->json(["success" => false, "msg" => "Something went wrong", "error"=>$e->getMessage()], 400);
         }
     }
-    
+    // ================ Admin Panel Plan =================
     public function showEdit(Request $request){
         $id = $request->id;
         $plan = Plan::where('id', $id)->first();
