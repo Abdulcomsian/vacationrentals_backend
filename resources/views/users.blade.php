@@ -78,63 +78,52 @@
                         </div><!-- end card header -->
 
                         <div class="card-body">
-                            <div class="table-responsive table-card">
-                                <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
-                                    <thead class="text-muted table-light">
+                            <div class="table-responsive">
+                                <table class="table align-middle mb-0">
+                                    <thead class="table-light">
                                         <tr>
-                                            <th scope="col">Company Logo</th>
-                                            <th scope="col">Company Name</th>
-                                            <th scope="col">Company Tagline</th>
-                                            <th scope="col">Category/ies</th>
-                                            <th scope="col">Package</th>
-                                            <th scope="col">Approved</th>
+                                            <th scope="col">Image</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Companies</th>
+                                            <th scope="col">Listings</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($listings as $listing)
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="flex-shrink-0 me-2">
-                                                            <img src="{{ asset("assets/listing_images/" . $listing->company_logo) }}" alt="" class="avatar-xs rounded-circle shadow" />
-                                                        </div>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex gap-2 align-items-center">
+                                                    <div class="flex-shrink-0">
+                                                        <img src="assets/images/users/avatar-3.jpg" alt="" class="avatar-xs rounded-circle" />
                                                     </div>
-                                                </td>
-                                                <td>{{$listing->company_name}}</td>
-                                                <td>
-                                                   {{$listing->company_tagline}}
-                                                </td>
-                                                <td>
-                                                    @php
-                                                        foreach ($listing->getCategories as $category_id) {
-                                                            $categoryId = $category_id->category_id;
-                                                            $categoryName = \App\Models\Category::select('category_name')->where('id', $categoryId)->value("category_name");
-                                                            echo $categoryName . ", ";
-                                                        }
-                                                    @endphp
-                                                </td>
-                                                <td>Monthly</td>
-                                                <td>Yes</td>
-                                                <td>
-                                                    <a href="{{url('edit-listing', ["id"=>$listing->id])}}" class="edit-cat text-success">
-                                                        <i class="las la-pencil-alt fs-20"></i>
-                                                    </a>
-                                                    <a href="#" class="del-cat text-danger mx-2" data-id="{{$listing->id}}">
-                                                        <i class="lar la-trash-alt fs-20"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @empty 
-                                            <tr>
-                                                <td>
-                                                    No Listings Found
-                                                </td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody><!-- end tbody -->
-                                </table><!-- end table -->
+                                                </div>
+                                            </td>
+                                            <td>John Doe</td>
+                                            <td>johndoe@gmail.com</td>
+                                            <td>
+                                                <select class="form-select w-50" aria-label="Default select example">
+                                                    <option selected="">Select Company </option>
+                                                    <option value="1">Company 1</option>
+                                                    <option value="2">Company 2</option>
+                                                    <option value="3">Company 3</option>
+                                                </select>
+                                            </td>
+                                            <td><a href="#" class="fw-semibold" style="color:#E30B0B;">View Listings</a></td>
+                                            <td>
+                                                <a href="http://127.0.0.1:8000/edit-listing/1" class="edit-cat text-success" previewlistener="true">
+                                                    <i class="las la-pencil-alt fs-20"></i>
+                                                </a>
+                                                <a href="#" class="del-cat text-danger mx-2" data-id="1">
+                                                    <i class="lar la-trash-alt fs-20"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- end table -->
                             </div>
+                            <!-- end table responsive -->
                         </div>
                     </div> <!-- .card-->
                 </div> <!-- .col-->
