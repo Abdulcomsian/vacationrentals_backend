@@ -31,12 +31,17 @@ Route::post('/update-password', [UserController::class, 'updatePassword']);
 
 Route::middleware('check.authentication')->group(function(){
     Route::post('/checkout', [BillingController::class, 'checkout']);
-    Route::get('/plans', [PlanController::class, 'showPlans']);
-
     // Listing Apis
     Route::get('/listing-detail', [ListingController::class, 'showListingDetail']);
     Route::post('/add-listing', [ListingController::class, 'addListing']);
 
+    // Show Category Element API
 });
-// Categories Apis
+
+// Categories Apis Detail
 Route::get('/show-category', [CategoryController::class, 'showCategory']);
+Route::get('/show-category-element', [CategoryController::class, 'showCategoryElement']);
+
+
+// Plans Controller
+Route::get('/plans', [PlanController::class, 'showPlans']);
