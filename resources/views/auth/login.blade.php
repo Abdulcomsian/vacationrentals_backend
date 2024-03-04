@@ -101,7 +101,7 @@
                                 <img src="{{ URL::asset('build/images/logo-light.svg')}}" alt="" height="60">
                             </a>
                         </div>
-                        <p class="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p>
+                        <!-- <p class="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p> -->
                     </div>
                 </div>
             </div>
@@ -114,7 +114,7 @@
                         <div class="card-body p-4">
                             <div class="text-center mt-2">
                                 <h5 class="text-primary" style="color:#e30b0b !important;">Welcome Back !</h5>
-                                <p class="text-muted">Sign in to continue to Velzon.</p>
+                                <p class="text-muted">Sign in to continue to VacationRentals.</p>
                             </div>
                             <div class="p-2 mt-4">
                                 <form action="{{ route('login') }}" method="POST">

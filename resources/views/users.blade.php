@@ -111,7 +111,7 @@
                                             </td>
                                             <td><a href="#" class="fw-semibold" style="color:#E30B0B;">View Listings</a></td>
                                             <td>
-                                                <a href="http://127.0.0.1:8000/edit-listing/1" class="edit-cat text-success" previewlistener="true">
+                                                <a href="#" class="edit-cat text-success" previewlistener="true" >
                                                     <i class="las la-pencil-alt fs-20"></i>
                                                 </a>
                                                 <a href="#" class="del-cat text-danger mx-2" data-id="1">
@@ -147,7 +147,7 @@
                             <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
                             <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
                                 <h4>Are you sure ?</h4>
-                                <p class="text-muted mx-4 mb-0">Are you sure you want to delete this listing?</p>
+                                <p class="text-muted mx-4 mb-0">Are you sure you want to delete this User?</p>
                             </div>
                         </div>
                         <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
@@ -174,27 +174,27 @@
                             <div class="col-xxl-12 text-center">
                                 <div>
                                     <img src="{{ URL::asset('build/images/users/avatar-4.jpg') }}" alt="" class="rounded avatar-md shadow rounded-circle">
-                                    <label for="lastName" class="form-label d-block">listing Image</label>
+                                    <label for="lastName" class="form-label d-block">User Image</label>
                                     <input type="file" class="form-control" style="display: none;">
                                 </div>
                             </div>
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="lastName" class="form-label">listing Name</label>
-                                    <input type="text" class="form-control" id="lastName" placeholder="Enter lastname">
+                                    <label for="lastName" class="form-label">User Name</label>
+                                    <input type="text" class="form-control" id="lastName" placeholder="Enter Username">
                                 </div>
                             </div>
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="lastName" class="form-label">listing Url</label>
-                                    <input type="text" class="form-control" id="lastName" placeholder="Enter lastname">
+                                    <label for="lastName" class="form-label">User Email</label>
+                                    <input type="text" class="form-control" id="lastName" placeholder="Enter Email">
                                 </div>
                             </div>
                             <!--end col-->
                             <div class="col-lg-12">
                                 <div class="hstack gap-2 justify-content-end">
                                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn" style="background-color: #e30b0b !important;color:#fff;">Update listing</button>
+                                    <button type="submit" class="btn" style="background-color: #e30b0b !important;color:#fff;">Update User</button>
                                 </div>
                             </div>
                             <!--end col-->
@@ -245,6 +245,11 @@
         let id = $(this).attr("data-id");
         $("#listingId").val(id);
         $(".bs-delete-modal-center").modal("show");
+    });
+    $(document).on("click", ".edit-cat", function(){
+        let id = $(this).attr("data-id");
+        $("#listingId").val(id);
+        $(".bs-edit-modal-center").modal("show");
     });
 </script>
 @endsection
