@@ -82,33 +82,18 @@
                                 <table class="table align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th scope="col">Image</th>
+                                            <th scope="col">ID</th>
                                             <th scope="col">Name</th>
                                             <th scope="col">Email</th>
-                                            <th scope="col">Companies</th>
                                             <th scope="col">Listings</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>
-                                                <div class="d-flex gap-2 align-items-center">
-                                                    <div class="flex-shrink-0">
-                                                        <img src="assets/images/users/avatar-3.jpg" alt="" class="avatar-xs rounded-circle" />
-                                                    </div>
-                                                </div>
-                                            </td>
+                                            <td>1</td>
                                             <td>John Doe</td>
                                             <td>johndoe@gmail.com</td>
-                                            <td>
-                                                <select class="form-select w-50" aria-label="Default select example">
-                                                    <option selected="">Select Company </option>
-                                                    <option value="1">Company 1</option>
-                                                    <option value="2">Company 2</option>
-                                                    <option value="3">Company 3</option>
-                                                </select>
-                                            </td>
                                             <td><a href="#" class="fw-semibold" style="color:#E30B0B;">View Listings</a></td>
                                             <td>
                                                 <a href="#" class="edit-cat text-success" previewlistener="true" >
