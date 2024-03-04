@@ -31,12 +31,13 @@ Route::post('/update-password', [UserController::class, 'updatePassword']);
 
 Route::middleware(['check.authentication'])->group(function(){
     Route::post('/checkout', [BillingController::class, 'checkout']);
-    
     // Protected Route Plan API
     Route::get('/show-plans-protected', [PlanController::class, 'showPlans']);
+    
     // Listing Apis
     Route::get('/listing-detail', [ListingController::class, 'showListingDetail']);
     Route::post('/add-listing', [ListingController::class, 'addListing']);
+
 });
 
 // Categories Apis Detail

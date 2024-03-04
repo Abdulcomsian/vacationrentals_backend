@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('company_tagline')->nullable();
             $table->longText('short_description')->nullable();
             $table->string('company_logo')->nullable();
-            $table->enum('status', ['0','1'])->default('0')->comment('0 means pending 1 means approved from Admin');
+            $table->enum('status', ['0','1','2'])->default('0')->comment('0 means draft 1 means pending and 2 means approved from Admin');
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
             $table->timestamps();

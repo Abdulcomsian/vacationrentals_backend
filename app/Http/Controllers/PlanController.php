@@ -10,6 +10,7 @@ use App\Models\{
 
 class PlanController extends Controller
 {
+    // ================ API function ====================
     public function showPlans(){
         try{
             $plans = Plan::get();
@@ -20,7 +21,8 @@ class PlanController extends Controller
             return response()->json(["success" => false, "msg" => "Something went wrong", "error"=>$e->getMessage()], 400);
         }
     }
-    // ================ Admin Panel Plan =================
+
+    // ================ Admin Functions =================
     public function showEdit(Request $request){
         $id = $request->id;
         $plan = Plan::where('id', $id)->first();

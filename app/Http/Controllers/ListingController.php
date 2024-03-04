@@ -42,26 +42,41 @@ class ListingController extends Controller
             'company_logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        if($validator->fails()){
-            return response()->json(["success" => false, "msg"=>"Validation Error", "error"=>$validator->getMessageBag()]);
+        $validations = ['company_name', 'company_categories', 'company_tagline', 'short_description', 'company_logo'];
+        $errors = [];
+        foreach($validations as $val){
+            foreach($validator->errors()->get($val) as $error){
+                $errors[] = $error;
+            }
         }
+        if(!empty($errors)){
+            return response()->json(["success"=>false, "error"=>$errors, "status"=>400], 400);
+        }
+
         try{
-            if ($request->file('tool_image')) {
-                $file = $request->file('tool_image');
+            if ($request->file('company_logo')) {
+                $file = $request->file('company_logo');
                 $fileName = time() .'_' .  rand() . '.' . $file->getClientOriginalExtension();
                 $destinationPath = public_path('assets/listing_images'); // Use public_path() to get the physical file system path
                 $file->move($destinationPath, $fileName);
             }
             
             $user_id = Auth::user()->id;
-            $listing = Listing::where('user_id', $user_id)->update([
-                'tool_name' => $request->tool_name,
-                'short_description' => $request->short_description,
-                'long_description' => $request->long_description,
-                'tool_image' => $fileName,
-            ]);
-
-            return response()->json(["success"=>true, "msg"=>"Listing Added Successfully"], 200);
+            $listing = Listing::where('user_id', $user_id)->where('status', '0')->first(); // 0 means draft
+            if(!empty($listing) || isset($listing)){
+                $listing->update([
+                    'company_name' => $request->company_name,
+                    'short_description' => $request->short_description,
+                    'company_tagline' => $request->company_tagline,
+                    'company_logo' => $fileName,
+                    'status' => '1', // 1 means pending (needs approval from Admin and it should change to 2)
+                ]);
+                // add categories to the user
+                // dd($request->company_categories);
+                return response()->json(["success"=>true, "msg"=>"Listing details added"], 200);
+            }else{
+                return response()->json(["success"=>false, "msg"=>"No Listing Found against this User", "status"=>400], 400);
+            }        
 
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage()], 400);
