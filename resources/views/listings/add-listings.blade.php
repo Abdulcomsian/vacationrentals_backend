@@ -4,6 +4,7 @@
 @section('stylesheets')
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" type="text/css" /> -->
 <link
     href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet">
@@ -11,6 +12,7 @@
     href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
     rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 
@@ -44,11 +46,20 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-xl-6 d-flex flex-column">
+                                    <!-- <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
+                                        <option value="AL">Alabama</option>
+                                        <option value="AL">Alabama</option>
+                                        <option value="AL">Alabama</option>
+                                        <option value="AL">Alabama</option>
+                                        <option value="AL">Alabama</option>
+                                        <option value="WY">Wyoming</option>
+                                    </select> -->
+
                                         <label for="" class="form-label">Select Company Category</label>
                                         @error('category')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
-                                        <select class="form-control" name="category[]" id="category" multiple>
+                                        <select class="form-control select2_dropdown" name="category[]" id="category" multiple="multiple">
                                             <option value="">Select Category</option>
                                             @isset($categories)
                                                 @foreach($categories as $category)
@@ -151,6 +162,13 @@
 @endsection
 
 @section('script')
+
+<script>
+    $(document).ready(function() {
+        $('#category').select2();
+        $('.select2_dropdown').select2();
+    });
+</script>
 <script>
     ClassicEditor
            .create( document.querySelector( '#editor' ) )
