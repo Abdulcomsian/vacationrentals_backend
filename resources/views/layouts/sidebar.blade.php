@@ -44,6 +44,24 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('payments')}}">
+                    <i class="las la-dollar-sign"></i> <span>Payments
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('users')}}">
+                    <i class="las la-users"></i> <span>Users
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('profile')}}">
+                    <i class="las la-users"></i> <span>Profile
+                        </span>
+                    </a>
+                </li>
+                <!-- <li class="nav-item">
                     <a class="nav-link menu-link" href="#">
                         <i class="las la-users"></i> <span>User Accounts
                         </span>
@@ -72,7 +90,7 @@
                         <i class="las la-users"></i> <span>User Accounts
                         </span>
                     </a>
-                </li>
+                </li> -->
             </ul>
         </div>
         <!-- Sidebar -->
