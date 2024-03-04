@@ -48,14 +48,14 @@
                                         @error('category')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
-                                        <select class="form-control" name="category" id="category">
+                                        <select class="form-control" name="category[]" id="category" multiple>
                                             <option value="">Select Category</option>
                                             @isset($categories)
                                                 @foreach($categories as $category)
                                                     <option value="{{$category->id}}">{{$category->category_name}}</option>
                                                 @endforeach
                                             @endisset
-                                        </select>
+                                        </select>                                        
                                     </div>
                                     <div class="col-xl-6 d-flex flex-column">
                                         <label for="" class="form-label">Choose Company Logo</label>
@@ -85,8 +85,7 @@
                                 </div>
                                 <div class="row mt-4">
                                     <div class="col-xl-12">
-                                        <label for="" class="form-label">Add Short Description</label>
-                                        
+                                        <label for="" class="form-label">Add Short Description</label>                                        
                                         <textarea name="short_description" id="editor" cols="30" rows="10"></textarea>
                                     </div>
                                 </div>
@@ -150,8 +149,5 @@
 //     var editorContent = CKEDITOR.instances.short_description.getData();
 //            console.log(editorContent);
 // })
-           
-
-
 </script>
 @endsection

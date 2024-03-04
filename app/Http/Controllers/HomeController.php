@@ -35,13 +35,21 @@ class HomeController extends Controller
     }
 
     public function categories(){
-        $categories = Category::with('listings')->where('status', 'activate')->get();
+        $categories = Category::with('listings')->where('status', 'activate')->paginate(10);
         return view('categories', compact('categories'));
     }
-
-    public function listings(){
-        $listings = Listing::get();
-        return view('listings/listings', compact('listings'));
+    
+    public function listings(Request $request){
+        if(isset($request->users)){
+            $listings = Listing::with('getCategories')->where('user_id', $request->users)->get();
+            $users = User::where('type', 'user')->get();
+            $user_id = $request->users;
+            return view('listings/listings', compact('listings', 'users', 'user_id'));
+        }else{
+            $listings = Listing::with('getCategories')->get();
+            $users = User::where('type', 'user')->get();
+            return view('listings/listings', compact('listings', 'users'));
+        }
     }
 
     public function packages(){

@@ -31,7 +31,6 @@
 @endif
 <div class="row">
     <div class="col">
-
         <div class="h-100">
             <div class="row mb-3 pb-1">
                 <div class="col-12">
@@ -40,6 +39,20 @@
                             <!-- <h4 class="fs-16 mb-1">Good Morning, Admin!</h4>
                             <p class="text-muted mb-0">Here's what's happening with your store
                                 today.</p> -->
+                                <form action="{{route('listings')}}" method="POST">
+                                    @csrf
+                                    <div class="form-control d-flex" style="width: 24%;">
+                                        <select name="users" id="user">
+                                            <option value="">All User</option>
+                                            @isset($users)
+                                            @foreach($users as $user)
+                                                <option value="{{$user->id}}" @if(isset($user_id) && $user_id == $user->id) selected @endif>{{$user->name}}</option>
+                                            @endforeach
+                                            @endisset
+                                        </select>
+                                        <button class="btn btn-primary mx-3" type="submit">Search</button>
+                                    </div>
+                                </form>
                         </div>
                         <div class="mt-3 mt-lg-0">
                             <form action="javascript:void(0);">
@@ -71,13 +84,12 @@
                                             <th scope="col">Company Logo</th>
                                             <th scope="col">Company Name</th>
                                             <th scope="col">Company Tagline</th>
-                                            <th scope="col">Short Description</th>
+                                            <th scope="col">Category/ies</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @isset($listings)
-                                        @foreach($listings as $listing)
+                                        @forelse($listings as $listing)
                                             <tr>
                                                 <td>
                                                     <div class="d-flex align-items-center">
@@ -90,7 +102,15 @@
                                                 <td>
                                                    {{$listing->company_tagline}}
                                                 </td>
-                                                <td>{!!$listing->short_description!!}</td>
+                                                <td>
+                                                    @php
+                                                        foreach ($listing->getCategories as $category_id) {
+                                                            $categoryId = $category_id->category_id;
+                                                            $categoryName = \App\Models\Category::select('category_name')->where('id', $categoryId)->value("category_name");
+                                                            echo $categoryName . ", ";
+                                                        }
+                                                    @endphp
+                                                </td>
                                                 <td>
                                                     <a href="{{url('edit-listing', ["id"=>$listing->id])}}" class="edit-cat text-success">
                                                         <i class="las la-pencil-alt fs-20"></i>
@@ -100,8 +120,13 @@
                                                     </a>
                                                 </td>
                                             </tr>
-                                        @endforeach
-                                        @endisset                                        
+                                        @empty 
+                                            <tr>
+                                                <td>
+                                                    No Listings Found
+                                                </td>
+                                            </tr>
+                                        @endforelse
                                     </tbody><!-- end tbody -->
                                 </table><!-- end table -->
                             </div>

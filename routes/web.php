@@ -31,7 +31,7 @@ Route::get('/payment_cancel', [BillingController::class, 'handleCancel'])->name(
 Route::middleware(['auth:web', 'admin'])->group(function(){
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('categories', [HomeController::class, 'categories'])->name('categories');
-    Route::get('listings', [HomeController::class, 'listings'])->name('listings');
+    Route::any('listings', [HomeController::class, 'listings'])->name('listings');
     Route::get('packages', [HomeController::class, 'packages'])->name('packages');
 
     // Categories Route

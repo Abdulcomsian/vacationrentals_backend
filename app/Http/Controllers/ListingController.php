@@ -13,7 +13,8 @@ use App\Models\{
     Plan,
     Subscription,
     Listing,
-    Category
+    Category,
+    ListingCategory
 };
 class ListingController extends Controller
 {
@@ -90,7 +91,6 @@ class ListingController extends Controller
             $user_id = Auth::user()->id;
             $storeListing = new Listing();
             $storeListing->user_id = $user_id;
-            $storeListing->category_id = $request->category;
             if($request->file('companyImage')){
                 $file = $request->file('companyImage');
                 $fileName = time() .'_' .  rand() . '.' . $file->getClientOriginalExtension();
@@ -101,8 +101,14 @@ class ListingController extends Controller
             $storeListing->company_name = $request->companyName;
             $storeListing->company_tagline = $request->companyTagLine;
             $storeListing->short_description = $request->short_description;
-            $storeListing->status = 1;
+            $storeListing->status = 1;          
             if($storeListing->save()){
+                foreach($request->category as $category_id){
+                    $listingCategory = new ListingCategory();
+                    $listingCategory->category_id = $category_id;
+                    $listingCategory->listing_id = $storeListing->id;
+                    $listingCategory->save();
+                }
                 return redirect()->route('listings')->with(['success'=>"Listing Added Successfully"]);
             }
         }catch(\Exception $e){
@@ -113,7 +119,11 @@ class ListingController extends Controller
     public function editListing($id){
         $categories = Category::where('status', 'activate')->get();
         $listingData = Listing::where('id', $id)->first();
-        return view('listings/edit-listings', compact('listingData', 'categories'));
+        $listingCategory = ListingCategory::where('listing_id', $id)->get();
+        foreach($listingCategory as $listCat){
+            $categoryId[] = $listCat->category_id;
+        }
+        return view('listings/edit-listings', compact('listingData', 'categories', 'categoryId'));
     }
 
     public function updateListing(Request $request){
@@ -122,7 +132,6 @@ class ListingController extends Controller
             $user_id = Auth::user()->id;
             $storeListing = Listing::find($id);
             $storeListing->user_id = $user_id;
-            $storeListing->category_id = $request->category;
             if($request->file('companyImage')){
                 $file = $request->file('companyImage');
                 $fileName = time() .'_' .  rand() . '.' . $file->getClientOriginalExtension();
@@ -135,6 +144,13 @@ class ListingController extends Controller
             $storeListing->short_description = $request->short_description;
             $storeListing->status = 1;
             if($storeListing->save()){
+                $deleteCategory = ListingCategory::where('listing_id', $id)->delete();
+                foreach($request->category as $category_id){
+                    $listingCategory = new ListingCategory();
+                    $listingCategory->listing_id = $id;
+                    $listingCategory->category_id = $category_id;
+                    $listingCategory->save();
+                }
                 return redirect()->route('listings')->with(['success'=>"Listing Updated Successfully"]);
             }
         }catch(\Exception $e){
@@ -146,9 +162,10 @@ class ListingController extends Controller
         try{
             $id = $request->listing_id;
             $deleteListing = Listing::where('id', $id)->delete();
+            $deleteListingCategory = ListingCategory::where('listing_id', $id)->delete();
             return redirect()->back()->with(['success'=>"Listing deleted Successfully"]);
         }catch(\Exception $e){
             return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
-        }        
+        }
     }
 }
