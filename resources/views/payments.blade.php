@@ -44,20 +44,24 @@
                                 <table class="table align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th scope="col">User Name</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Comapny Name</th>
-                                            <th scope="col">Payment Type</th>
-                                            <th scope="col">Price</th>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Transaction ID</th>
+                                            <th scope="col">Amount</th>
+                                            <th scope="col">Package</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">User</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>John Doe</td>
-                                            <td>johndoe@gmail.com</td>
-                                            <td>My Company</td>
-                                            <td>Card</td>
+                                            <td>1</td>
+                                            <td>0365629</td>
                                             <td>$150</td>
+                                            <td>Monthly</td>
+                                            <td class="text-success"><b>Success</b></td>
+                                            <td>13/05/2023</td>
+                                            <td>John Doe</td>
                                         </tr>
                                     </tbody>
                                 </table>
