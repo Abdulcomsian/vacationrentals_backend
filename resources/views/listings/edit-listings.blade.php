@@ -73,7 +73,7 @@
                                 </div>
     
                                 <div class="row mt-2">
-                                    <div class="col-xl-6 d-flex flex-column">
+                                    <div class="col-xl-4 d-flex flex-column">
                                         <label for="" class="form-label required">Company Name</label>
                                         @error('companyName')
                                             <span class="text-danger">{{$message}}</span>
@@ -81,12 +81,24 @@
                                         <input type="text" class="form-control" name="companyName" value="{{$listingData['company_name'] ?? ''}}" placeholder="Enter company here...">
                                     </div>
     
-                                    <div class="col-xl-6 d-flex flex-column">
+                                    <div class="col-xl-4 d-flex flex-column">
                                         <label for="" class="form-label required">Company Tag Line</label>
                                         @error('companyTagLine')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
                                         <input type="text" class="form-control" name="companyTagLine" value="{{$listingData['company_tagline'] ?? ''}}" placeholder="Enter company tag line here...">
+                                    </div>
+                                    <div class="col-xl-4 d-flex flex-column">
+                                        <label for="" class="form-label required">Status</label>
+                                        @error('companyTagLine')
+                                            <span class="text-danger">{{$message}}</span>
+                                        @enderror
+                                        <select class="form-select mb-3" aria-label="Default select example">
+                                            <option selected="">Select Status </option>
+                                            <option value="1">Approved</option>
+                                            <option value="1">Pending</option>
+                                            <option value="1">Rejected</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row mt-4">

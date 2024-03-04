@@ -40,6 +40,13 @@
                             <!-- <h4 class="fs-16 mb-1">Good Morning, Admin!</h4>
                             <p class="text-muted mb-0">Here's what's happening with your store
                                 today.</p> -->
+                                <select class="form-select w-25" aria-label="Default select example">
+                                    <option selected="">Select Listings </option>
+                                    <option value="1">All Listings</option>
+                                    <option value="1">Approved</option>
+                                    <option value="1">Pending</option>
+                                    <option value="1">Rejected</option>
+                                </select>
                         </div>
                         <div class="mt-3 mt-lg-0">
                             <form action="javascript:void(0);">
@@ -71,7 +78,9 @@
                                             <th scope="col">Company Logo</th>
                                             <th scope="col">Company Name</th>
                                             <th scope="col">Company Tagline</th>
-                                            <th scope="col">Short Description</th>
+                                            <th scope="col">Categories</th>
+                                            <th scope="col">Package</th>
+                                            <th scope="col">Approved</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
@@ -90,7 +99,9 @@
                                                 <td>
                                                    {{$listing->company_tagline}}
                                                 </td>
-                                                <td>{!!$listing->short_description!!}</td>
+                                                <td>3D Tours, Accounting</td>
+                                                <td>Monthly</td>
+                                                <td>Yes</td>
                                                 <td>
                                                     <a href="{{url('edit-listing', ["id"=>$listing->id])}}" class="edit-cat text-success">
                                                         <i class="las la-pencil-alt fs-20"></i>
