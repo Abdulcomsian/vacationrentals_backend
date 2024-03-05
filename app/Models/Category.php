@@ -16,6 +16,6 @@ class Category extends Model
     ];
 
     public function listings(){
-        return $this->hasMany(Listing::class);
+        return $this->hasMany(ListingCategory::class);
     }
 }
