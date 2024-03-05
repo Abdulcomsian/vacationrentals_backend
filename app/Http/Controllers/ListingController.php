@@ -14,7 +14,8 @@ use App\Models\{
     Subscription,
     Listing,
     Category,
-    ListingCategory
+    ListingCategory,
+    Deal,
 };
 class ListingController extends Controller
 {
@@ -62,7 +63,7 @@ class ListingController extends Controller
             }
             
             $user_id = Auth::user()->id;
-            $listing = Listing::where('user_id', $user_id)->where('status', '0')->first(); // 0 means draft
+            $listing = Listing::where('user_id', $user_id)->where('status', '0')->first(); // 0 means draft    
             if(!empty($listing) || isset($listing)){
                 $listing->update([
                     'company_name' => $request->company_name,
@@ -72,14 +73,37 @@ class ListingController extends Controller
                     'status' => '1', // 1 means pending (needs approval from Admin and it should change to 2)
                 ]);
                 // add categories to the user
-                // dd($request->company_categories);
+                $categories = json_decode($request->company_categories);
+                foreach($categories as $category){
+                    $categoryInsert = new ListingCategory();
+                    $categoryInsert->listing_id = $listing->id;
+                    $categoryInsert->category_id = $category;
+                    $categoryInsert->save();
+                }
+                // adding deals
+                $deals = json_decode($request->deals);
+                if(isset($deals)){
+                    foreach($deals as $deal){
+                        $insertDeal = new Deal();
+                        $insertDeal->listing_id = $listing->id;
+                        $insertDeal->deal_name = $deal->deal_name;
+                        $insertDeal->currency = $deal->currency;
+                        $insertDeal->discount_price = $deal->discount_price;
+                        $insertDeal->actual_price = $deal->actual_price;
+                        $insertDeal->billing_interval = $deal->billing_interval;
+                        $insertDeal->type = $deal->type;
+                        $insertDeal->coupon_code = $deal->coupon_code;
+                        $insertDeal->link = $deal->link;
+                        $insertDeal->save();
+                    }
+                }
                 return response()->json(["success"=>true, "msg"=>"Listing details added"], 200);
             }else{
                 return response()->json(["success"=>false, "msg"=>"No Listing Found against this User", "status"=>400], 400);
             }        
 
         }catch(\Exception $e){
-            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage()], 400);
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "line"=>$e->getLine()], 400);
         }
     }
 

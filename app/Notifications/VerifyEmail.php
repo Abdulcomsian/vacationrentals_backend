@@ -7,16 +7,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class SendEmailForgotPassword extends Notification
+class VerifyEmail extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($verificationCode)
+    public function __construct($emailVerificationToken ,$user_id)
     {
-        $this->verficationCode = $verificationCode;
+        $this->emailVerificationToken = $emailVerificationToken;
+        $this->user_id = $user_id;
     }
 
     /**
@@ -35,9 +36,12 @@ class SendEmailForgotPassword extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject('OTP Verification')
-                    ->line('Please click the link below to reset the password')
-                    ->line('Your Verfication Code is: ' . $this->verficationCode)
+                    ->subject("Verify Email")
+                    ->line('Please click the link below to verify email.')
+                    ->action('Verify Email', url('verify-email', [
+                        'user_id' => $this->user_id,
+                        'token' => $this->emailVerificationToken
+                    ]))
                     ->line('Thank you for using our application!');
     }
 

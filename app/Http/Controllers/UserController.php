@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Repository\UserHandler;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Notifications\SendEmailForgotPassword;
+use App\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Notification;
 use App\Models\User;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -39,11 +41,27 @@ class UserController extends Controller
                 "email" => $email,
                 "password" => Hash::make($password),
                 "tc_status" => $tcStatus,
+                "email_verification_token" => rand(11111, 99999),
             ]);
             $user->assignRole('user');
-            return response()->json(["success" => true, "msg" => "User Created Successfully", "status" => 200], 200);
+            // Sending Email for Verification
+            Notification::route("mail", $request->email)->notify(new VerifyEmail($user->email_verification_token, $user->id));
+            return response()->json(["success" => true, "msg" => "Verification Email has been sent to the given email address", "status" => 200], 200);
         }catch (\Exception $e) {
             return response()->json(["success" => false, "msg" => "Something went wrong", "error" => $e->getMessage()]);        
+        }
+    }
+
+    // Web function for verifying Email
+    public function verifyEmail($user_id, $token){
+        $user = User::where('id', $user_id)->first();
+        if($user->email_verification_token == $token){
+            $user->email_verification_token = NULL;
+            $user->email_verified_at = Carbon::now();
+            $user->save();
+            return redirect('https://vacationrentals.tools/signin')->with(["msg"=>"Email Verified Successfully"]);
+        }else{
+            echo "Verification Token Doesn`t matched";
         }
     }
 
@@ -60,11 +78,18 @@ class UserController extends Controller
             
             $email =  $request->email;
             $password = $request->password;
+            // checking email is verified or not
+            $user = User::where('email', $email)->first();
+            if($user->email_verified_at == NULL){                
+                return response()->json(["success"=>false, "msg"=>"Your email is not verified. Please verify your email", "status"=>400], 400);
+            }
+
             if(!$token = auth()->attempt(["email" => $email, "password" => $password])){
                 return response()->json(['error' => 'Email or password is incorrect'], 401);
             }
             $jwt =  $this->respondWithToken($token);
             return response()->json(["success"=>true, "msg"=>"User Login Successfully", "token"=>$jwt, "status"=>200], 200);
+
         }catch(\Exception $e){
             return response()->json(['succcess' => false, "msg" => "Something Went Wrong", "error" => $e->getMessage()]);
         }
