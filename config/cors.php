@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['GET', 'POST'],
 
-    'allowed_origins' => ['https://vacationrentals.tools'],
+    'allowed_origins' => ['https://vacationrentals.tools', 'https://admin.vacationrentals.tools', 'http://localhost:3000', 'http://localhost:8000'],
 
     'allowed_origins_patterns' => [],
 
