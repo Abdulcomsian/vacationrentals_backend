@@ -38,6 +38,7 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
     Route::get('packages', [HomeController::class, 'packages'])->name('packages');
     Route::get('payments', [HomeController::class, 'payments'])->name('payments');
     Route::get('profile', [HomeController::class, 'profile'])->name('profile');
+    Route::get('emails', [HomeController::class, 'emails'])->name('emails');
 
     // Categories Route
     Route::post('add-category', [CategoryController::class, 'storeCategory'])->name('store.category');

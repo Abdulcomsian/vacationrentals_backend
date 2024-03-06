@@ -50,6 +50,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('emails')}}">
+                    <i class="las la-mail-bulk"></i> <span>Email Templates
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('users')}}">
                     <i class="las la-users"></i> <span>Users
                         </span>
