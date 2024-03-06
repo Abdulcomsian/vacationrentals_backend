@@ -38,9 +38,9 @@ class ContactUsNotification extends Notification
     {
         return (new MailMessage)
                     ->subject($this->name . " messsaged you")
-                    ->line("Sender Name: " . $this->name)
-                    ->line("Sender Email: " . $this->email)
-                    ->line("Sender Message: " . $this->message);
+                    ->line("Name: " . $this->name)
+                    ->line("Email: " . $this->email)
+                    ->line("Message: " . $this->message);
     }
 
     /**

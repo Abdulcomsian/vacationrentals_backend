@@ -108,7 +108,7 @@ class HomeController extends Controller
             $name = $request->name;
             $email = $request->email;
             $message = $request->message;
-            $toEmail = "admin@vacationrentals.tool";
+            $toEmail = "peterfischerflorez@gmail.com";
             Notification::route("mail", $toEmail)->notify(new ContactUsNotification($name, $message, $email));
             return response()->json(["success"=>true, "msg"=>"Your email has been received", "status" => 200], 200);
         }catch(\Exception $e){
