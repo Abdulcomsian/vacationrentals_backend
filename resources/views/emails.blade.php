@@ -11,9 +11,6 @@
     href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
     rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}">
-<link href="{{ URL::asset('build/libs/quill/quill.snow.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ URL::asset('build/libs/quill/quill.core.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('build/libs/quill/quill.bubble.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 
@@ -62,6 +59,51 @@
                                                 </a>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Sign Up</td>
+                                            <td>
+                                                <a href="#" class="edit-cat text-success" previewlistener="true" >
+                                                    <i class="las la-pencil-alt fs-20"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Contact Us</td>
+                                            <td>
+                                                <a href="#" class="edit-cat text-success" previewlistener="true" >
+                                                    <i class="las la-pencil-alt fs-20"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Listing Submission</td>
+                                            <td>
+                                                <a href="#" class="edit-cat text-success" previewlistener="true" >
+                                                    <i class="las la-pencil-alt fs-20"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>Payment</td>
+                                            <td>
+                                                <a href="#" class="edit-cat text-success" previewlistener="true" >
+                                                    <i class="las la-pencil-alt fs-20"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>Listing Aapproval</td>
+                                            <td>
+                                                <a href="#" class="edit-cat text-success" previewlistener="true" >
+                                                    <i class="las la-pencil-alt fs-20"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                                 <!-- end table -->
@@ -88,13 +130,6 @@
                 <div class="addtool">
                     <form action="javascript:void(0);">
                         <div class="row g-3">
-                            <div class="col-xxl-12 text-start">
-                                <div>
-                                    <img src="{{ URL::asset('build/images/error500.png') }}" alt="" class="w-50">
-                                    <label class="form-label d-block"><a href="#" class="change_img" style="color:#e30b0b;">Change Image</a></label>
-                                    <input type="file" class="form-control image_email" style="display: none;">
-                                </div>
-                            </div>
                             <div class="col-xxl-6">
                                 <div>
                                     <label class="form-label">Email Subject</label>
@@ -109,8 +144,14 @@
                             </div>
                             <div class="col-xxl-12">
                                 <div>
+                                    <label class="form-label">Overview</label>
+                                    <textarea  class="form-control" name="" id="" cols="30" rows="3">Your one time verification OTP is {OTP Here}.</textarea>
+                                </div>
+                            </div>
+                            <div class="col-xxl-12">
+                                <div>
                                     <label class="form-label">Email Description</label>
-                                    <div class="ckeditor-classic"></div>
+                                    <textarea  class="form-control" name="" id="" cols="30" rows="10"></textarea>
                                 </div>
                             </div>
                             <div class="col-lg-12">
@@ -132,18 +173,11 @@
 
 @endsection
 @section('script')
-<script src="{{ URL::asset('build/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
-    <script src="{{ URL::asset('build/libs/quill/quill.min.js') }}"></script>
-    <script src="{{ URL::asset('build/js/pages/form-editor.init.js') }}"></script>
-    <script src="{{ URL::asset('build/js/app.js') }}"></script>
 <script>
     $(document).on("click", ".edit-cat", function(){
         let id = $(this).attr("data-id");
         $("#listingId").val(id);
         $(".bs-edit-modal-center").modal("show");
-    });
-    $(".change_img").click(function(){
-        $(".image_email").click();
     });
 </script>
 @endsection
