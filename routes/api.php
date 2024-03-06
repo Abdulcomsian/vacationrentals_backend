@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     UserController,
     BillingController,
     CategoryController,
+    HomeController,
     PlanController,
     ListingController,
 };
@@ -46,3 +47,6 @@ Route::get('/show-category-element', [CategoryController::class, 'showCategoryEl
 
 // Unprotected Plans API
 Route::get('/plans', [PlanController::class, 'showPlans']);
+
+// Contact Form API
+Route::post('/contact-form', [HomeController::class, 'contactForm']);

@@ -64,18 +64,18 @@
                                             @endisset
                                         </select>
                                     </div>
-                                    <div class="col-xl-5 d-flex flex-column">
+                                    {{-- <div class="col-xl-5 d-flex flex-column">
                                         <label for="" class="form-label">Choose Company Logo</label>
                                         @error('companyImage')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
                                         <input class="form-control" type="file" name="companyImage" value="">
-                                    </div>
-                                    <div class="col-xl-1 mt-4">
+                                    </div> --}}
+                                    {{-- <div class="col-xl-1 mt-4">
                                         @if(isset($listingData['company_logo']))
                                             <img src="{{asset('assets/listing_images/' . $listingData['company_logo'])}}"  class="avatar-xs rounded-circle shadow" alt="">
                                         @endif
-                                    </div>
+                                    </div> --}}
                                 </div>
     
                                 <div class="row mt-2">
