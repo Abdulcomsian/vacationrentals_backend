@@ -92,7 +92,7 @@ class CategoryController extends Controller
                 return redirect()->back()->with(['success' => "Category Updated Succesfully"]);
             }
         }catch(\Exception $e){
-            return redirect()->back()->with(['success' => "Category Updated Succesfully"]);
+            return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
         }
     }
 

@@ -79,9 +79,9 @@
                                             <tr>
                                                 <td>{{$plan->plan_name}}</td>
                                                 <td>
-                                                    {{$plan->price}}$
+                                                    {{$plan->actual_price}}$
                                                 </td>
-                                                <td>
+                                                <td style="text-wrap: wrap;">
                                                    {{$plan->description}}
                                                 </td>
                                                 <td>
@@ -219,8 +219,8 @@
                             </div>
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="description" class="form-label">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter Description"></textarea>
+                                    <label for="description" class="form-label">Description (Should be seperated with comma)</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Description list should be seperated with comma. ex . a, b, c, d"></textarea>
                                 </div>
                             </div>
                             <!--end col-->

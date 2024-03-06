@@ -40,7 +40,7 @@ class PlanController extends Controller
                 return redirect()->back()->with(['success'=>"Plan Updated Successfully"]);
             }
         }catch(\Exception $e){
-            return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
+            return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
 
