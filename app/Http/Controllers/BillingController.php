@@ -56,7 +56,8 @@ class BillingController extends Controller
             'cancel_url' => route('payment.cancel'),
             'success_url' => url('payment_success?session_id={CHECKOUT_SESSION_ID}'),
             'metadata' => [
-                'website_link' => $request->website_link
+                'website_link' => $request->website_link,
+                'price_id' => $request->price_id
             ],
             ]);
             $url = $checkout_session->url; // Stripe checkout page URL
@@ -94,10 +95,14 @@ class BillingController extends Controller
                     'ends_at' => $expirationDate
                 ]);
 
+                // getting the plan Id from price ID here
+                $price_id = $checkout_session->metadata->price_id;
+                $planId = Plan::where('plan_id', $price_id)->value("id");
                 // Storing tool link
                 $toolLink = new Listing();
                 $toolLink->user_id = $userData->id;
                 $toolLink->company_link = $checkout_session->metadata->website_link;
+                $toolLink->plan_id = $planId;
                 $toolLink->save();
 
                 // return response()->json(["success"=>true, "msg"=>"Subscription added Successfully"], 200);
