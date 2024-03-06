@@ -92,7 +92,7 @@ class CategoryController extends Controller
                 return redirect()->back()->with(['success' => "Category Updated Succesfully"]);
             }
         }catch(\Exception $e){
-            return redirect()->back()->with(['success' => "Category Updated Succesfully"]);
+            return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
         }
     }
 
@@ -105,6 +105,19 @@ class CategoryController extends Controller
                 return response()->json(["success"=>true, "data"=>$categories, "status"=>200], 200);
             }else{
                 return response()->josn(["success"=>false, "msg"=>"No Category Found", "status"=>400], 400);
+            }
+        }catch(\Exception $e){
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong ... ", "status"=>400], 400);
+        }
+    }
+
+    public function showCategoryElement(){
+        try{
+            $categories = Category::select("category_name")->where('status', 'activate')->get();
+            if(count($categories) > 0){
+                return response()->json(["success"=>true, "data"=>$categories, "status"=>200], 200);
+            }else{
+                return response()->json(["success"=>false, "msg"=>"No Categories Available", "status"=>400], 400);
             }
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong ... ", "status"=>400], 400);

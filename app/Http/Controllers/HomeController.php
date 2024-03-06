@@ -35,7 +35,8 @@ class HomeController extends Controller
     }
     public function users()
     {
-        return view('users');
+        $users = User::where('type', 'user')->get();
+        return view('users', compact('users'));
     }
     public function payments()
     {

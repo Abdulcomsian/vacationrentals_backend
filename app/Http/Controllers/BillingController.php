@@ -22,11 +22,18 @@ class BillingController extends Controller
         try{
             $validator = Validator::make($request->all(), [
                 'price_id' => 'required',
-                'tool_link' => 'required',
+                'website_link' => 'required',
             ]);
 
-            if($validator->fails()){
-                return respone(["success"=>false, "msg"=>"Validation error", "error"=>$validator->getMessageBag()]);
+            $price_id = $validator->errors()->get('price_id');
+            $websiteLink = $validator->errors()->get('website_link');
+
+            foreach($price_id as $price){
+                return response()->json(["success" => false, "msg" => $price, "status" => 400], 400); 
+            }
+
+            foreach($websiteLink as $website){
+                return response()->json(["success" => false, "msg" => $website, "status" => 400], 400);
             }
 
             // Stripe Checkout Page Integration Start here
@@ -47,9 +54,9 @@ class BillingController extends Controller
             ]],
             'mode' => 'subscription',
             'cancel_url' => route('payment.cancel'),
-            'success_url' => route('payment.success'),
+            'success_url' => url('payment_success?session_id={CHECKOUT_SESSION_ID}'),
             'metadata' => [
-                'tool_link' => $request->tool_link
+                'website_link' => $request->website_link
             ],
             ]);
             $url = $checkout_session->url; // Stripe checkout page URL
@@ -61,10 +68,9 @@ class BillingController extends Controller
         }
     }
     
-    public function handleSuccess(){
+    public function handleSuccess(Request $request){
         try{
-            $sessionId = Session::get('session_id');
-            // $sessionId = 'cs_test_a1W1SCmMG9rGY7qLYbGE1gFxQ2N3xB8e3yv1RMCuXAomv2vhK03s02MdNA';
+            $sessionId = $request->session_id;
             if(isset($sessionId)){
                 $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
                 $checkout_session = $stripe->checkout->sessions->retrieve($sessionId, []);
@@ -91,10 +97,11 @@ class BillingController extends Controller
                 // Storing tool link
                 $toolLink = new Listing();
                 $toolLink->user_id = $userData->id;
-                $toolLink->tool_link = $checkout_session->metadata->tool_link;
+                $toolLink->company_link = $checkout_session->metadata->website_link;
                 $toolLink->save();
 
-                return response()->json(["success"=>true, "msg"=>"Subscription added Successfully"], 200);
+                // return response()->json(["success"=>true, "msg"=>"Subscription added Successfully"], 200);
+                return redirect('https://vacationrentals.tools/dashboard/addtool');
             }else{
                 return response()->json(["success"=>false, "msg"=>"Unauthorized User"],401);
             }

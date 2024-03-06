@@ -39,14 +39,14 @@
                             <!-- <h4 class="fs-16 mb-1">Good Morning, Admin!</h4>
                             <p class="text-muted mb-0">Here's what's happening with your store
                                 today.</p> --> 
-                                <select name="users" class="form-select mb-3 w-25" id="user">
+                                {{-- <select name="users" class="form-select mb-3 w-25" id="user">
                                     <option value="">All User</option>
                                     @isset($users)
                                     @foreach($users as $user)
                                         <option value="{{$user->id}}" @if(isset($user_id) && $user_id == $user->id) selected @endif>{{$user->name}}</option>
                                     @endforeach
                                     @endisset
-                                </select>
+                                </select> --}}
                                 <!-- <form action="{{route('listings')}}" method="POST">
                                     @csrf
                                     <div class="form-control d-flex" style="width: 24%;">
@@ -56,14 +56,14 @@
                                 </form> -->
                         </div>
                         <div class="mt-3 mt-lg-0">
-                            <form action="javascript:void(0);">
+                            {{-- <form action="javascript:void(0);">
                                 <div class="row g-3 mb-0 align-items-center">
                                     <div class="col-auto">
                                         <a href="{{url('add-listings')}}" type="button" class="btn shadow-none" style="background-color: #e30b0b !important;color:#fff;"><i class="ri-add-circle-line align-middle me-1"></i> Add new listing</a>
                                     </div>
                                 </div>
                                 <!--end row-->
-                            </form>
+                            </form> --}}
                         </div>
                     </div><!-- end card header -->
                 </div>
@@ -74,7 +74,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">All Listings</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">All Users</h4>
                         </div><!-- end card header -->
 
                         <div class="card-body">
@@ -85,25 +85,37 @@
                                             <th scope="col">ID</th>
                                             <th scope="col">Name</th>
                                             <th scope="col">Email</th>
-                                            <th scope="col">Listings</th>
-                                            <th scope="col">Action</th>
+                                            <th scope="col">Email Verification Status</th>
+                                            {{-- <th scope="col">Action</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @isset($users)
+                                        @foreach($users as $user)
                                         <tr>
                                             <td>1</td>
-                                            <td>John Doe</td>
-                                            <td>johndoe@gmail.com</td>
-                                            <td><a href="#" class="fw-semibold" style="color:#E30B0B;">View Listings</a></td>
+                                            <td>{{$user->name}}</td>
+                                            <td>{{$user->email}}</td>
                                             <td>
+                                                @php
+                                                    if($user->email_verified_at == NULL){
+                                                        echo "Pending";
+                                                    }else{
+                                                        echo "Verified";
+                                                    }
+                                                @endphp
+                                            </td>
+                                            {{-- <td>
                                                 <a href="#" class="edit-cat text-success" previewlistener="true" >
                                                     <i class="las la-pencil-alt fs-20"></i>
                                                 </a>
                                                 <a href="#" class="del-cat text-danger mx-2" data-id="1">
                                                     <i class="lar la-trash-alt fs-20"></i>
                                                 </a>
-                                            </td>
+                                            </td> --}}
                                         </tr>
+                                        @endforeach
+                                        @endisset
                                     </tbody>
                                 </table>
                                 <!-- end table -->

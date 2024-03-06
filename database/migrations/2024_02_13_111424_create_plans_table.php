@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('plan_name')->nullable();
             $table->string('plan_id')->nullable();
-            $table->integer('price')->nullable();
-            $table->string('description')->nullable();
+            $table->integer('actual_price')->nullable();
+            $table->integer('recurring_price')->nullable();
+            $table->longText('description')->nullable();
             $table->string('currency')->nullable();
             $table->timestamps();
         });

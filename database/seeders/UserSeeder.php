@@ -16,9 +16,9 @@ class UserSeeder extends Seeder
     public function run(): void
     {
        $users = [
-            ["type" => "user", "name" => "muneeb", "email" => "muneeb@gmail.com","password" => Hash::make('muneeb123'),"tc_status" => "1"],
-            ["type" => "user", "name" => "sohail", "email" => "sohail@gmail.com","password" => Hash::make('muneeb123'),"tc_status" => "1"],
-            ["type" => "user", "name" => "ali", "email" => "ali@gmail.com","password" => Hash::make('muneeb123'),"tc_status" => "1"],
+            ["type" => "user", "name" => "muneeb","email_verified_at" => Carbon::now(),  "email" => "muneeb@gmail.com","password" => Hash::make('muneeb123'),"tc_status" => "1"],
+            ["type" => "user", "name" => "sohail","email_verified_at" => Carbon::now(), "email" => "sohail@gmail.com","password" => Hash::make('muneeb123'),"tc_status" => "1"],
+            ["type" => "user", "name" => "ali","email_verified_at" => Carbon::now(), "email" => "ali@gmail.com","password" => Hash::make('muneeb123'),"tc_status" => "1"],
        ];
 
        

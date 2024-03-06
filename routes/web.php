@@ -26,6 +26,8 @@ Auth::routes();
 Route::get('/payment_success', [BillingController::class, 'handleSuccess'])->name('payment.success');
 Route::get('/payment_cancel', [BillingController::class, 'handleCancel'])->name('payment.cancel');
 
+// Verifying Email
+Route::get('verify-email/{user_id}/{token}', [UserController::class, 'verifyEmail']);
 
 // Admin Routes Starts here
 Route::middleware(['auth:web', 'admin'])->group(function(){

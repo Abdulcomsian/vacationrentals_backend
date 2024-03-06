@@ -29,14 +29,20 @@ Route::post('/verfiy-code', [UserController::class, 'verifyCode']);
 Route::post('/update-password', [UserController::class, 'updatePassword']);
 
 
-Route::middleware('check.authentication')->group(function(){
+Route::middleware(['check.authentication'])->group(function(){
     Route::post('/checkout', [BillingController::class, 'checkout']);
-    Route::get('/plans', [PlanController::class, 'showPlans']);
-
+    // Protected Route Plan API
+    Route::get('/show-plans-protected', [PlanController::class, 'showPlans']);
+    
     // Listing Apis
     Route::get('/listing-detail', [ListingController::class, 'showListingDetail']);
     Route::post('/add-listing', [ListingController::class, 'addListing']);
 
 });
-// Categories Apis
+
+// Categories Apis Detail
 Route::get('/show-category', [CategoryController::class, 'showCategory']);
+Route::get('/show-category-element', [CategoryController::class, 'showCategoryElement']);
+
+// Unprotected Plans API
+Route::get('/plans', [PlanController::class, 'showPlans']);
