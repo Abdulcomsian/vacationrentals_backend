@@ -57,13 +57,20 @@ class HomeController extends Controller
     }
     
     public function listings(Request $request){
+        /*
+            Listing Status Meanings
+            0 - Draft
+            1 - Pending
+            2 - Approved
+            3 - Rejected
+        */
         if(isset($request->users)){
-            $listings = Listing::with('getCategories')->where('user_id', $request->users)->get();
+            $listings = Listing::with('getCategories')->where('user_id', $request->users)->where('status', ['1', '2', '3'])->get();
             $users = User::where('type', 'user')->get();
             $user_id = $request->users;
             return view('listings/listings', compact('listings', 'users', 'user_id'));
         }else{
-            $listings = Listing::with('getCategories')->get();
+            $listings = Listing::with('getCategories')->where('status', ['1', '2', '3'])->get();
             $users = User::where('type', 'user')->get();
             return view('listings/listings', compact('listings', 'users'));
         }

@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Listing extends Model
 {
+    /*
+        Listing Status Meanings
+        0 - Draft
+        1 - Pending
+        2 - Approved
+        3 - Rejected
+    */
+    
     use HasFactory,SoftDeletes;
 
     protected $fillable = [

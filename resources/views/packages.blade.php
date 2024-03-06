@@ -70,6 +70,7 @@
                                         <tr>
                                             <th scope="col">Name</th>
                                             <th scope="col">Price</th>
+                                            <th scope="col">Price after discount</th>
                                             <th scope="col">Description</th>
                                             <th scope="col">Action</th>
                                         </tr>
@@ -79,7 +80,10 @@
                                             <tr>
                                                 <td>{{$plan->plan_name}}</td>
                                                 <td>
-                                                    {{$plan->actual_price}}$
+                                                    ${{$plan->actual_price}}
+                                                </td>
+                                                <td>
+                                                    ${{$plan->recurring_price ?? '0'}}
                                                 </td>
                                                 <td style="text-wrap: wrap;">
                                                    {{$plan->description}}

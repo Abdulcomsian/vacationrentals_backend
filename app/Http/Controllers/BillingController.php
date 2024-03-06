@@ -46,24 +46,50 @@ class BillingController extends Controller
                 'email' => $user->email,
             ]);
 
-            $checkout_session = \Stripe\Checkout\Session::create([
-            'customer' => $customer->id,
-            'line_items' => [[
-                'price' => $request->price_id,
-                'quantity' => 1,
-            ]],
-            'mode' => 'subscription',
-            'cancel_url' => route('payment.cancel'),
-            'success_url' => url('payment_success?session_id={CHECKOUT_SESSION_ID}'),
-            'metadata' => [
-                'website_link' => $request->website_link,
-                'price_id' => $request->price_id
-            ],
-            ]);
+            $priceId = $request->price_id;
+            $isCouponEligible = false;
+            if($priceId === "price_1OrHLaLyI7mncMRJA9dBBgIa"){
+                $isCouponEligible = true;
+            }
+            
+            if($isCouponEligible){
+                $checkout_session = \Stripe\Checkout\Session::create([
+                    'customer' => $customer->id,
+                    'line_items' => [[
+                        'price' => $request->price_id,
+                        'quantity' => 1,
+                    ]],
+                    'discounts' => [[
+                        'coupon' => 'fvpqsWdu',
+                    ]],
+                    'mode' => 'subscription',
+                    'cancel_url' => route('payment.cancel'),
+                    'success_url' => url('payment_success?session_id={CHECKOUT_SESSION_ID}'),
+                    'metadata' => [
+                        'website_link' => $request->website_link,
+                        'price_id' => $request->price_id
+                    ],
+                    ]);
+            }else{
+                $checkout_session = \Stripe\Checkout\Session::create([
+                    'customer' => $customer->id,
+                    'line_items' => [[
+                        'price' => $request->price_id,
+                        'quantity' => 1,
+                    ]],
+                    'mode' => 'subscription',
+                    'cancel_url' => route('payment.cancel'),
+                    'success_url' => url('payment_success?session_id={CHECKOUT_SESSION_ID}'),
+                    'metadata' => [
+                        'website_link' => $request->website_link,
+                        'price_id' => $request->price_id
+                    ],
+                    ]);
+            }
             $url = $checkout_session->url; // Stripe checkout page URL
             $sessiondId = $checkout_session->id;
             $session = Session::put('session_id', $sessiondId);
-            return response()->json(["success"=>true, "redirectURL"=>$url, 'sessionId'=>$sessiondId], 200);
+            return response()->json(["success"=>true, "redirectURL"=>$url, 'sessionId'=>$sessiondId, "status"=>200], 200);
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something went wrong", "error"=>$e->getMessage()], 400);
         }
