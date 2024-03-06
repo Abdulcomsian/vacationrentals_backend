@@ -34,7 +34,7 @@ class PlanController extends Controller
             $id = $request->plan_id;
             $plan = Plan::find($id);
             $plan->plan_name = $request->plan_name;
-            $plan->price = $request->price;
+            $plan->actual_price = $request->price;
             $plan->description = $request->description;
             if($plan->save()){
                 return redirect()->back()->with(['success'=>"Plan Updated Successfully"]);

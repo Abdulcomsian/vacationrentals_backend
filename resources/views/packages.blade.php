@@ -256,7 +256,7 @@
             dataType: 'json',
             success: function(response) {
                 let plan = response.plan;
-                $('#price').val(plan.price);
+                $('#price').val(plan.actual_price);
                 $('#description').val(plan.description);
                 $('.planSelect').val(plan.plan_name);
                 $(".bs-edit-modal-center").modal("show");
