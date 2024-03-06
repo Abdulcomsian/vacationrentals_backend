@@ -100,7 +100,8 @@ class BillingController extends Controller
                 $toolLink->company_link = $checkout_session->metadata->website_link;
                 $toolLink->save();
 
-                return response()->json(["success"=>true, "msg"=>"Subscription added Successfully"], 200);
+                // return response()->json(["success"=>true, "msg"=>"Subscription added Successfully"], 200);
+                return redirect('https://vacationrentals.tools/dashboard/addtool');
             }else{
                 return response()->json(["success"=>false, "msg"=>"Unauthorized User"],401);
             }
