@@ -63,7 +63,7 @@ class BillingController extends Controller
                         'coupon' => 'fvpqsWdu',
                     ]],
                     'mode' => 'subscription',
-                    'cancel_url' => route('payment.cancel'),
+                    'cancel_url' => url('https://vacationrentals.tools/dashboard/addlisting'),
                     'success_url' => url('payment_success?session_id={CHECKOUT_SESSION_ID}'),
                     'metadata' => [
                         'website_link' => $request->website_link,
@@ -78,7 +78,7 @@ class BillingController extends Controller
                         'quantity' => 1,
                     ]],
                     'mode' => 'subscription',
-                    'cancel_url' => route('payment.cancel'),
+                    'cancel_url' => url('https://vacationrentals.tools/dashboard/addlisting'),
                     'success_url' => url('payment_success?session_id={CHECKOUT_SESSION_ID}'),
                     'metadata' => [
                         'website_link' => $request->website_link,
