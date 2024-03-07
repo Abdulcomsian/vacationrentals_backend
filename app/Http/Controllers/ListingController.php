@@ -63,7 +63,8 @@ class ListingController extends Controller
             // }
             
             $user_id = Auth::user()->id;
-            $listing = Listing::where('user_id', $user_id)->where('status', '0')->first(); // 0 means draft    
+            $listingId = $request->id;
+            $listing = Listing::where('id', $listingId)->where('status', '0')->first(); // 0 means draft    
             if(!empty($listing) || isset($listing)){
                 $listing->update([
                     'company_name' => $request->company_name,
@@ -76,7 +77,7 @@ class ListingController extends Controller
                 $categories = json_decode($request->company_categories);
                 foreach($categories as $category){
                     $categoryInsert = new ListingCategory();
-                    $categoryInsert->listing_id = $listing->id;
+                    $categoryInsert->listing_id = $listingId;
                     $categoryInsert->category_id = $category;
                     $categoryInsert->save();
                 }
@@ -85,7 +86,7 @@ class ListingController extends Controller
                 if(isset($deals)){
                     foreach($deals as $deal){
                         $insertDeal = new Deal();
-                        $insertDeal->listing_id = $listing->id;
+                        $insertDeal->listing_id = $listingId;
                         $insertDeal->deal_name = $deal->deal_name;
                         $insertDeal->currency = $deal->currency;
                         $insertDeal->discount_price = $deal->discount_price;
@@ -105,6 +106,21 @@ class ListingController extends Controller
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "line"=>$e->getLine()], 400);
         }
+    }
+
+    public function showAllListing(){
+        try{
+            $userId = Auth::user()->id;
+            $listings = Listing::where('user_id', $userId)->get();
+            if(count($listings) > 0){
+                return response()->json(["success"=>true, "listings"=>$listings, "status"=>200], 200);
+            }else{
+                return response()->json(["success"=>false, "msg"=>"No listings found", "status"=>400], 400);
+            }
+        }catch(\Exception $e){
+            return response()->json(["success"=>false, "msg"=>"Something went wrong", "status"=>400], 400);
+        }
+        
     }
 
 

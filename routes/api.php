@@ -38,7 +38,7 @@ Route::middleware(['check.authentication'])->group(function(){
     // Listing Apis
     Route::get('/listing-detail', [ListingController::class, 'showListingDetail']);
     Route::post('/add-listing', [ListingController::class, 'addListing']);
-
+    Route::get('/show-all-listings', [ListingController::class, 'showAllListing']);
 });
 
 // Categories Apis Detail
