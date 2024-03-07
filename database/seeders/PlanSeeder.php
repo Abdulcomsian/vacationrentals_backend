@@ -15,7 +15,7 @@ class PlanSeeder extends Seeder
     {
         // remove this seeder when Admin creates and edit the plans data
         $plans = [
-            ["plan_name" => "Monthly", "plan_id" => "price_1OrHLaLyI7mncMRJA9dBBgIa", "actual_price" => "1","recurring_price" => "5",  "description"=>"Logo icon, Unlimited categories, Business tagline & full description, Link to website", "currency"=>"USD"],
+            ["plan_name" => "First Month", "plan_id" => "price_1OrHLaLyI7mncMRJA9dBBgIa", "actual_price" => "1","recurring_price" => "5.99",  "description"=>"Logo icon, Unlimited categories, Business tagline & full description, Link to website", "currency"=>"USD"],
             ["plan_name" => "Yearly", "plan_id" => "price_1OjJt0LyI7mncMRJX2AStM7F", "actual_price" => "59","recurring_price" => null, "description"=>"Logo icon, Unlimited categories, Business tagline & full description, Link to website", "currency"=>"USD"],
             ["plan_name" => "Featured", "plan_id" => "price_1OjJtVLyI7mncMRJUzV3ysrC", "actual_price" => "59","recurring_price" => null, "description"=>"Your listing will show on top of the home page, Your business will show on top on your chosen category, Logo icon, Unlimited categories, Business tag line & full description, Link to website, Be able to add deals", "currency"=>"USD"],
         ];
