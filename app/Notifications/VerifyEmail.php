@@ -42,7 +42,7 @@ class VerifyEmail extends Notification
                         'user_id' => $this->user_id,
                         'token' => $this->emailVerificationToken
                     ]))
-                    ->line('Thank you for using our application!');
+                    ->line('Thank you for using our directory of tools and resources for the vacation rental industry.');
     }
 
     /**

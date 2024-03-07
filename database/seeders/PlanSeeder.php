@@ -21,7 +21,7 @@ class PlanSeeder extends Seeder
                 "plan_id" => "price_1OrHLaLyI7mncMRJA9dBBgIa", 
                 "discounted_price" => "1",
                 "recurring_price" => "5.99",  
-                "description"=>"Logo icon, Unlimited categories, Business tagline & full description, Link to website", 
+                "description"=>"Unlimited categories, Business tagline & full description, Link to website", 
                 "currency"=>"USD"
             ],[
                 "plan_type" => "Yearly",
@@ -29,7 +29,7 @@ class PlanSeeder extends Seeder
                 "plan_id" => "price_1OjJt0LyI7mncMRJX2AStM7F", 
                 "discounted_price" => null,
                 "recurring_price" => "59", 
-                "description"=>"Logo icon, Unlimited categories, Business tagline & full description, Link to website", 
+                "description"=>"Unlimited categories, Business tagline & full description, Link to website", 
                 "currency"=>"USD"
             ],[
                 "plan_type" => "Featured",
@@ -37,7 +37,7 @@ class PlanSeeder extends Seeder
                 "plan_id" => "price_1OjJtVLyI7mncMRJUzV3ysrC", 
                 "discounted_price" => null,
                 "recurring_price" => "199", 
-                "description"=>"Your listing will show on top of the home page, Your business will show on top on your chosen category, Logo icon, Unlimited categories, Business tag line & full description, Link to website, Be able to add deals", 
+                "description"=>"Your listing will show on top of the home page, Your business will show on top on your chosen category, Unlimited categories, Business tag line & full description, Link to website, Be able to add deals", 
                 "currency"=>"USD"
             ],
         ];
