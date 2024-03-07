@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
+            $table->string('plan_type')->nullable();
             $table->string('plan_name')->nullable();
             $table->string('plan_id')->nullable();
-            $table->integer('actual_price')->nullable();
-            $table->integer('recurring_price')->nullable();
+            $table->float('discounted_price')->nullable();
+            $table->float('recurring_price')->nullable();
             $table->longText('description')->nullable();
             $table->string('currency')->nullable();
             $table->timestamps();

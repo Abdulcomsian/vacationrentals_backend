@@ -33,8 +33,10 @@ class PlanController extends Controller
         try{
             $id = $request->plan_id;
             $plan = Plan::find($id);
+            $plan->plan_type = $request->plan_type;
             $plan->plan_name = $request->plan_name;
-            $plan->actual_price = $request->price;
+            $plan->discounted_price = $request->discounted_price;
+            $plan->recurring_price = $request->recurring_price;
             $plan->description = $request->description;
             if($plan->save()){
                 return redirect()->back()->with(['success'=>"Plan Updated Successfully"]);

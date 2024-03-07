@@ -68,9 +68,10 @@
                                 <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
                                     <thead class="text-muted table-light">
                                         <tr>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Price</th>
-                                            <th scope="col">Price after discount</th>
+                                            <th scope="col">Plan Type</th>
+                                            <th scope="col">Plan Name</th>
+                                            <th scope="col">Discounted Price</th>
+                                            <th scope="col">Recurring Price</th>
                                             <th scope="col">Description</th>
                                             <th scope="col">Action</th>
                                         </tr>
@@ -78,9 +79,10 @@
                                     <tbody>
                                         @foreach($plans as $plan)
                                             <tr>
+                                                <td>{{$plan->plan_type}}</td>
                                                 <td>{{$plan->plan_name}}</td>
                                                 <td>
-                                                    ${{$plan->actual_price}}
+                                                    ${{$plan->discounted_price ?? '0'}}
                                                 </td>
                                                 <td>
                                                     ${{$plan->recurring_price ?? '0'}}
@@ -206,21 +208,35 @@
                         <div class="row g-3">
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="lastName" class="form-label">Package</label>
-                                    <select class="form-select planSelect" name="plan_name" aria-label="Default select example">
+                                    <label for="lastName" class="form-label">Plan Type</label>
+                                    <select class="form-select planSelect" name="plan_type" aria-label="Default select example">
                                         <option selected="">Select your Status </option>
-                                        <option value="Monthly">Monthly</option>
-                                        <option value="Yearly">Yearly</option>
-                                        <option value="Featured">Featured</option>
+                                        @foreach ($plans as $plan)
+                                            <option value={{$plan->plan_type}}>{{$plan->plan_type}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="price" class="form-label">Price</label>
-                                    <input type="text" name="price" class="form-control" id="price" placeholder="Enter Price">
+                                    <label for="price" class="form-label">Discounted Price</label>
+                                    <input type="text" name="plan_name" class="form-control" id="plan_name" placeholder="Enter Plan Name">
                                 </div>
                             </div>
+                            <div class="col-xxl-12">
+                                <div>
+                                    <label for="price" class="form-label">Discounted Price</label>
+                                    <input type="text" name="discounted_price" class="form-control" id="discounted_price" placeholder="Enter Price">
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-12">
+                                <div>
+                                    <label for="price" class="form-label">Recurring Price</label>
+                                    <input type="text" name="recurring_price" class="form-control" id="recurring_price" placeholder="Enter Price">
+                                </div>
+                            </div>
+
                             <div class="col-xxl-12">
                                 <div>
                                     <label for="description" class="form-label">Description (Should be seperated with comma)</label>
@@ -260,9 +276,11 @@
             dataType: 'json',
             success: function(response) {
                 let plan = response.plan;
-                $('#price').val(plan.actual_price);
+                $('#discounted_price').val(plan.discounted_price !== null ? plan.discounted_price : '0');
+                $('#recurring_price').val(plan.recurring_price);
                 $('#description').val(plan.description);
-                $('.planSelect').val(plan.plan_name);
+                $('#plan_name').val(plan.plan_name);
+                $('.planSelect').val(plan.plan_type);
                 $(".bs-edit-modal-center").modal("show");
             }
         });
