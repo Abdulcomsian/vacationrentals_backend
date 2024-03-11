@@ -62,13 +62,39 @@ class ListingController extends Controller
             //     $file->move($destinationPath, $fileName);
             // }
             
+            // Saving Short Description of Editor
+            $designDocument  = $request->short_description;
+            $dom = new \DOMDocument();
+            libxml_use_internal_errors(true);
+            $dom->loadHtml($designDocument, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            libxml_use_internal_errors(false);
+            $images = $dom->getElementsByTagName('img');
+
+            foreach($images as $item => $image){
+                $data = $image->getAttribute("src");
+                $styles = $image->getAttribute("style");
+                list($type, $data) = explode(';', $data);
+                list(, $data)      = explode(',', $data);
+                $imgeData = base64_decode($data);
+                $image_name= time().$item.'.png';
+                $path = public_path().'/assets/listing_description_image/' . $image_name;
+                file_put_contents($path, $imgeData);
+                $image->removeAttribute('src');
+                $image->setAttribute('src', $path);
+                $image->setAttribute('max-width' , '100% !important;');
+                $image->setAttribute('width' , $styles);
+                $image->setAttribute('height' , 'auto');
+                $image->removeAttribute("style");
+            }
+            $content = $dom->saveHTML();
+            
             $user_id = Auth::user()->id;
             $listingId = $request->id;
             $listing = Listing::where('id', $listingId)->where('status', '0')->first(); // 0 means draft    
             if(!empty($listing) || isset($listing)){
                 $listing->update([
                     'company_name' => $request->company_name,
-                    'short_description' => $request->short_description,
+                    'short_description' => $content,
                     'company_tagline' => $request->company_tagline,
                     // 'company_logo' => $fileName,
                     'status' => '1', // 1 means pending (needs approval from Admin and it should change to 2)
