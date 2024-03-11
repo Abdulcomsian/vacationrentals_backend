@@ -36,7 +36,7 @@ class SendEmailForgotPassword extends Notification
     {
         return (new MailMessage)
                     ->subject('OTP Verification')
-                    ->line('Please click the link below to reset the password')
+                    // ->line('OTP Password Reminder Email')
                     ->line('Your Verfication Code is: ' . $this->verficationCode)
                     ->line('Thank you for using our application!');
     }
