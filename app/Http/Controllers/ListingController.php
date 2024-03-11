@@ -74,9 +74,7 @@ class ListingController extends Controller
                     'status' => '1', // 1 means pending (needs approval from Admin and it should change to 2)
                 ]);
                 // add categories to the user
-                $orgCategories = $request->company_categories;
                 $categories = json_decode($request->company_categories);
-                dd($orgCategories, $categories);
                 foreach($categories as $category){
                     $categoryInsert = new ListingCategory();
                     $categoryInsert->listing_id = $listingId;
