@@ -20,19 +20,19 @@ use App\Models\{
 class ListingController extends Controller
 {
     // =============== API Functions ======================
-    // public function showListingDetail(Request $request){
-    //     try{
-    //         $listing_id = $request->listing_id;
-    //         $listingData = Listing::where('id', $listing_id)->first();
-    //         if(!empty($listingData)){
-    //             return response()->json(["success"=>true, "listingData"=>$listingData], 200);
-    //         }else{
-    //             return response()->json(["success"=>false, "msg"=>"Sorry, Data not found related to your id . $listing_id"]);
-    //         }
-    //     }catch(\Exception $e){
-    //         return response()->json(["success"=>false, "msg"=>"Something went wrong", "error"=>$e->getMessage()], 400);
-    //     }
-    // }
+    public function showListingDetail(Request $request){
+        try{
+            $listing_id = $request->listing_id;
+            $listingData = Listing::where('id', $listing_id)->first();
+            if(!empty($listingData)){
+                return response()->json(["success"=>true, "listingData"=>$listingData], 200);
+            }else{
+                return response()->json(["success"=>false, "msg"=>"Sorry, Data not found related to your id . $listing_id"]);
+            }
+        }catch(\Exception $e){
+            return response()->json(["success"=>false, "msg"=>"Something went wrong", "error"=>$e->getMessage()], 400);
+        }
+    }
 
     public function addListing(Request $request){
         $validator = Validator::make($request->all(),[
@@ -98,7 +98,7 @@ class ListingController extends Controller
                         $insertDeal->save();
                     }
                 }
-                return response()->json(["success"=>true, "msg"=>"Listing details added"], 200);
+                return response()->json(["success"=>true, "msg"=>"Listing details added", "status"=>200], 200);
             }else{
                 return response()->json(["success"=>false, "msg"=>"No Listing Found against this User", "status"=>400], 400);
             }        
