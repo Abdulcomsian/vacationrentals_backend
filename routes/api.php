@@ -36,9 +36,9 @@ Route::middleware(['check.authentication'])->group(function(){
     Route::get('/show-plans-protected', [PlanController::class, 'showPlans']);
     
     // Listing Apis
-    Route::get('/listing-detail', [ListingController::class, 'showListingDetail']);
+    Route::post('/listing-detail', [ListingController::class, 'showListingDetail']);
     Route::post('/add-listing', [ListingController::class, 'addListing']);
-    Route::get('/show-all-listings', [ListingController::class, 'showAllListing']);
+    Route::post('/show-all-listings', [ListingController::class, 'showAllListing']);
 });
 
 // Categories Apis Detail

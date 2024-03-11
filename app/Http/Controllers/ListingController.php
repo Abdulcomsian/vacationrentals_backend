@@ -23,11 +23,11 @@ class ListingController extends Controller
     public function showListingDetail(Request $request){
         try{
             $listing_id = $request->listing_id;
-            $listingData = Listing::where('id', $listing_id)->first();
+            $listingData = Listing::with(['plan', 'deals'])->where('id', $listing_id)->first();
             if(!empty($listingData)){
-                return response()->json(["success"=>true, "listingData"=>$listingData], 200);
+                return response()->json(["success"=>true, "listingData"=>$listingData, "status" => 200], 200);
             }else{
-                return response()->json(["success"=>false, "msg"=>"Sorry, Data not found related to your id . $listing_id"]);
+                return response()->json(["success"=>false, "msg"=>"No listing found against this . $listing_id", "status" => 400], 400);
             }
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something went wrong", "error"=>$e->getMessage()], 400);
