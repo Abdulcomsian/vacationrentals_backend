@@ -20,10 +20,11 @@ use App\Models\{
 class ListingController extends Controller
 {
     // =============== API Functions ======================
+    // this function show a listing details against specific listing Id
     public function showListingDetail(Request $request){
         try{
             $listing_id = $request->listing_id;
-            $listingData = Listing::with(['plan', 'deals'])->where('id', $listing_id)->first();
+            $listingData = Listing::with(['deals'])->where('id', $listing_id)->first();
             if(!empty($listingData)){
                 return response()->json(["success"=>true, "listingData"=>$listingData, "status" => 200], 200);
             }else{
@@ -34,6 +35,7 @@ class ListingController extends Controller
         }
     }
 
+    // for adding listing
     public function addListing(Request $request){
         $validator = Validator::make($request->all(),[
             'company_name' => 'required|string',
@@ -134,6 +136,23 @@ class ListingController extends Controller
         }
     }
 
+    // for deleting Listing 
+    public function deleteListingUser(Request $request){
+        try{
+            $id = $request->listing_id;
+            $deleteListing = Listing::where('id', $id)->delete(); // softdelete
+            $deleteListingCategory = ListingCategory::where('listing_id', $id)->delete();
+            $deleteDeals = Deal::where('listing_id', $id)->delete(); // softdelete
+            if($deleteListing !== false && $deleteListingCategory !== false && $deleteDeals !== false){
+                return response()->json(['success'=>true, "msg"=>"Listing Deleted Successfully", "status"=>200], 200);
+            }else{
+                return response()->json(['success'=>false, "msg"=>"Listing Deletion Failure", "status"=>400], 400);
+            }
+        }catch(\Exception $e){
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "status"=>400], 400);
+        }
+    }
+
     public function showAllListing(){
         try{
             $userId = Auth::user()->id;
@@ -166,6 +185,11 @@ class ListingController extends Controller
         }
         
     }
+
+
+
+
+
 
 
     // =============== Admin Functions ======================
