@@ -22,4 +22,8 @@ class Plan extends Model
         'description',
         'currency',
     ];
+
+    public function listings(){
+        return $this->hasMany(Listing::class);
+    }
 }

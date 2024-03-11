@@ -111,7 +111,25 @@ class ListingController extends Controller
     public function showAllListing(){
         try{
             $userId = Auth::user()->id;
-            $listings = Listing::where('user_id', $userId)->get();
+            $listings = Listing::with(['plan', 'deals'])
+                ->where('user_id', $userId)
+                ->get()
+                ->map(function ($listing) {
+                    return [
+                        'id' => $listing->id,
+                        'company_name' => $listing->company_name,
+                        'company_link' => $listing->company_link,
+                        'plan' => [
+                            'id' => $listing->plan->id,
+                            'plan_type' => $listing->plan->plan_type,
+                            'plan_name' => $listing->plan->plan_name,
+                            'discounted_price' => $listing->plan->discounted_price,
+                            'recurring_price' => $listing->plan->recurring_price,
+                        ],
+                        'has_deals' => $listing->deals->count() > 0,
+                    ];
+                });
+
             if(count($listings) > 0){
                 return response()->json(["success"=>true, "listings"=>$listings, "status"=>200], 200);
             }else{

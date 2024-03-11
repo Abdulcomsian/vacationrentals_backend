@@ -32,4 +32,12 @@ class Listing extends Model
     public function getCategories(){
         return $this->hasMany(ListingCategory::class);
     }
+
+    public function plan(){
+        return $this->belongsTo(Plan::class);
+    }
+
+    public function deals(){
+        return $this->hasMany(Deal::class);
+    }
 }
