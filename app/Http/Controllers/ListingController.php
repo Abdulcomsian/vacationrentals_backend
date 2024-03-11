@@ -35,6 +35,7 @@ class ListingController extends Controller
     // }
 
     public function addListing(Request $request){
+        dd($request->all());
         $validator = Validator::make($request->all(),[
             'company_name' => 'required|string',
             'company_categories' => 'required',
