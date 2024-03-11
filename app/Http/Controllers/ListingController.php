@@ -100,7 +100,7 @@ class ListingController extends Controller
                 }
                 return response()->json(["success"=>true, "msg"=>"Listing details added", "status"=>200], 200);
             }else{
-                return response()->json(["success"=>false, "msg"=>"No Listing Found against this User", "status"=>400], 400);
+                return response()->json(["success"=>false, "msg"=>"Listing has already been created for the selected tool", "status"=>400], 400);
             }        
 
         }catch(\Exception $e){
