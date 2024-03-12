@@ -19,6 +19,6 @@ class CheckAuthentication
             return $next($request);
         }
 
-        return response()->json(["status" => false, "msg"=>"Unauthorized User"], 401);
+        return response()->json(["success"=>false, "msg"=>"Unauthorized User", "status" => 401], 401);
     }
 }
