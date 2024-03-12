@@ -131,8 +131,13 @@ class BillingController extends Controller
                 $toolLink->plan_id = $planId->id;
                 $toolLink->save();
 
+                $is_featured = "false";
+                if($planId->plan_type == 'Featured'){
+                    $is_featured = "true";
+                }
+
                 // return response()->json(["success"=>true, "msg"=>"Subscription added Successfully"], 200);
-                return redirect('https://vacationrentals.tools/dashboard/addtool?id=' . $toolLink->id . '&plan_type=' . $planId->plan_type);
+                return redirect('https://vacationrentals.tools/dashboard/addtool?id=' . $toolLink->id . '&featured=' . $is_featured);
             }else{
                 return response()->json(["success"=>false, "msg"=>"Unauthorized User"],401);
             }
