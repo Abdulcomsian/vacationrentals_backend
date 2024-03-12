@@ -123,16 +123,16 @@ class BillingController extends Controller
 
                 // getting the plan Id from price ID here
                 $price_id = $checkout_session->metadata->price_id;
-                $planId = Plan::where('plan_id', $price_id)->value("id");
+                $planId = Plan::where('plan_id', $price_id)->first();
                 // Storing tool link
                 $toolLink = new Listing();
                 $toolLink->user_id = $userData->id;
                 $toolLink->company_link = $checkout_session->metadata->website_link;
-                $toolLink->plan_id = $planId;
+                $toolLink->plan_id = $planId->id;
                 $toolLink->save();
 
                 // return response()->json(["success"=>true, "msg"=>"Subscription added Successfully"], 200);
-                return redirect('https://vacationrentals.tools/dashboard/addtool?id=' . $toolLink->id);
+                return redirect('https://vacationrentals.tools/dashboard/addtool?id=' . $toolLink->id . '&plan_type=' . $planId->plan_type);
             }else{
                 return response()->json(["success"=>false, "msg"=>"Unauthorized User"],401);
             }
