@@ -102,6 +102,7 @@ class ListingController extends Controller
                 ]);
                 // add categories to the user
                 $categories = json_decode($request->company_categories);
+                ListingCategory::where('listing_id', $listingId)->delete();
                 foreach($categories as $category){
                     $categoryInsert = new ListingCategory();
                     $categoryInsert->listing_id = $listingId;
@@ -188,11 +189,41 @@ class ListingController extends Controller
 
     public function showCategoryListing(Request $request){
         try{
-            $slug = $request->slug;
-            $categoryId = Category::where('slug', $slug)->value("id");
-            dd($categoryId);
+            if(isset($request->slug)){
+                $slug = $request->slug;
+                // $listingsData = Category::with('categoryList')
+                // ->where('slug' , $slug)
+                // ->first();
+                $categoryId = Category::where('slug', $slug)->value("id");
+                $categoryListing = ListingCategory::where('category_id', $categoryId)->get();
+                $featuredListings = [];
+                $otherMonthListings = [];
+                foreach ($categoryListing as $listing) {
+                    $listingModel = Listing::where('id', $listing->listing_id)->with('plan')->first();                
+                    if ($listingModel) {
+                        $planType = $listingModel->plan->plan_type;
+                
+                        if ($planType === 'Featured') {
+                            array_unshift($featuredListings, $listingModel);
+                        } elseif ($planType === 'Monthly' || $planType === 'Yearly') {
+                            $otherMonthListings[] = $listingModel;
+                        }
+                    }
+                }
+                
+                $listings = array_merge($featuredListings, $otherMonthListings);
+
+                return response()->json(["success"=>true, "listings"=>$listings, "status"=>200], 200);
+            }else{
+                $listings = Listing::leftJoin('plans', 'listings.plan_id', '=', 'plans.id')
+                ->orderByRaw('plans.plan_type = "Featured" DESC')
+                ->select("listings.*", "plans.plan_type")
+                ->get();
+                return response()->json(["success"=>true, "listings"=>$listings, "status"=>200], 200);
+            }
+            
         }catch(\Exception $e){
-            return response()->json(["success"=>false, "msg"=>"Something went wrong", "status"=>400], 400);
+            return response()->json(["success"=>false, "msg"=>"Something went wrong","error" => $e->getMessage(), "status"=>400], 400);
         }
     }
 
