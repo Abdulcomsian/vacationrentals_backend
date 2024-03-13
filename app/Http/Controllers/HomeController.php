@@ -35,7 +35,9 @@ class HomeController extends Controller
     */
     public function index()
     {
-        return view('index');
+        $users = User::where('type', 'user')->count();
+        $listings = Listing::where('status', ['1','2'])->count();
+        return view('index', compact('users', 'listings'));
     }
     public function users()
     {
@@ -48,7 +50,8 @@ class HomeController extends Controller
     }
     public function profile()
     {
-        return view('profile');
+        $adminDetail = User::where('type', 'admin')->first();
+        return view('profile', compact('adminDetail'));
     }
     public function emails()
     {

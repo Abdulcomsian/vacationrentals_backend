@@ -201,8 +201,7 @@ class ListingController extends Controller
                 foreach ($categoryListing as $listing) {
                     $listingModel = Listing::where('id', $listing->listing_id)->with('plan')->first();                
                     if ($listingModel) {
-                        $planType = $listingModel->plan->plan_type;
-                
+                        $planType = $listingModel->plan->plan_type;                
                         if ($planType === 'Featured') {
                             array_unshift($featuredListings, $listingModel);
                         } elseif ($planType === 'Monthly' || $planType === 'Yearly') {

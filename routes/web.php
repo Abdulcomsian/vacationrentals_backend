@@ -56,6 +56,11 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
     // Plan or Package Routes
     Route::post('update-plan', [PlanController::class, 'updatePlan'])->name('update.plan');
     Route::post('show-edit-plan' ,[PlanController::class, 'showEdit'])->name('show.edit.plan');
+
+    // User Routes for Admin
+    Route::post('delete-user', [UserController::class, 'deleteUser'])->name('delete.user');
+    Route::post('update-admin-profile', [UserController::class, 'updateAdmin'])->name('update.admin.profile');
+    Route::post('change-password', [UserController::class, 'changePassword'])->name('change.password');
 });
 
 // Admin Routes ends here

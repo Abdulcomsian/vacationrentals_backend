@@ -55,41 +55,49 @@
                 <div class="card-body p-4">
                     <div class="tab-content">
                         <div class="tab-pane active" id="personalDetails" role="tabpanel">
-                            <form action="javascript:void(0);">
+                            <form action="{{route('update.admin.profile')}}" method="POST" enctype="multipart/form-data">
+                                @csrf
                                 <div class="row">
+                                    <input type="hidden" name="admin_id" value="{{$adminDetail->id}}">
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label for="firstnameInput" class="form-label">First
+                                            @error('full_name')
+                                                <span class="text-danger">{{$message}}</span>
+                                            @enderror
+                                            <label for="firstnameInput" class="form-label">Full
                                                 Name</label>
-                                            <input type="text" class="form-control" id="firstnameInput"
-                                                placeholder="Enter your firstname" value="Dave">
+                                            <input type="text" class="form-control" id="firstnameInput" name="full_name"
+                                                placeholder="Enter your firstname" value="{{$adminDetail->name}}">
                                         </div>
                                     </div>
                                     <!--end col-->
-                                    <div class="col-lg-6">
+                                    {{-- <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="lastnameInput" class="form-label">Last
                                                 Name</label>
                                             <input type="text" class="form-control" id="lastnameInput"
                                                 placeholder="Enter your lastname" value="Adame">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <!--end col-->
-                                    <div class="col-lg-6">
+                                    {{-- <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="phonenumberInput" class="form-label">Phone
                                                 Number</label>
                                             <input type="text" class="form-control" id="phonenumberInput"
                                                 placeholder="Enter your phone number" value="+(1) 987 6543">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <!--end col-->
                                     <div class="col-lg-6">
                                         <div class="mb-3">
+                                            @error('email')
+                                                <span class="text-danger">{{$message}}</span>
+                                            @enderror
                                             <label for="emailInput" class="form-label">Email
                                                 Address</label>
-                                            <input type="email" class="form-control" id="emailInput"
-                                                placeholder="Enter your email" value="daveadame@velzon.com">
+                                            <input type="email" class="form-control" id="emailInput" name="email"
+                                                placeholder="Enter your email" value="{{$adminDetail->email}}">
                                         </div>
                                     </div>
                                     <!--end col-->
@@ -106,22 +114,24 @@
                         </div>
                         <!--end tab-pane-->
                         <div class="tab-pane" id="changePassword" role="tabpanel">
-                            <form action="javascript:void(0);">
+                            <form action="{{route('change.password')}}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="admin_id" value="{{$adminDetail->id}}">
                                 <div class="row g-2">
-                                    <div class="col-lg-4">
+                                    {{-- <div class="col-lg-4">
                                         <div>
                                             <label for="oldpasswordInput" class="form-label">Old
                                                 Password*</label>
                                             <input type="password" class="form-control" id="oldpasswordInput"
                                                 placeholder="Enter current password">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <!--end col-->
                                     <div class="col-lg-4">
                                         <div>
                                             <label for="newpasswordInput" class="form-label">New
                                                 Password*</label>
-                                            <input type="password" class="form-control" id="newpasswordInput"
+                                            <input type="password" class="form-control" name="new_password" id="newpasswordInput"
                                                 placeholder="Enter new password">
                                         </div>
                                     </div>
@@ -130,21 +140,21 @@
                                         <div>
                                             <label for="confirmpasswordInput" class="form-label">Confirm
                                                 Password*</label>
-                                            <input type="password" class="form-control" id="confirmpasswordInput"
+                                            <input type="password" class="form-control" name="confim_password" id="confirmpasswordInput"
                                                 placeholder="Confirm password">
                                         </div>
                                     </div>
                                     <!--end col-->
-                                    <div class="col-lg-12">
+                                    {{-- <div class="col-lg-12">
                                         <div class="mb-3">
                                             <a href="javascript:void(0);"
                                                 class="link-primary text-decoration-underline">Forgot
                                                 Password ?</a>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <!--end col-->
-                                    <div class="col-lg-12">
-                                        <div class="text-end">
+                                    <div class="col-lg-4">
+                                        <div class="text-end d-flex mt-4">
                                             <button type="submit" class="btn btn-danger">Change
                                                 Password</button>
                                         </div>

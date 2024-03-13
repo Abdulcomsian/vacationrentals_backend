@@ -121,9 +121,9 @@
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="183.35">500</span>
+                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="183.35">{{$users}}</span>
                                     </h4>
-                                    <a href="" class="text-decoration-underline">View Users</a>
+                                    <a href="{{route('users')}}" class="text-decoration-underline">View Users</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-warning rounded fs-3">
@@ -152,9 +152,9 @@
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="165.89">100</span>
+                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="165.89">{{$listings}}</span>
                                     </h4>
-                                    <a href="/listings" class="text-decoration-underline">View Listings</a>
+                                    <a href="{{route('listings')}}" class="text-decoration-underline">View Listings</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-danger rounded fs-3">

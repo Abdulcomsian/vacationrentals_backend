@@ -86,14 +86,15 @@
                                             <th scope="col">Name</th>
                                             <th scope="col">Email</th>
                                             <th scope="col">Email Verification Status</th>
-                                            {{-- <th scope="col">Action</th> --}}
+                                            <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php $i = 1; @endphp
                                         @isset($users)
                                         @foreach($users as $user)
                                         <tr>
-                                            <td>1</td>
+                                            <td>{{$i}}</td>
                                             <td>{{$user->name}}</td>
                                             <td>{{$user->email}}</td>
                                             <td>
@@ -105,15 +106,18 @@
                                                     }
                                                 @endphp
                                             </td>
-                                            {{-- <td>
-                                                <a href="#" class="edit-cat text-success" previewlistener="true" >
+                                            <td>
+                                                {{-- <a href="#" class="edit-cat text-success" previewlistener="true" >
                                                     <i class="las la-pencil-alt fs-20"></i>
-                                                </a>
-                                                <a href="#" class="del-cat text-danger mx-2" data-id="1">
+                                                </a> --}}
+                                                <a href="#" class="del-cat text-danger mx-2" data-id="{{$user->id}}">
                                                     <i class="lar la-trash-alt fs-20"></i>
                                                 </a>
-                                            </td> --}}
+                                            </td>
                                         </tr>
+                                        @php
+                                            $i++
+                                        @endphp
                                         @endforeach
                                         @endisset
                                     </tbody>
@@ -133,9 +137,9 @@
 <div class="modal fade bs-delete-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form action="{{route('delete.listing')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('delete.user')}}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <input type="hidden" id="listingId" name="listing_id" value="">
+                <input type="hidden" id="userId" name="user_id" value="">
                     <div class="modal-header">
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="NotificationModalbtn-close"></button>
                     </div>
@@ -240,7 +244,7 @@
 <script>
     $(document).on("click", ".del-cat", function(){
         let id = $(this).attr("data-id");
-        $("#listingId").val(id);
+        $("#userId").val(id);
         $(".bs-delete-modal-center").modal("show");
     });
     $(document).on("click", ".edit-cat", function(){

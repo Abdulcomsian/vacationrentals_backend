@@ -10,11 +10,20 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Notifications\SendEmailForgotPassword;
 use App\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Notification;
-use App\Models\User;
+use App\Models\{
+    User,
+    Plan,
+    Subscription,
+    Listing,
+    Category,
+    ListingCategory,
+    Deal,
+};
 use Carbon\Carbon;
 
 class UserController extends Controller
 {
+    // ================== API Functions Start ====================
     public function register(Request $request){
         try {
             $validator = Validator::make($request->all(), [
@@ -191,5 +200,75 @@ class UserController extends Controller
         $newPassword = Hash::make($request->new_password);
         $user = User::where('email', $email)->update(["password"=>$newPassword]);
         return response()->json(["success"=>true, "msg"=>"Password changed successfully", "status"=>200]);
+    }
+
+
+    // ==================== API Function ends here ================================
+
+
+
+
+
+    // ==================== Admin Functions Starts here ============================
+
+    public function deleteUser(Request $request){
+        try{
+            $userId = $request->user_id;
+            $listings = Listing::where('user_id', $userId)->get();
+            foreach($listings as $listing){
+                ListingCategory::where('listing_id', $listing->id)->delete();
+                Deal::where('listing_id', $listing->id)->delete();
+                $listing->delete();
+            }
+            User::where('id', $userId)->delete();
+            return redirect()->back()->with(['success' => "User Deleted Successfully"]);
+        }catch(\Exception $e){
+            return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
+        }
+    }
+
+    public function updateAdmin(Request $request){
+        $request->validate([
+            "full_name" => "required",
+            "email" => "required|email",
+        ],[
+            "full_name.required" => "Name is required.",
+            "email.required" => "Email is required.",
+            "email.email" => "Must be a type of email"
+        ]);
+        try{
+            $name = $request->full_name;
+            $email = $request->email;
+            $id = $request->admin_id;
+            $user = User::where('id', $id)->update([
+                'name' => $name,
+                'email' => $email
+            ]);
+            if($user){
+                return redirect()->back()->with(['success'=>"Admin Details Updated Successfully"]);
+            }
+        }catch(\Exception $e){
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function changePassword(Request $request){
+        $request->validate([
+            'new_password' => 'required|min:8|confirmed',
+            'confirm_password' => 'required',
+        ], [
+            'new_password.confirmed' => 'The new password and confirmation password do not match.',
+        ]);
+        try{
+            $password = $request->new_password;
+            $user = User::where('id', $request->admin_id)->update([
+                'password' => Hash::make($password)
+            ]);
+            if($user){
+                return redirect()->back()->with(['success'=>"Password Updated Successfull"]);
+            }
+        }catch(\Exception $e){
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
     }
 }
