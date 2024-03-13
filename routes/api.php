@@ -38,6 +38,7 @@ Route::middleware(['check.authentication'])->group(function(){
     // Listing Apis
     Route::post('/listing-detail', [ListingController::class, 'showListingDetail']);
     Route::post('/add-listing', [ListingController::class, 'addListing']);
+    Route::post('/update-listing', [ListingController::class, 'addListing']);
     Route::get('/show-all-listings', [ListingController::class, 'showAllListing']);
     Route::post('/delete-listing', [ListingController::class, 'deleteListingUser']);
 });

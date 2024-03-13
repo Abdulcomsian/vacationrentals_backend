@@ -35,7 +35,7 @@ class ListingController extends Controller
         }
     }
 
-    // for adding listing
+    // for adding listing and updating the listing
     public function addListing(Request $request){
         $validator = Validator::make($request->all(),[
             'company_name' => 'required|string',
@@ -82,7 +82,7 @@ class ListingController extends Controller
                 $path = public_path().'/assets/listing_description_image/' . $image_name;
                 file_put_contents($path, $imgeData);
                 $image->removeAttribute('src');
-                $image->setAttribute('src', $path);
+                $image->setAttribute('src', asset('assets/listing_description_image/' . $image_name));
                 $image->setAttribute('max-width' , '100% !important;');
                 $image->setAttribute('width' , $styles);
                 $image->setAttribute('height' , 'auto');
@@ -92,7 +92,7 @@ class ListingController extends Controller
             
             $user_id = Auth::user()->id;
             $listingId = $request->id;
-            $listing = Listing::where('id', $listingId)->where('status', '0')->first(); // 0 means draft    
+            $listing = Listing::where('id', $listingId)->first(); // 0 means draft    
             if(!empty($listing) || isset($listing)){
                 $listing->update([
                     'company_name' => $request->company_name,
@@ -158,6 +158,7 @@ class ListingController extends Controller
             $userId = Auth::user()->id;
             $listings = Listing::with(['plan', 'deals'])
                 ->where('user_id', $userId)
+                ->where('deleted_at', '=', null)
                 ->get()
                 ->map(function ($listing) {
                     return [
