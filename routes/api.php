@@ -47,6 +47,8 @@ Route::middleware(['check.authentication'])->group(function(){
 Route::get('/show-category', [CategoryController::class, 'showCategory']);
 Route::get('/show-category-element', [CategoryController::class, 'showCategoryElement']);
 
+Route::post('/show-category-listing', [ListingController::class, 'showCategoryListing']);
+
 // Unprotected Plans API
 Route::get('/plans', [PlanController::class, 'showPlans']);
 

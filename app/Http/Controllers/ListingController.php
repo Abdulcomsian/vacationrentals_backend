@@ -35,7 +35,7 @@ class ListingController extends Controller
         }
     }
 
-    // for adding listing and updating the listing
+    // for adding listing and updating the record
     public function addListing(Request $request){
         $validator = Validator::make($request->all(),[
             'company_name' => 'required|string',
@@ -83,9 +83,8 @@ class ListingController extends Controller
                 file_put_contents($path, $imgeData);
                 $image->removeAttribute('src');
                 $image->setAttribute('src', asset('assets/listing_description_image/' . $image_name));
-                $image->setAttribute('max-width' , '100% !important;');
                 $image->setAttribute('width' , $styles);
-                $image->setAttribute('height' , 'auto');
+                $image->setAttribute('class', 'ck-image');
                 $image->removeAttribute("style");
             }
             $content = $dom->saveHTML();
@@ -126,11 +125,10 @@ class ListingController extends Controller
                         $insertDeal->save();
                     }
                 }
-                return response()->json(["success"=>true, "msg"=>"Listing details added", "status"=>200], 200);
+                return response()->json(["success"=>true, "msg"=>"Listing updated successfully and is under review", "status"=>200], 200);
             }else{
                 return response()->json(["success"=>false, "msg"=>"Listing has already been created for the selected tool", "status"=>400], 400);
-            }        
-
+            }
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "line"=>$e->getLine()], 400);
         }
@@ -185,6 +183,17 @@ class ListingController extends Controller
             return response()->json(["success"=>false, "msg"=>"Something went wrong", "status"=>400], 400);
         }
         
+    }
+
+
+    public function showCategoryListing(Request $request){
+        try{
+            $slug = $request->slug;
+            $categoryId = Category::where('slug', $slug)->value("id");
+            dd($categoryId);
+        }catch(\Exception $e){
+            return response()->json(["success"=>false, "msg"=>"Something went wrong", "status"=>400], 400);
+        }
     }
 
 
