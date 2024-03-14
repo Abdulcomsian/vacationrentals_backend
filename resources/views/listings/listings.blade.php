@@ -94,7 +94,7 @@
                                     </thead>
                                     <tbody>
                                         @forelse($listings as $listing)
-                                            <tr style="text-wrap: wrap;">
+                                            <tr>
                                                 {{-- <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="flex-shrink-0 me-2">
@@ -106,7 +106,7 @@
                                                 <td style="text-wrap: wrap;">
                                                    {{$listing->company_tagline}}
                                                 </td>
-                                                <td>{{$listing->company_link}}</td>
+                                                <td style="text-wrap: wrap;">{{$listing->company_link}}</td>
                                                 <td style="text-wrap: wrap;">
                                                     @php
                                                         foreach ($listing->getCategories as $category_id) {
