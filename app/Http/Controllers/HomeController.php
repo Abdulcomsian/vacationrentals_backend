@@ -36,7 +36,7 @@ class HomeController extends Controller
     public function index()
     {
         $users = User::where('type', 'user')->count();
-        $listings = Listing::where('status', '1')->orWhere('status', '2')->count();
+        $listings = Listing::where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->count();
         $payments = Subscription::select("stripe_price")->get();
         $totalPayment = 0;
         foreach($payments as $payment){
