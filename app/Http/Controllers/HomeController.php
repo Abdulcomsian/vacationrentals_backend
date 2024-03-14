@@ -36,7 +36,7 @@ class HomeController extends Controller
     public function index()
     {
         $users = User::where('type', 'user')->count();
-        $listings = Listing::where('status', ['1','2'])->count();
+        $listings = Listing::where('status', '1')->orWhere('status', '2')->count();
         $payments = Subscription::select("stripe_price")->get();
         $totalPayment = 0;
         foreach($payments as $payment){
@@ -52,7 +52,6 @@ class HomeController extends Controller
     public function payments()
     {
         $payments = Subscription::with('user')->get();
-        // dd($payments);
         return view('payments', compact('payments'));
     }
     public function profile()
@@ -78,16 +77,32 @@ class HomeController extends Controller
             2 - Approved
             3 - Rejected
         */
-        if(isset($request->users)){
-            $listings = Listing::with(['getCategories', 'plan'])->where('user_id', $request->users)->where('status',['2'])->get();
-            $users = User::where('type', 'user')->get();
-            $user_id = $request->users;
-            return view('listings/listings', compact('listings', 'users', 'user_id'));
-        }else{
-            $listings = Listing::with(['getCategories', 'plan'])->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->get();
-            $users = User::where('type', 'user')->get();
-            return view('listings/listings', compact('listings', 'users'));
-        }
+        // if(isset($request->userId)){
+        //     $listings = Listing::with(['getCategories', 'plan'])->where('user_id', $request->userId)->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->get();
+        //     $users = User::where('type', 'user')->get();
+        //     $user_id = $request->userId;
+        //     return view('listings/listings', compact('listings', 'users', 'user_id'));
+        // }else{
+        //     $listings = Listing::with(['getCategories', 'plan'])->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->get();
+        //     $users = User::where('type', 'user')->get();
+        //     return view('listings/listings', compact('listings', 'users'));
+        // }
+
+        $listingsQuery = Listing::with(['getCategories', 'plan'])->where(function($query) use ($request) {
+            if (isset($request->userId)) {
+                $query->where('user_id', $request->userId);
+            }
+            $query->whereIn('status', ['1', '2', '3']);
+        });
+        
+        $listings = $listingsQuery->get();
+        $users = User::where('type', 'user')->get();
+
+        
+        // Pass the listings, users, and user_id to the view
+        return isset($request->userId)
+            ? view('listings/listings', compact('listings', 'users'))
+            : view('listings/listings', compact('listings', 'users'));        
     }
 
     public function packages(){

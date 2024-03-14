@@ -351,6 +351,7 @@ class ListingController extends Controller
             "companyName" => "required",
             "companyTagLine" => "required",
             "websiteLink" => "required",
+            "short_description" => "required",
         ],[
             // "companyImage.required" => "Company image is required.",
             // "companyImage.image" => "The file must be an image.",
@@ -436,6 +437,20 @@ class ListingController extends Controller
 
     public function updateListing(Request $request){
         // dd($request->all());
+        $request->validate([
+            // "companyImage" => "required|mimes:jpeg,png,jpg,gif|max:2048",
+            "companyName" => "required",
+            "companyTagLine" => "required",
+            "websiteLink" => "required",
+            "short_description" => "required",
+        ],[
+            // "companyImage.required" => "Company image is required.",
+            // "companyImage.image" => "The file must be an image.",
+            // "companyImage.mimes" => "The image must be a file of type: jpeg, png, jpg, gif.",
+            // "companyImage.max" => "The image may not be greater than 2048 kilobytes in size.",
+            "companyName.required" => "Company name is required.",
+            "companyTagLine.required" => "Company tagline is required.",
+        ]);
         try{
             $id = $request->listing_id;
             $user_id = Auth::user()->id;

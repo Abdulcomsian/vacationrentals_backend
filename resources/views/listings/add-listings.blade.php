@@ -67,27 +67,27 @@
                                     </div> --}}
                                     <div class="col-xl-6 d-flex flex-column">
                                         <label for="" class="form-label required">Company Name</label>
+                                        <input type="text" class="form-control" name="companyName" placeholder="Enter company here..." required>
                                         @error('companyName')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
-                                        <input type="text" class="form-control" name="companyName" placeholder="Enter company here...">
                                     </div>
                                 </div>
     
                                 <div class="row mt-2">
                                     <div class="col-xl-4 d-flex flex-column">
                                         <label for="" class="form-label required">Company Tag Line</label>
+                                        <input type="text" class="form-control" name="companyTagLine" placeholder="Enter company tag line here..." required>
                                         @error('companyTagLine')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
-                                        <input type="text" class="form-control" name="companyTagLine" placeholder="Enter company tag line here...">
                                     </div>
                                     <div class="col-xl-4 d-flex flex-column">
                                         <label for="" class="form-label required">Website Link</label>
+                                        <input type="text" class="form-control" name="websiteLink" placeholder="Enter website link here......" required>
                                         @error('websiteLink')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
-                                        <input type="text" class="form-control" name="websiteLink" placeholder="Enter website link here......">
                                     </div>
                                     <div class="col-xl-4 d-flex flex-column">
                                         <label for="" class="form-label required">Status</label>
@@ -101,7 +101,10 @@
                                 </div>
                                 <div class="row mt-4">
                                     <div class="col-xl-12">
-                                        <label for="" class="form-label">Add Short Description</label>                                        
+                                        <label for="" class="form-label">Add Short Description</label><br>                                     
+                                        @error('short_description')
+                                            <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                         <textarea name="short_description" id="summernote" style="display: none;"></textarea>
                                     </div>
                                 </div>

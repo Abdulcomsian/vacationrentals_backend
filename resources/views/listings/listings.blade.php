@@ -39,7 +39,7 @@
                             <!-- <h4 class="fs-16 mb-1">Good Morning, Admin!</h4>
                             <p class="text-muted mb-0">Here's what's happening with your store
                                 today.</p> --> 
-                                <select name="users" class="form-select mb-3 w-25" id="user">
+                                <select name="users" class="form-select mb-3 w-25 userListingFilter" id="user">
                                     <option value="">All User</option>
                                     @isset($users)
                                     @foreach($users as $user)
@@ -267,5 +267,21 @@
         $("#listingId").val(id);
         $(".bs-delete-modal-center").modal("show");
     });
+
+    $(document).on("change", ".userListingFilter", function(){
+        let userId = $(this).find(":selected").val();
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        $.ajax({
+            method: "POST",
+            url: "{{ route('listings') }}",
+            data: {
+                _token: csrfToken,
+                userId: userId,
+            },
+            success: function(res) { 
+                console.log(res);
+            }
+        });
+    })
 </script>
 @endsection
