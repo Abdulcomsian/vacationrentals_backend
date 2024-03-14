@@ -102,8 +102,8 @@
                                                         </div>
                                                     </div>
                                                 </td> --}}
-                                                <td>{{$listing->company_name}}</td>
-                                                <td>
+                                                <td style="text-wrap: wrap;">{{$listing->company_name}}</td>
+                                                <td style="text-wrap: wrap;">
                                                    {{$listing->company_tagline}}
                                                 </td>
                                                 <td>{{$listing->company_link}}</td>
