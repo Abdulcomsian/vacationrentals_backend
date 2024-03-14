@@ -94,7 +94,7 @@
                                     </thead>
                                     <tbody>
                                         @forelse($listings as $listing)
-                                            <tr>
+                                            <tr style="text-wrap: wrap;">
                                                 {{-- <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="flex-shrink-0 me-2">
