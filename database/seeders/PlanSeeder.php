@@ -39,7 +39,15 @@ class PlanSeeder extends Seeder
                 "recurring_price" => "199", 
                 "description"=>"Your listing will show on top of the home page, Your business will show on top on your chosen category, Unlimited categories, Business tag line & full description, Link to website, Be able to add deals", 
                 "currency"=>"USD"
-            ],
+            ],[
+                "plan_type" => "Admin Plan",
+                "plan_name" => "Yearly",
+                "plan_id" => null, 
+                "discounted_price" => null,
+                "recurring_price" => "0", 
+                "description"=>"Default Plan for Admin to create listing", 
+                "currency"=>"USD"
+            ]
         ];
 
         foreach($plans as $plan){

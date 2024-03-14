@@ -129,19 +129,27 @@
                                     <!--end col-->
                                     <div class="col-lg-4">
                                         <div>
+                                            
                                             <label for="newpasswordInput" class="form-label">New
                                                 Password*</label>
                                             <input type="password" class="form-control" name="new_password" id="newpasswordInput"
                                                 placeholder="Enter new password">
+                                                @error('new_password')
+                                                    <span class="text-danger">{{$message}}</span>
+                                                @enderror
                                         </div>
                                     </div>
                                     <!--end col-->
                                     <div class="col-lg-4">
                                         <div>
+                                            
                                             <label for="confirmpasswordInput" class="form-label">Confirm
                                                 Password*</label>
                                             <input type="password" class="form-control" name="confim_password" id="confirmpasswordInput"
                                                 placeholder="Confirm password">
+                                                @error('confim_password')
+                                                    <span class="text-danger">{{$message}}</span>
+                                                @enderror
                                         </div>
                                     </div>
                                     <!--end col-->

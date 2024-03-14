@@ -254,10 +254,7 @@ class UserController extends Controller
 
     public function changePassword(Request $request){
         $request->validate([
-            'new_password' => 'required|min:8|confirmed',
-            'confirm_password' => 'required',
-        ], [
-            'new_password.confirmed' => 'The new password and confirmation password do not match.',
+            'new_password' => 'required',
         ]);
         try{
             $password = $request->new_password;

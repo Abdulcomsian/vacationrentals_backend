@@ -27,6 +27,7 @@ class Listing extends Model
         'short_description',
         'company_logo',
         'status',
+        'plan_id',
     ];
 
     public function getCategories(){

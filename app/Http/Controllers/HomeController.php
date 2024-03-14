@@ -72,12 +72,12 @@ class HomeController extends Controller
             3 - Rejected
         */
         if(isset($request->users)){
-            $listings = Listing::with('getCategories')->where('user_id', $request->users)->where('status', ['1', '2', '3'])->get();
+            $listings = Listing::with(['getCategories', 'plan'])->where('user_id', $request->users)->where('status',['2'])->get();
             $users = User::where('type', 'user')->get();
             $user_id = $request->users;
             return view('listings/listings', compact('listings', 'users', 'user_id'));
         }else{
-            $listings = Listing::with('getCategories')->where('status', ['1', '2', '3'])->get();
+            $listings = Listing::with(['getCategories', 'plan'])->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->get();
             $users = User::where('type', 'user')->get();
             return view('listings/listings', compact('listings', 'users'));
         }

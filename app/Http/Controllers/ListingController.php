@@ -371,8 +371,43 @@ class ListingController extends Controller
             // }
             $storeListing->company_name = $request->companyName;
             $storeListing->company_tagline = $request->companyTagLine;
-            $storeListing->short_description = $request->short_description;
-            $storeListing->status = 1;          
+
+            // saving summernote content
+            $designDocument = $request->short_description;
+            $dom = new \DOMDocument();
+            libxml_use_internal_errors(true);
+            $dom->loadHtml($designDocument, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            libxml_use_internal_errors(false);
+            $images = $dom->getElementsByTagName('img');
+
+            foreach($images as $item => $image){
+                $data = $image->getAttribute("src");
+                $styles = $image->getAttribute("style");
+                list($type, $data) = explode(';', $data);
+                list(, $data)      = explode(',', $data);
+                $imgeData = base64_decode($data);
+                $image_name= time().$item.'.png';
+                $path = public_path().'/assets/listing_description_image/' . $image_name;
+                file_put_contents($path, $imgeData);
+                $image->removeAttribute('src');
+                $image->setAttribute('src', asset('assets/listing_description_image/' . $image_name));
+                $image->setAttribute('width' , $styles);
+                $image->setAttribute('class', 'ck-image');
+                $image->removeAttribute("style");
+            }
+            $content = $dom->saveHTML();
+            $storeListing->short_description = $content;
+            $storeListing->plan_id = 4;
+            $status = $request->status;
+            $saveStatus = "0";
+            if($status == "approve"){
+                $saveStatus = "2";
+            }elseif($status == "pending"){
+                $saveStatus = "1";
+            }elseif($status == "reject"){
+                $saveStatus = "3";
+            }
+            $storeListing->status = $saveStatus;
             if($storeListing->save()){
                 foreach($request->category as $category_id){
                     $listingCategory = new ListingCategory();
@@ -389,7 +424,7 @@ class ListingController extends Controller
 
     public function editListing($id){
         $categories = Category::where('status', 'activate')->get();
-        $listingData = Listing::where('id', $id)->first();
+        $listingData = Listing::with('plan')->where('id', $id)->first();
         $listingCategory = ListingCategory::where('listing_id', $id)->get();
         foreach($listingCategory as $listCat){
             $categoryId[] = $listCat->category_id;
@@ -398,6 +433,7 @@ class ListingController extends Controller
     }
 
     public function updateListing(Request $request){
+        // dd($request->all());
         try{
             $id = $request->listing_id;
             $user_id = Auth::user()->id;
@@ -412,8 +448,50 @@ class ListingController extends Controller
             // }
             $storeListing->company_name = $request->companyName;
             $storeListing->company_tagline = $request->companyTagLine;
-            $storeListing->short_description = $request->short_description;
-            $storeListing->status = 1;
+            
+            // saving summernote content
+            $designDocument = $request->short_description;
+            $dom = new \DOMDocument();
+            libxml_use_internal_errors(true);
+            $dom->loadHtml($designDocument, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            libxml_use_internal_errors(false);
+            $images = $dom->getElementsByTagName('img');
+
+            foreach($images as $item => $image){
+                $data = $image->getAttribute("src");
+                $styles = $image->getAttribute("style");
+                $image_explode = explode(';', $data);
+                if(count($image_explode) == 2){
+                    list($type, $data) = [$image_explode[0] , $image_explode[1]];
+                    list(, $data)      = explode(',', $data);
+                }else{
+                    continue;
+                }
+                // list($type, $data) = explode(';', $data);
+                // list(, $data)      = explode(',', $data);
+                $imgeData = base64_decode($data);
+                $image_name= time().$item.'.png';
+                $path = public_path().'/assets/listing_description_image/' . $image_name;
+                file_put_contents($path, $imgeData);
+                $image->removeAttribute('src');
+                $image->setAttribute('src', asset('assets/listing_description_image/' . $image_name));
+                $image->setAttribute('width' , $styles);
+                $image->setAttribute('class', 'ck-image');
+                $image->removeAttribute("style");
+            }
+            $content = $dom->saveHTML();
+            $storeListing->short_description = $content;
+            $status = $request->status;
+            $saveStatus = "0";
+            if($status == "approve"){
+                $saveStatus = "2";
+            }elseif($status == "pending"){
+                $saveStatus = "2";
+            }elseif($status == "reject"){
+                $saveStatus = "3";
+            }
+            $storeListing->status = $saveStatus;
+            $storeListing->plan_id = $request->plan_id;
             if($storeListing->save()){
                 $deleteCategory = ListingCategory::where('listing_id', $id)->delete();
                 foreach($request->category as $category_id){

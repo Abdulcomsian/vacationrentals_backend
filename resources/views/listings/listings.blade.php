@@ -82,30 +82,30 @@
                                 <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
                                     <thead class="text-muted table-light">
                                         <tr>
-                                            <th scope="col">Company Logo</th>
+                                            {{-- <th scope="col">Company Logo</th> --}}
                                             <th scope="col">Company Name</th>
                                             <th scope="col">Company Tagline</th>
                                             <th scope="col">Category/ies</th>
                                             <th scope="col">Package</th>
-                                            <th scope="col">Approved</th>
+                                            <th scope="col">Status</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse($listings as $listing)
                                             <tr>
-                                                <td>
+                                                {{-- <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="flex-shrink-0 me-2">
                                                             <img src="{{ asset("assets/listing_images/" . $listing->company_logo) }}" alt="" class="avatar-xs rounded-circle shadow" />
                                                         </div>
                                                     </div>
-                                                </td>
+                                                </td> --}}
                                                 <td>{{$listing->company_name}}</td>
                                                 <td>
                                                    {{$listing->company_tagline}}
                                                 </td>
-                                                <td>
+                                                <td style="text-wrap: wrap;">
                                                     @php
                                                         foreach ($listing->getCategories as $category_id) {
                                                             $categoryId = $category_id->category_id;
@@ -114,8 +114,16 @@
                                                         }
                                                     @endphp
                                                 </td>
-                                                <td>Monthly</td>
-                                                <td>Yes</td>
+                                                <td>{{$listing->plan->plan_type}}</td>
+                                                <td>
+                                                    @if($listing->status == 1)
+                                                    Pending
+                                                    @elseif($listing->status == 2)
+                                                    Approved
+                                                    @elseif($listing->status == 3)
+                                                    Rejected
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <a href="{{url('edit-listing', ["id"=>$listing->id])}}" class="edit-cat text-success">
                                                         <i class="las la-pencil-alt fs-20"></i>

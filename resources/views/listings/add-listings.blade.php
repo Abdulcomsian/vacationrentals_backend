@@ -46,21 +46,11 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-xl-6 d-flex flex-column">
-                                    <!-- <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
-                                        <option value="AL">Alabama</option>
-                                        <option value="AL">Alabama</option>
-                                        <option value="AL">Alabama</option>
-                                        <option value="AL">Alabama</option>
-                                        <option value="AL">Alabama</option>
-                                        <option value="WY">Wyoming</option>
-                                    </select> -->
-
                                         <label for="" class="form-label">Select Company Category</label>
                                         @error('category')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
                                         <select class="form-control select2_dropdown" name="category[]" id="category" multiple="multiple">
-                                            <option value="">Select Category</option>
                                             @isset($categories)
                                                 @foreach($categories as $category)
                                                     <option value="{{$category->id}}">{{$category->category_name}}</option>
@@ -68,48 +58,44 @@
                                             @endisset
                                         </select>                                        
                                     </div>
-                                    <div class="col-xl-6 d-flex flex-column">
+                                    {{-- <div class="col-xl-6 d-flex flex-column">
                                         <label for="" class="form-label">Choose Company Logo</label>
                                         @error('companyImage')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
                                         <input class="form-control" type="file" name="companyImage" value="">
-                                    </div>
-                                </div>
-    
-                                <div class="row mt-2">
-                                    <div class="col-xl-4 d-flex flex-column">
+                                    </div> --}}
+                                    <div class="col-xl-6 d-flex flex-column">
                                         <label for="" class="form-label required">Company Name</label>
                                         @error('companyName')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
                                         <input type="text" class="form-control" name="companyName" placeholder="Enter company here...">
                                     </div>
+                                </div>
     
-                                    <div class="col-xl-4 d-flex flex-column">
+                                <div class="row mt-2">
+                                    <div class="col-xl-6 d-flex flex-column">
                                         <label for="" class="form-label required">Company Tag Line</label>
                                         @error('companyTagLine')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
                                         <input type="text" class="form-control" name="companyTagLine" placeholder="Enter company tag line here...">
                                     </div>
-                                    <div class="col-xl-4 d-flex flex-column">
+                                    <div class="col-xl-6 d-flex flex-column">
                                         <label for="" class="form-label required">Status</label>
-                                        @error('companyTagLine')
-                                            <span class="text-danger">{{$message}}</span>
-                                        @enderror
-                                        <select class="form-select mb-3" aria-label="Default select example">
+                                        <select class="form-select mb-3" name="status" aria-label="Default select example">
                                             <option selected="">Select Status </option>
-                                            <option value="1">Approved</option>
-                                            <option value="1">Pending</option>
-                                            <option value="1">Rejected</option>
+                                            <option value="approve">Approved</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="reject">Rejected</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
                                     <div class="col-xl-12">
                                         <label for="" class="form-label">Add Short Description</label>                                        
-                                        <textarea name="short_description" id="editor" cols="30" rows="10"></textarea>
+                                        <textarea name="short_description" id="summernote" style="display: none;"></textarea>
                                     </div>
                                 </div>
                                 <div class="row mt-4 text-right">
@@ -167,17 +153,9 @@
     $(document).ready(function() {
         $('#category').select2();
         $('.select2_dropdown').select2();
+        $('#summernote').summernote({
+            height: 300,
+        });
     });
-</script>
-<script>
-    ClassicEditor
-           .create( document.querySelector( '#editor' ) )
-           .catch( error => {
-               console.error( error );
-           } );
-// $(document).on("click", "#submitButton", function(){
-//     var editorContent = CKEDITOR.instances.short_description.getData();
-//            console.log(editorContent);
-// })
 </script>
 @endsection
