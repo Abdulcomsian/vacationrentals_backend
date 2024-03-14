@@ -13,7 +13,7 @@ class PlanController extends Controller
     // ================ API function ====================
     public function showPlans(){
         try{
-            $plans = Plan::get();
+            $plans = Plan::where('plan_type', '!=', 'Admin Plan')->get();
             if(!empty($plans)){
                 return response()->json(["success"=>true, "plans"=>$plans], 200);
             }
