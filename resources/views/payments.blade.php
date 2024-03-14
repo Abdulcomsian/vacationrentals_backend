@@ -45,7 +45,7 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">Transaction ID</th>
+                                            <th scope="col">Subscription Id</th>
                                             <th scope="col">Amount</th>
                                             <th scope="col">Package</th>
                                             <th scope="col">Status</th>
@@ -54,15 +54,28 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>0365629</td>
-                                            <td>$150</td>
-                                            <td>Monthly</td>
-                                            <td class="text-success"><b>Success</b></td>
-                                            <td>13/05/2023</td>
-                                            <td>John Doe</td>
-                                        </tr>
+                                        @php
+                                            $i = 1;
+                                        @endphp
+                                        @isset($payments)
+                                        @foreach($payments as $payment)
+                                        @php
+                                            $plan = App\Models\Plan::where('plan_id', $payment->price_id)->first();
+                                        @endphp
+                                            <tr>
+                                                <td>{{$i}}</td>
+                                                <td>{{$payment->stripe_subscription_id}}</td>
+                                                <td>{{$payment->stripe_price}}</td>
+                                                <td>{{$plan->plan_type}}</td>
+                                                <td>{{$payment->payment_status}}</td>
+                                                <td>{{$payment->created_at}}</td>
+                                                <td>{{$payment->user->name}}</td>
+                                            </tr>
+                                            @php
+                                                $i++
+                                            @endphp
+                                        @endforeach
+                                        @endisset                                        
                                     </tbody>
                                 </table>
                                 <!-- end table -->

@@ -87,18 +87,22 @@
                                 </div>
     
                                 <div class="row mt-2">    
-                                    <div class="col-xl-6 d-flex flex-column">
+                                    <div class="col-xl-4 d-flex flex-column">
                                         <label for="" class="form-label required">Company Tag Line</label>
                                         @error('companyTagLine')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
                                         <input type="text" class="form-control" name="companyTagLine" value="{{$listingData['company_tagline'] ?? ''}}" placeholder="Enter company tag line here...">
                                     </div>
-                                    <div class="col-xl-6 d-flex flex-column">
-                                        <label for="" class="form-label required">Status</label>
-                                        @error('companyTagLine')
+                                    <div class="col-xl-4 d-flex flex-column">
+                                        <label for="" class="form-label required">Website Link</label>
+                                        @error('websiteLink')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
+                                        <input type="text" class="form-control" name="websiteLink" value="{{$listingData['company_link'] ?? ''}}" placeholder="Enter company link here...">
+                                    </div>
+                                    <div class="col-xl-4 d-flex flex-column">
+                                        <label for="" class="form-label required">Status</label>
                                         <select class="form-select mb-3" aria-label="Default select example" name="status">
                                             <option selected="">Change Status </option>
                                             <option value="approve" @if($listingData->status == 2) selected @endif>Approved</option>

@@ -21,7 +21,12 @@ class Subscription extends Model
         'quantity',
         'trial_ends_at',
         'ends_at',
+        'price_id',
         'created_at',
         'updated_at',
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

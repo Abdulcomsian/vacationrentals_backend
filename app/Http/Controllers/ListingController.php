@@ -350,6 +350,7 @@ class ListingController extends Controller
             // "companyImage" => "required|mimes:jpeg,png,jpg,gif|max:2048",
             "companyName" => "required",
             "companyTagLine" => "required",
+            "websiteLink" => "required",
         ],[
             // "companyImage.required" => "Company image is required.",
             // "companyImage.image" => "The file must be an image.",
@@ -408,6 +409,7 @@ class ListingController extends Controller
                 $saveStatus = "3";
             }
             $storeListing->status = $saveStatus;
+            $storeListing->company_link = $request->websiteLink;
             if($storeListing->save()){
                 foreach($request->category as $category_id){
                     $listingCategory = new ListingCategory();
@@ -492,6 +494,7 @@ class ListingController extends Controller
             }
             $storeListing->status = $saveStatus;
             $storeListing->plan_id = $request->plan_id;
+            $storeListing->company_link = $request->websiteLink;
             if($storeListing->save()){
                 $deleteCategory = ListingCategory::where('listing_id', $id)->delete();
                 foreach($request->category as $category_id){

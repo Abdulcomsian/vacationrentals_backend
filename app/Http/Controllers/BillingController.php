@@ -118,7 +118,8 @@ class BillingController extends Controller
                     'currency' => $checkout_session->currency,
                     'stripe_subscription_id' => $checkout_session->subscription,
                     'invoice_id' => $checkout_session->invoice,
-                    'ends_at' => $expirationDate
+                    'ends_at' => $expirationDate,
+                    'price_id' => $checkout_session->metadata->price_id
                 ]);
 
                 // getting the plan Id from price ID here

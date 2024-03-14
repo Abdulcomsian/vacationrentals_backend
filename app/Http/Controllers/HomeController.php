@@ -37,7 +37,12 @@ class HomeController extends Controller
     {
         $users = User::where('type', 'user')->count();
         $listings = Listing::where('status', ['1','2'])->count();
-        return view('index', compact('users', 'listings'));
+        $payments = Subscription::select("stripe_price")->get();
+        $totalPayment = 0;
+        foreach($payments as $payment){
+            $totalPayment = $totalPayment + $payment->stripe_price;
+        }
+        return view('index', compact('users', 'listings', 'totalPayment'));
     }
     public function users()
     {
@@ -46,7 +51,9 @@ class HomeController extends Controller
     }
     public function payments()
     {
-        return view('payments');
+        $payments = Subscription::with('user')->get();
+        // dd($payments);
+        return view('payments', compact('payments'));
     }
     public function profile()
     {

@@ -85,6 +85,7 @@
                                             {{-- <th scope="col">Company Logo</th> --}}
                                             <th scope="col">Company Name</th>
                                             <th scope="col">Company Tagline</th>
+                                            <th scope="col">Website Link</th>
                                             <th scope="col">Category/ies</th>
                                             <th scope="col">Package</th>
                                             <th scope="col">Status</th>
@@ -105,6 +106,7 @@
                                                 <td>
                                                    {{$listing->company_tagline}}
                                                 </td>
+                                                <td>{{$listing->company_link}}</td>
                                                 <td style="text-wrap: wrap;">
                                                     @php
                                                         foreach ($listing->getCategories as $category_id) {

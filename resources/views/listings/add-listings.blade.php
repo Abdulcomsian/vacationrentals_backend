@@ -75,14 +75,21 @@
                                 </div>
     
                                 <div class="row mt-2">
-                                    <div class="col-xl-6 d-flex flex-column">
+                                    <div class="col-xl-4 d-flex flex-column">
                                         <label for="" class="form-label required">Company Tag Line</label>
                                         @error('companyTagLine')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
                                         <input type="text" class="form-control" name="companyTagLine" placeholder="Enter company tag line here...">
                                     </div>
-                                    <div class="col-xl-6 d-flex flex-column">
+                                    <div class="col-xl-4 d-flex flex-column">
+                                        <label for="" class="form-label required">Website Link</label>
+                                        @error('websiteLink')
+                                            <span class="text-danger">{{$message}}</span>
+                                        @enderror
+                                        <input type="text" class="form-control" name="websiteLink" placeholder="Enter website link here......">
+                                    </div>
+                                    <div class="col-xl-4 d-flex flex-column">
                                         <label for="" class="form-label required">Status</label>
                                         <select class="form-select mb-3" name="status" aria-label="Default select example">
                                             <option selected="">Select Status </option>
