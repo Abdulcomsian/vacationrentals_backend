@@ -60,13 +60,14 @@
                                         @isset($payments)
                                         @foreach($payments as $payment)
                                         @php
-                                            $plan = App\Models\Plan::where('plan_id', $payment->price_id)->first();
+                                            $paymentPrice = $payment->price_id ?? '';
+                                            $plan = App\Models\Plan::where('plan_id', $paymentPrice)->first();
                                         @endphp
                                             <tr>
                                                 <td>{{$i}}</td>
                                                 <td>{{$payment->stripe_subscription_id}}</td>
                                                 <td>{{$payment->stripe_price}}</td>
-                                                <td>{{$plan->plan_type}}</td>
+                                                <td>{{$plan->plan_type ?? ''}}</td>
                                                 <td>{{$payment->payment_status}}</td>
                                                 <td>{{$payment->created_at}}</td>
                                                 <td>{{$payment->user->name}}</td>
