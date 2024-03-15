@@ -36,7 +36,6 @@ Route::middleware(['check.authentication'])->group(function(){
     Route::get('/show-plans-protected', [PlanController::class, 'showPlans']);
     
     // Listing Apis
-    Route::post('/listing-detail', [ListingController::class, 'showListingDetail']);
     Route::post('/add-listing', [ListingController::class, 'addListing']);
     Route::post('/update-listing', [ListingController::class, 'updateListingUser']);
     Route::get('/show-all-listings', [ListingController::class, 'showAllListing']);
@@ -48,6 +47,7 @@ Route::get('/show-category', [CategoryController::class, 'showCategory']);
 Route::get('/show-category-element', [CategoryController::class, 'showCategoryElement']);
 
 Route::post('/show-category-listing', [ListingController::class, 'showCategoryListing']);
+Route::post('/listing-detail', [ListingController::class, 'showListingDetail']);
 
 // Unprotected Plans API
 Route::get('/plans', [PlanController::class, 'showPlans']);

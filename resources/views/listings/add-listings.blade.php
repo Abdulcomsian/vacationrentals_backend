@@ -50,13 +50,13 @@
                                         @error('category')
                                             <span class="text-danger">{{$message}}</span>
                                         @enderror
-                                        <select class="form-control select2_dropdown" name="category[]" id="category" multiple="multiple">
+                                        <select class="form-control select2_dropdown" name="category[]" id="category" multiple="multiple" required>
                                             @isset($categories)
                                                 @foreach($categories as $category)
                                                     <option value="{{$category->id}}">{{$category->category_name}}</option>
                                                 @endforeach
                                             @endisset
-                                        </select>                                        
+                                        </select>   
                                     </div>
                                     {{-- <div class="col-xl-6 d-flex flex-column">
                                         <label for="" class="form-label">Choose Company Logo</label>

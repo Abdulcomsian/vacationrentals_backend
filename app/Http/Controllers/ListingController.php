@@ -352,6 +352,7 @@ class ListingController extends Controller
             "companyTagLine" => "required",
             "websiteLink" => "required",
             "short_description" => "required",
+            "category" => "required",
         ],[
             // "companyImage.required" => "Company image is required.",
             // "companyImage.image" => "The file must be an image.",
@@ -359,6 +360,7 @@ class ListingController extends Controller
             // "companyImage.max" => "The image may not be greater than 2048 kilobytes in size.",
             "companyName.required" => "Company name is required.",
             "companyTagLine.required" => "Company tagline is required.",
+            "category.required" => "Please select at least one category",
         ]);
         try{
             $user_id = Auth::user()->id;
@@ -429,6 +431,7 @@ class ListingController extends Controller
         $categories = Category::where('status', 'activate')->get();
         $listingData = Listing::with('plan')->where('id', $id)->first();
         $listingCategory = ListingCategory::where('listing_id', $id)->get();
+        $categoryId = [];
         foreach($listingCategory as $listCat){
             $categoryId[] = $listCat->category_id;
         }
@@ -443,6 +446,7 @@ class ListingController extends Controller
             "companyTagLine" => "required",
             "websiteLink" => "required",
             "short_description" => "required",
+            "category" => "required",
         ],[
             // "companyImage.required" => "Company image is required.",
             // "companyImage.image" => "The file must be an image.",
@@ -450,6 +454,7 @@ class ListingController extends Controller
             // "companyImage.max" => "The image may not be greater than 2048 kilobytes in size.",
             "companyName.required" => "Company name is required.",
             "companyTagLine.required" => "Company tagline is required.",
+            "category.required" => "Please select at least one category",
         ]);
         try{
             $id = $request->listing_id;
