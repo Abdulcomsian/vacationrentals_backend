@@ -91,7 +91,7 @@ class BillingController extends Controller
             $session = Session::put('session_id', $sessiondId);
             return response()->json(["success"=>true, "redirectURL"=>$url, 'sessionId'=>$sessiondId, "status"=>200], 200);
         }catch(\Exception $e){
-            return response()->json(["success"=>false, "msg"=>"Something went wrong", "error"=>$e->getMessage()], 400);
+            return response()->json(["success"=>false, "msg"=>"Something went wrong", "error"=>$e->getMessage(), "status"=>400], 400);
         }
     }
     
@@ -140,10 +140,10 @@ class BillingController extends Controller
                 // return response()->json(["success"=>true, "msg"=>"Subscription added Successfully"], 200);
                 return redirect('https://vacationrentals.tools/dashboard/addtool?id=' . $toolLink->id . '&featured=' . $is_featured);
             }else{
-                return response()->json(["success"=>false, "msg"=>"Unauthorized User"],401);
+                return response()->json(["success"=>false, "msg"=>"Unauthorized User", "status"=>401],401);
             }
         }catch(\Exception $e){
-            return response()->json(["success"=>false, "msg"=>"Something went wrong", "error"=>$e->getMessage()], 400);
+            return response()->json(["success"=>false, "msg"=>"Something went wrong", "error"=>$e->getMessage(), "status"=>400], 400);
         }
         
     }
@@ -152,7 +152,7 @@ class BillingController extends Controller
         try{
             return response()->json(["success"=>true, "msg"=>"Sorry your payment has been cancelled. Please try again later"]);
         }catch(\Exception $e){
-            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage()], 400);
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "status"=>400], 400);
         }
     }
 }
