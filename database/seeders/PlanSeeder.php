@@ -34,7 +34,7 @@ class PlanSeeder extends Seeder
             ],[
                 "plan_type" => "Featured",
                 "plan_name" => "Yearly",
-                "plan_id" => "price_1OjJtVLyI7mncMRJUzV3ysrC", 
+                "plan_id" => "price_1OuXKOLyI7mncMRJwPStr0ZU", 
                 "discounted_price" => null,
                 "recurring_price" => "199", 
                 "description"=>"Your listing will show on top of the home page, Your business will show on top on your chosen category, Unlimited categories, Business tag line & full description, Link to website, Be able to add deals", 
