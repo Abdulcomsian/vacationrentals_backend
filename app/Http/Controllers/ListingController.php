@@ -25,8 +25,30 @@ class ListingController extends Controller
         try{
             $listing_id = $request->listing_id;
             $listingData = Listing::with(['deals', 'getCategories'])->where('id', $listing_id)->first();
+
+            $categoryIds = [];
+            foreach ($listingData['getCategories'] as $category) {
+                $categoryIds[] = $category['category_id'];
+            }
+
+            $structuredListingData = [
+                'id' => $listingData['id'],
+                'user_id' => $listingData['user_id'],
+                'company_name' => $listingData['company_name'],
+                'company_link' => $listingData['company_link'],
+                'company_tagline' => $listingData['company_tagline'],
+                'short_description' => $listingData['short_description'],
+                'company_logo' => $listingData['company_logo'],
+                'status' => $listingData['status'],
+                'deleted_at' => $listingData['deleted_at'],
+                'created_at' => $listingData['created_at'],
+                'updated_at' => $listingData['updated_at'],
+                'plan_id' => $listingData['plan_id'],
+                'deals' => $listingData['deals'],
+                'category_ids' => $categoryIds,
+            ];
             if(!empty($listingData)){
-                return response()->json(["success"=>true, "listingData"=>$listingData, "status" => 200], 200);
+                return response()->json(["success"=>true, "listingData"=>$structuredListingData, "status" => 200], 200);
             }else{
                 return response()->json(["success"=>false, "msg"=>"No listing found against this . $listing_id", "status" => 400], 400);
             }
