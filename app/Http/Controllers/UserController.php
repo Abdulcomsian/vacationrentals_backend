@@ -94,7 +94,7 @@ class UserController extends Controller
             }
 
             if(!$token = auth()->attempt(["email" => $email, "password" => $password])){
-                return response()->json(['error' => 'Email or password is incorrect'], 401);
+                return response()->json(['success'=>false, 'msg' => 'Email or password is incorrect', 'status'=>401], 401);
             }
             $jwt =  $this->respondWithToken($token);
             return response()->json(["success"=>true, "msg"=>"User Login Successfully", "token"=>$jwt, "status"=>200], 200);
