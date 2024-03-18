@@ -591,7 +591,11 @@ class ListingController extends Controller
                             $categoryName = \App\Models\Category::select('category_name')->where('id', $categoryId)->value("category_name");
                             $categories[] =  $categoryName; 
                         }
-                        return $categories;
+
+                        $cats = '
+                        <span class="text-wrap: wrap;">"'.$categories.'"</span>
+                        ';
+                        return $cats;
                     })
                     ->addColumn('package', function($listing){
                         return $listing->plan->plan_type;
