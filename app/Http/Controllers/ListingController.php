@@ -122,7 +122,7 @@ class ListingController extends Controller
                     'short_description' => $content,
                     'company_tagline' => $request->company_tagline,
                     // 'company_logo' => $fileName,
-                    'status' => '1', // 1 means pending (needs approval from Admin and it should change to 2)
+                    'status' => '2', // 2 means approved by default 
                 ]);
                 // add categories to the user
                 $categories = json_decode($request->company_categories);
@@ -229,7 +229,7 @@ class ListingController extends Controller
                     'short_description' => $content,
                     'company_tagline' => $request->company_tagline,
                     // 'company_logo' => $fileName,
-                    'status' => '1', // 1 means pending (needs approval from Admin and it should change to 2)
+                    'status' => '2', // 2 means approved by default
                 ]);
                 // add categories to the user
                 $categories = json_decode($request->company_categories);
@@ -576,7 +576,8 @@ class ListingController extends Controller
         return Datatables::of($listings)
                     ->addIndexColumn()
                     ->addColumn('company_name', function($listing){
-                        return $listing->company_name;
+                        $companName = '<span style="white-space: pre-wrap;">'.$listing->company_name.'</span>';
+                        return $companName;
                     })
                     ->addColumn('listing_link', function($listing){
                         $listingLink = '<a href="'.$listing->company_link.'" target="_blank">
@@ -589,9 +590,9 @@ class ListingController extends Controller
                         foreach ($listing->getCategories as $category_id) {
                             $categoryId = $category_id->category_id;
                             $categoryName = \App\Models\Category::select('category_name')->where('id', $categoryId)->value("category_name");
-                            $categories[] =  $categoryName; 
+                            $categories[] =  '<span style="white-space: pre-wrap;">'.$categoryName.'</span>'; 
                         }
-                        return $categories;
+                        return implode(', ', $categories);
                     })
                     ->addColumn('package', function($listing){
                         return $listing->plan->plan_type;
