@@ -309,7 +309,7 @@ class ListingController extends Controller
                 });
 
             if(count($listings) > 0){
-                return response()->json(["success"=>true, "listings"=>$listings, "status"=>200, "userId" => $userId], 200);
+                return response()->json(["success"=>true, "listings"=>$listings, "status"=>200], 200);
             }else{
                 return response()->json(["success"=>false, "msg"=>"No listings found", "status"=>400], 400);
             }
@@ -484,9 +484,7 @@ class ListingController extends Controller
         ]);
         try{
             $id = $request->listing_id;
-            $user_id = Auth::user()->id;
             $storeListing = Listing::find($id);
-            $storeListing->user_id = $user_id;
             // if($request->file('companyImage')){
             //     $file = $request->file('companyImage');
             //     $fileName = time() .'_' .  rand() . '.' . $file->getClientOriginalExtension();
