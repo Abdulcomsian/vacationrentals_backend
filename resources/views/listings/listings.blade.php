@@ -84,8 +84,7 @@
                                         <tr>
                                             {{-- <th scope="col">Company Logo</th> --}}
                                             <th scope="col">Company Name</th>
-                                            <th scope="col">Company Tagline</th>
-                                            <th scope="col">Website Link</th>
+                                            <th scope="col">Listing Link</th>
                                             <th scope="col">Category/ies</th>
                                             <th scope="col">Package</th>
                                             <th scope="col">Status</th>
@@ -104,9 +103,10 @@
                                                 </td> --}}
                                                 <td style="text-wrap: wrap;">{{$listing->company_name}}</td>
                                                 <td style="text-wrap: wrap;">
-                                                   {{$listing->company_tagline}}
+                                                    <a href="{{$listing->company_link}}" target="_blank">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
                                                 </td>
-                                                <td style="text-wrap: wrap;">{{$listing->company_link}}</td>
                                                 <td style="text-wrap: wrap;">
                                                     @php
                                                         foreach ($listing->getCategories as $category_id) {
