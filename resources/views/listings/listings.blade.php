@@ -85,7 +85,7 @@
                                             {{-- <th scope="col">Company Logo</th> --}}
                                             <th scope="col">Company Name</th>
                                             <th scope="col">Listing Link</th>
-                                            <th scope="col">Category/ies</th>
+                                            <th scope="col" style="max-width: 20%;">Category/ies</th>
                                             <th scope="col">Package</th>
                                             <th scope="col">Status</th>
                                             <th scope="col">Action</th>
