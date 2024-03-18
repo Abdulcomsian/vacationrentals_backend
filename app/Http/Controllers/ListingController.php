@@ -309,7 +309,7 @@ class ListingController extends Controller
                 });
 
             if(count($listings) > 0){
-                return response()->json(["success"=>true, "listings"=>$listings, "status"=>200], 200);
+                return response()->json(["success"=>true, "listings"=>$listings, "status"=>200, "userId" => $userId], 200);
             }else{
                 return response()->json(["success"=>false, "msg"=>"No listings found", "status"=>400], 400);
             }
