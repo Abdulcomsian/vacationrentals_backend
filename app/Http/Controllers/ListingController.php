@@ -17,6 +17,8 @@ use App\Models\{
     ListingCategory,
     Deal,
 };
+use Yajra\DataTables\Contracts\DataTable;
+use DataTables;
 class ListingController extends Controller
 {
     // =============== API Functions ======================
@@ -238,6 +240,8 @@ class ListingController extends Controller
                     $categoryInsert->category_id = $category;
                     $categoryInsert->save();
                 }
+
+                Deal::where('listing_id', $listingId)->delete();
                 // adding deals
                 $deals = json_decode($request->deals);
                 if(isset($deals)){
@@ -561,5 +565,64 @@ class ListingController extends Controller
         }catch(\Exception $e){
             return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
         }
+    }
+
+    public function listingDataTable(Request $request){
+        if($request->userId){
+            $listings = Listing::with(['getCategories', 'plan'])->where('user_id', $request->userId)->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->get();
+        }else{
+            $listings = Listing::with(['getCategories', 'plan'])->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->get();
+        }
+        return Datatables::of($listings)
+                    ->addIndexColumn()
+                    ->addColumn('company_name', function($listing){
+                        return $listing->company_name;
+                    })
+                    ->addColumn('listing_link', function($listing){
+                        $listingLink = '<a href="'.$listing->company_link.'" target="_blank">
+                        <i class="fa fa-eye"></i>
+                    </a>';
+                        return $listingLink;
+                    })
+                    ->addColumn('categories', function($listing){
+                        $categories = [];
+                        foreach ($listing->getCategories as $category_id) {
+                            $categoryId = $category_id->category_id;
+                            $categoryName = \App\Models\Category::select('category_name')->where('id', $categoryId)->value("category_name");
+                            $categories[] =  $categoryName; 
+                        }
+                        return $categories;
+                    })
+                    ->addColumn('package', function($listing){
+                        return $listing->plan->plan_type;
+                    })
+                    ->addColumn('status', function($listing){
+                        $status = "";
+                        if($listing->status == 1){
+                           $status = "Pending";
+                        }
+                        elseif($listing->status == 2){
+                            $status = "Approved";
+                        }
+                        elseif($listing->status == 3){
+                            $status = "Rejected";
+                        }
+                        return $status;
+                    })
+
+                    ->addColumn('action', function($listing) {
+                        $btns = '
+                            <a href="' . url('edit-listing', ["id" => $listing->id]) . '" class="edit-cat text-success">
+                                <i class="las la-pencil-alt fs-20"></i>
+                            </a>
+                            <a href="#" class="del-cat text-danger mx-2" data-id="' . $listing->id . '">
+                                <i class="lar la-trash-alt fs-20"></i>
+                            </a>
+                        ';
+                        return $btns;
+                    })
+                    
+                    ->rawColumns(['company_name', 'listing_link', 'categories', 'package', 'status', 'action'])
+                    ->make(true);
     }
 }

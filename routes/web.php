@@ -40,6 +40,9 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
     Route::get('profile', [HomeController::class, 'profile'])->name('profile');
     Route::get('emails', [HomeController::class, 'emails'])->name('emails');
 
+    // listing filter
+    Route::post('listing-filter', [HomeController::class, 'listingFilter'])->name('listing.filter');
+
     // Categories Route
     Route::post('add-category', [CategoryController::class, 'storeCategory'])->name('store.category');
     Route::post('delete-modal', [CategoryController::class, 'deleteCategory'])->name('delete.category');
@@ -52,6 +55,7 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
     Route::post('store-listing', [ListingController::class, 'storeListing'])->name('store.listing');
     Route::post('update-listing', [ListingController::class, 'updateListing'])->name('update.listing');
     Route::post('delete-listing', [ListingController::class, 'deleteListing'])->name('delete.listing');
+    Route::post('listing-datatable', [ListingController::class, 'listingDataTable'])->name('listing.datatable');
 
     // Plan or Package Routes
     Route::post('update-plan', [PlanController::class, 'updatePlan'])->name('update.plan');

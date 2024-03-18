@@ -79,7 +79,7 @@
 
                         <div class="card-body">
                             <div class="table-responsive table-card">
-                                <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
+                                <table class="table table-borderless table-centered align-middle table-nowrap mb-0 data-table">
                                     <thead class="text-muted table-light">
                                         <tr>
                                             {{-- <th scope="col">Company Logo</th> --}}
@@ -91,57 +91,8 @@
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @forelse($listings as $listing)
-                                            <tr>
-                                                {{-- <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="flex-shrink-0 me-2">
-                                                            <img src="{{ asset("assets/listing_images/" . $listing->company_logo) }}" alt="" class="avatar-xs rounded-circle shadow" />
-                                                        </div>
-                                                    </div>
-                                                </td> --}}
-                                                <td style="text-wrap: wrap;">{{$listing->company_name}}</td>
-                                                <td style="text-wrap: wrap;">
-                                                    <a href="{{$listing->company_link}}" target="_blank">
-                                                        <i class="fa fa-eye"></i>
-                                                    </a>
-                                                </td>
-                                                <td style="text-wrap: wrap;">
-                                                    @php
-                                                        foreach ($listing->getCategories as $category_id) {
-                                                            $categoryId = $category_id->category_id;
-                                                            $categoryName = \App\Models\Category::select('category_name')->where('id', $categoryId)->value("category_name");
-                                                            echo $categoryName . ", ";
-                                                        }
-                                                    @endphp
-                                                </td>
-                                                <td>{{$listing->plan->plan_type}}</td>
-                                                <td>
-                                                    @if($listing->status == 1)
-                                                    Pending
-                                                    @elseif($listing->status == 2)
-                                                    Approved
-                                                    @elseif($listing->status == 3)
-                                                    Rejected
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <a href="{{url('edit-listing', ["id"=>$listing->id])}}" class="edit-cat text-success">
-                                                        <i class="las la-pencil-alt fs-20"></i>
-                                                    </a>
-                                                    <a href="#" class="del-cat text-danger mx-2" data-id="{{$listing->id}}">
-                                                        <i class="lar la-trash-alt fs-20"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @empty 
-                                            <tr>
-                                                <td>
-                                                    No Listings Found
-                                                </td>
-                                            </tr>
-                                        @endforelse
+                                    <tbody id="listing_table">
+                                       
                                     </tbody><!-- end tbody -->
                                 </table><!-- end table -->
                             </div>
@@ -261,6 +212,8 @@
 </style>
 @endsection
 @section('script')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 <script>
     $(document).on("click", ".del-cat", function(){
         let id = $(this).attr("data-id");
@@ -268,20 +221,57 @@
         $(".bs-delete-modal-center").modal("show");
     });
 
+    $(function () {      
+      loadTable();
+    });
+
+    function loadTable(data={}){
+        $('.data-table').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        bLengthChange: false,
+        bInfo: false,
+        pagingType: 'full_numbers',
+        "bDestroy": true,
+        ajax: {
+            type: "POST", 
+            url:"{{ route('listing.datatable') }}",
+            data: {
+                _token:'{{csrf_token()}}',
+                ...data
+            }
+        },
+        columns: [
+            {data: 'company_name', name: 'company_name'},
+            {data: 'listing_link', name: 'listing_link'},
+            {data: 'categories', name: 'categories'},
+            {data: 'package', name: 'package'},
+            {data: 'status', name: 'status'},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+      });
+    }
+
     $(document).on("change", ".userListingFilter", function(){
         let userId = $(this).find(":selected").val();
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
-        $.ajax({
-            method: "POST",
-            url: "{{ route('listings') }}",
-            data: {
-                _token: csrfToken,
-                userId: userId,
-            },
-            success: function(res) { 
-                console.log(res);
-            }
-        });
+        let data = {userId: userId,}
+        loadTable(data);
+        // var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        // $.ajax({
+        //     method: "POST",
+        //     url: "{{ route('listing.datatable') }}",
+        //     data: {
+        //         _token: csrfToken,
+        //         userId: userId,
+        //     },
+        //     success: function(res) {
+        //         console.log(res);
+        //         // $("#listing_table").html(res);
+        //     }
+        // });
     })
+
+
 </script>
 @endsection
