@@ -153,7 +153,7 @@ class ListingController extends Controller
                 return response()->json(["success"=>false, "msg"=>"Listing has already been created for the selected tool", "status"=>400], 400);
             }
         }catch(\Exception $e){
-            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "line"=>$e->getLine()], 400);
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "line"=>$e->getLine(), "status" => 400], 400);
         }
     }
 
@@ -260,7 +260,7 @@ class ListingController extends Controller
                 return response()->json(["success"=>false, "msg"=>"Listing has already been created for the selected tool", "status"=>400], 400);
             }
         }catch(\Exception $e){
-            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "line"=>$e->getLine()], 400);
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "line"=>$e->getLine(), "status" => 400], 400);
         }
     }
 
