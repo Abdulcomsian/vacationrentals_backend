@@ -534,7 +534,7 @@ class ListingController extends Controller
             if($status == "approve"){
                 $saveStatus = "2";
             }elseif($status == "pending"){
-                $saveStatus = "2";
+                $saveStatus = "1";
             }elseif($status == "reject"){
                 $saveStatus = "3";
             }
