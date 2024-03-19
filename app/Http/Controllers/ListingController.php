@@ -198,11 +198,13 @@ class ListingController extends Controller
 
             foreach($images as $item => $image){
                 $data = $image->getAttribute("src");
+                $imageData = $image->getAttribute("class");
                 $styles = $image->getAttribute("style");
                 $image_explode = explode(';', $data);
                 if(count($image_explode) == 2){
                     list($type, $data) = [$image_explode[0] , $image_explode[1]];
                     list(, $data)      = explode(',', $data);
+                    list(, $imageData) = explode(',', $imageData);
                 }else{
                     continue;
                 }
@@ -511,9 +513,6 @@ class ListingController extends Controller
                 if(count($image_explode) == 2){
                     list($type, $data) = [$image_explode[0] , $image_explode[1]];
                     list(, $data) = explode(',', $data);
-                    if($imageData){
-                        list(, $imageData)      = explode(',', $imageData);
-                    }
                 }else{
                     continue;
                 }
