@@ -66,7 +66,7 @@ class HomeController extends Controller
     }
 
     public function categories(){
-        $categories = Category::with('listings')->where('status', 'activate')->paginate(10);
+        $categories = Category::with('listings')->where('status', 'activate')->where("id", "!=", "1")->paginate(10);
         return view('categories', compact('categories'));
     }
     
