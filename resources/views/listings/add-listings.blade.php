@@ -91,8 +91,7 @@
                                     </div>
                                     <div class="col-xl-4 d-flex flex-column">
                                         <label for="" class="form-label required">Status</label>
-                                        <select class="form-select mb-3" name="status" aria-label="Default select example">
-                                            <option selected="">Select Status </option>
+                                        <select class="form-select mb-3" name="status" aria-label="Default select example" aria-placeholder="Select Status">
                                             <option value="approve">Approved</option>
                                             <option value="pending">Pending</option>
                                             <option value="reject">Rejected</option>

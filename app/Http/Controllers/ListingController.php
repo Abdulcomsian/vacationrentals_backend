@@ -150,7 +150,7 @@ class ListingController extends Controller
                         $insertDeal->save();
                     }
                 }
-                return response()->json(["success"=>true, "msg"=>"Listing updated successfully and is under review", "status"=>200], 200);
+                return response()->json(["success"=>true, "msg"=>"Listing updated successfully", "status"=>200], 200);
             }else{
                 return response()->json(["success"=>false, "msg"=>"Listing has already been created for the selected tool", "status"=>400], 400);
             }
@@ -198,13 +198,12 @@ class ListingController extends Controller
 
             foreach($images as $item => $image){
                 $data = $image->getAttribute("src");
-                $imageData = $image->getAttribute("class");
+                // $imageData = $image->getAttribute("class");
                 $styles = $image->getAttribute("style");
                 $image_explode = explode(';', $data);
                 if(count($image_explode) == 2){
                     list($type, $data) = [$image_explode[0] , $image_explode[1]];
                     list(, $data)      = explode(',', $data);
-                    list(, $imageData) = explode(',', $imageData);
                 }else{
                     continue;
                 }
@@ -264,7 +263,7 @@ class ListingController extends Controller
                         $insertDeal->save();
                     }
                 }
-                return response()->json(["success"=>true, "msg"=>"Listing updated successfully and is under review", "status"=>200], 200);
+                return response()->json(["success"=>true, "msg"=>"Listing updated successfully", "status"=>200], 200);
             }else{
                 return response()->json(["success"=>false, "msg"=>"Listing has already been created for the selected tool", "status"=>400], 400);
             }
@@ -309,6 +308,7 @@ class ListingController extends Controller
                             'discounted_price' => $listing->plan->discounted_price,
                             'recurring_price' => $listing->plan->recurring_price,
                         ],
+                        'status' => $listing->status,
                         'has_deals' => $listing->deals->count() > 0,
                     ];
                 });
@@ -328,29 +328,45 @@ class ListingController extends Controller
     public function showCategoryListing(Request $request){
         try{
             if(isset($request->slug)){
-                $slug = $request->slug;
                 // $listingsData = Category::with('categoryList')
                 // ->where('slug' , $slug)
                 // ->first();
+                $slug = $request->slug;
                 $categoryId = Category::where('slug', $slug)->value("id");
                 $categoryListing = ListingCategory::where('category_id', $categoryId)->get();
                 $featuredListings = [];
                 $otherMonthListings = [];
                 foreach ($categoryListing as $listing) {
-                    $listingModel = Listing::where('id', $listing->listing_id)->with('plan')->first();                
+                    $listingModel = Listing::where('id', $listing->listing_id)->with(['plan','deals'])->first();                
                     if ($listingModel) {
                         $planType = $listingModel->plan->plan_type;                
                         if ($planType === 'Featured') {
+                            $hasMultipleDeals = false;
+                            if(count($listingModel->deals) > 0){
+                                $hasMultipleDeals = true;
+                            }
+                            $listingModel->has_deals = $hasMultipleDeals;
                             array_unshift($featuredListings, $listingModel);
                         } elseif ($planType === 'Monthly' || $planType === 'Yearly') {
+                            $hasMultipleDeals = false;
+                            if(count($listingModel->deals) > 0){
+                                $hasMultipleDeals = true;
+                            }
+                            $listingModel->has_deals = $hasMultipleDeals;
                             $otherMonthListings[] = $listingModel;
                         }
                     }
                 }
                 
                 $listings = array_merge($featuredListings, $otherMonthListings);
+                $responseListings = [];
+                foreach($listings as $listing){
+                    $filteredListings = collect($listing)->forget('deals')->toArray();
+                    $responseListings[] = $filteredListings;
+                }
 
-                return response()->json(["success"=>true, "listings"=>$listings, "status"=>200], 200);
+
+                return response()->json(["success"=>true, "listings"=>$responseListings, "status"=>200], 200);
             }else{
                 $listings = Listing::leftJoin('plans', 'listings.plan_id', '=', 'plans.id')
                 ->orderByRaw('plans.plan_type = "Featured" DESC')
@@ -510,7 +526,7 @@ class ListingController extends Controller
 
             foreach($images as $item => $image){
                 $data = $image->getAttribute("src");
-                $imageData = $image->getAttribute("class");                
+                // $imageData = $image->getAttribute("class");                
                 $styles = $image->getAttribute("style");
                 $image_explode = explode(';', $data);
                 if(count($image_explode) == 2){

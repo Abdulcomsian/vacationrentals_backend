@@ -103,8 +103,7 @@
                                     </div>
                                     <div class="col-xl-4 d-flex flex-column">
                                         <label for="" class="form-label required">Status</label>
-                                        <select class="form-select mb-3" aria-label="Default select example" name="status">
-                                            <option selected="">Change Status </option>
+                                        <select class="form-select mb-3" aria-label="Default select example" name="status" aria-placeholder="Change Status">
                                             <option value="approve" @if($listingData->status == 2) selected @endif>Approved</option>
                                             <option value="pending" @if($listingData->status == 1) selected @endif>Pending</option>
                                             <option value="reject" @if($listingData->status == 3) selected @endif>Rejected</option>
