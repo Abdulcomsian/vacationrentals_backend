@@ -235,13 +235,16 @@ class ListingController extends Controller
                 ]);
                 // add categories to the user
                 $categories = json_decode($request->company_categories);
-                ListingCategory::where('listing_id', $listingId)->delete();
-                foreach($categories as $category){
-                    $categoryInsert = new ListingCategory();
-                    $categoryInsert->listing_id = $listingId;
-                    $categoryInsert->category_id = $category;
-                    $categoryInsert->save();
+                if(isset($categories) && !empty($categories) && count($categories) > 0){
+                    ListingCategory::where('listing_id', $listingId)->delete();
+                    foreach($categories as $category){
+                        $categoryInsert = new ListingCategory();
+                        $categoryInsert->listing_id = $listingId;
+                        $categoryInsert->category_id = $category;
+                        $categoryInsert->save();
+                    }
                 }
+                
 
                 Deal::where('listing_id', $listingId)->delete();
                 // adding deals
