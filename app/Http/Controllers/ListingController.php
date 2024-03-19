@@ -297,6 +297,16 @@ class ListingController extends Controller
                 ->where('deleted_at', '=', null)
                 ->get()
                 ->map(function ($listing) {
+                    $listingStatus = '';
+                    if($listing->status == "0"){
+                        $listingStatus = "Draft";
+                    }elseif($listing->status == "1"){
+                        $listingStatus = "Pending";
+                    }elseif($listing->status == "2"){
+                        $listingStatus = "Approved";
+                    }elseif($listing->status == "3"){
+                        $listingStatus = "Rejected";
+                    }
                     return [
                         'id' => $listing->id,
                         'company_name' => $listing->company_name,
@@ -308,7 +318,7 @@ class ListingController extends Controller
                             'discounted_price' => $listing->plan->discounted_price,
                             'recurring_price' => $listing->plan->recurring_price,
                         ],
-                        'status' => $listing->status,
+                        'status' => $listingStatus,
                         'has_deals' => $listing->deals->count() > 0,
                     ];
                 });
@@ -357,7 +367,7 @@ class ListingController extends Controller
                         }
                     }
                 }
-                
+
                 $listings = array_merge($featuredListings, $otherMonthListings);
                 $responseListings = [];
                 foreach($listings as $listing){
