@@ -16,9 +16,13 @@ use App\Models\{
     Category,
     ListingCategory,
     Deal,
+    Email
 };
 use Yajra\DataTables\Contracts\DataTable;
 use DataTables;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\ListingSubmission;
+use App\Notifications\ListingApprovalNotification;
 class ListingController extends Controller
 {
     // =============== API Functions ======================
@@ -150,6 +154,13 @@ class ListingController extends Controller
                         $insertDeal->save();
                     }
                 }
+
+                // Getting the data from the database against Listing for email
+                $emailData = Email::where('type', 'listing_submission')->first();
+                $emailSubject = $emailData->subject;
+                $emailContent = $emailData->message;
+                // Sending email
+                Notification::route("mail", Auth::user()->email)->notify(new ListingSubmission($emailSubject, $emailContent));
                 return response()->json(["success"=>true, "msg"=>"Listing updated successfully", "status"=>200], 200);
             }else{
                 return response()->json(["success"=>false, "msg"=>"Listing has already been created for the selected tool", "status"=>400], 400);
@@ -578,10 +589,32 @@ class ListingController extends Controller
                     $listingCategory->category_id = $category_id;
                     $listingCategory->save();
                 }
+
+                $status = $storeListing->status;
+                if($status == "2" || $status == "3"){
+                    // Getting User Email
+                    $user_id = $storeListing->user_id;
+                    $userEmail = User::where('id', $user_id)->value("email");
+                    // Getting Status
+                    $approvalStatus = "";
+                    if($status == "2"){
+                        $approvalStatus = "Approved";
+                    }elseif($status == "3"){
+                        $approvalStatus = "Rejected";
+                    }
+                    // Getting the data from database against listing
+                    $emailData = Email::where('type', 'listing_approval')->first();
+                    $subjectEm = $emailData->subject;
+                    $emailSubject = str_replace("[LISTING_APPROVAL]", $approvalStatus, $subjectEm);
+                    $emailMessage = $emailData->message;
+                    $emailContent = str_replace("[LISTING_APPROVAL]", $approvalStatus, $emailMessage);
+                    // Sending email
+                    Notification::route("mail", $userEmail)->notify(new ListingApprovalNotification($emailSubject, $emailContent));
+                }               
                 return redirect()->route('listings')->with(['success'=>"Listing Updated Successfully"]);
             }
         }catch(\Exception $e){
-            return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
+            return redirect()->back()->with(['error' => "Something Went Wrong. Please try again later"]);
         }
     }
 

@@ -66,7 +66,8 @@ class HomeController extends Controller
         $signupEmail = Email::where('type', 'signup_email_verification')->first();
         $contactUsEmail = Email::where('type', 'contact_us_email')->first();
         $listingSubmit = Email::where('type', 'listing_submission')->first();
-        return view('emails', compact('forgotPasswordEmail', 'signupEmail', 'contactUsEmail', 'listingSubmit'));
+        $listingApproval = Email::where('type', 'listing_approval')->first();
+        return view('emails', compact('forgotPasswordEmail', 'signupEmail', 'contactUsEmail', 'listingSubmit', 'listingApproval'));
     }
 
     public function categories(){

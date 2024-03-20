@@ -59,6 +59,15 @@ class EmailController extends Controller
                         'type' => $request->type,
                     ]
                 );
+            }elseif($request->type == "listing_approval"){
+                $email = Email::updateOrCreate(
+                    ['type' => 'listing_approval'],
+                    [
+                        'subject' => $request->subject,
+                        'message' => $request->email_description,
+                        'type' => $request->type,
+                    ]
+                );
             }
             
             if($email){

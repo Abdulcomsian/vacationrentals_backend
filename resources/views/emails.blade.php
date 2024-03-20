@@ -97,9 +97,9 @@
                                         </tr> --}}
                                         <tr>
                                             <td>6</td>
-                                            <td>Listing Aapproval</td>
+                                            <td>Listing Approval</td>
                                             <td>
-                                                <a href="#" class="edit-cat text-success" previewlistener="true" >
+                                                <a href="#" class="edit-cat text-success" id="listing_approval" data-id="listing_approval" previewlistener="true" >
                                                     <i class="las la-pencil-alt fs-20"></i>
                                                 </a>
                                             </td>
@@ -123,6 +123,7 @@
 @include('modals.signup_email_verification')
 @include('modals.contact_us_modal')
 @include('modals.listing_submission_modal')
+@include('modals.listing_approval')
 @endsection
 @section('script')
 <script>
@@ -156,6 +157,12 @@
         let type = $(this).attr("data-id");
         $("#listingSubmitType").val(type);
         $("#listing_submission_modal").modal("show");
+    });
+
+    $(document).on("click", "#listing_approval", function(){
+        let type = $(this).attr("data-id");
+        $("#listingApprovalType").val(type);
+        $("#listing_approval_modal").modal("show");
     });
 </script>
 @endsection
