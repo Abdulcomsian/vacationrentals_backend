@@ -56,10 +56,11 @@ class UserController extends Controller
             $user->assignRole('user');
 
             // Getting data for the email from Database
-            $emailData = Email::where('type', 'signup_email_verification')->first();
-            $emailSubject = $emailData->subject;
-            $emailMessage = $emailData->message;
             $url = "<a href='" . url('verify-email', ['user_id' => $user->id, 'token' => $user->email_verification_token]) . "'>Verify Email</a>";
+            $emailData = Email::where('type', 'signup_email_verification')->first();
+            $emailSub = $emailData->subject;
+            $emailSubject = str_replace("[BUTTON_LINK]", $url, $emailSub);
+            $emailMessage = $emailData->message;
             $emailContent = str_replace("[BUTTON_LINK]", $url, $emailMessage);
             // Sending Email for Verification
             Notification::route("mail", $request->email)->notify(new VerifyEmail($emailSubject, $emailContent));
@@ -166,7 +167,8 @@ class UserController extends Controller
                 User::where('email', $email)->update(['verification_code'=>$verificationCode]);
                 // Getting the email data from Database
                 $emailData = Email::where('type', 'forgot_password')->first();
-                $emailSubject = $emailData->subject;
+                $emailSub = $emailData->subject;
+                $emailSubject = str_replace("[OTP]", $verificationCode, $emailSub);
                 $emailMessage = $emailData->message;
                 $emailContent = str_replace("[OTP]", $verificationCode, $emailMessage);
                 Notification::route('mail', $email)->notify(new SendEmailForgotPassword($emailSubject, $emailContent));
