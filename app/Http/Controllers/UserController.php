@@ -18,6 +18,7 @@ use App\Models\{
     Category,
     ListingCategory,
     Deal,
+    Email
 };
 use Carbon\Carbon;
 
@@ -53,8 +54,15 @@ class UserController extends Controller
                 "email_verification_token" => rand(11111, 99999),
             ]);
             $user->assignRole('user');
+
+            // Getting data for the email from Database
+            $emailData = Email::where('type', 'signup_email_verification')->first();
+            $emailSubject = $emailData->subject;
+            $emailMessage = $emailData->message;
+            $url = "<a href='" . url('verify-email', ['user_id' => $user->id, 'token' => $user->email_verification_token]) . "'>Verify Email</a>";
+            $emailContent = str_replace("[BUTTON_LINK]", $url, $emailMessage);
             // Sending Email for Verification
-            Notification::route("mail", $request->email)->notify(new VerifyEmail($user->email_verification_token, $user->id));
+            Notification::route("mail", $request->email)->notify(new VerifyEmail($emailSubject, $emailContent));
             return response()->json(["success" => true, "msg" => "Verification Email has been sent to the given email address", "status" => 200], 200);
         }catch (\Exception $e) {
             return response()->json(["success" => false, "msg" => "Something went wrong", "error" => $e->getMessage()]);        
@@ -115,7 +123,8 @@ class UserController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            // 'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => 120,
         ]);
     }
 
@@ -140,28 +149,33 @@ class UserController extends Controller
     }
 
     public function sendEmailPassword(Request $request){
-        try{
-            $validator = Validator::make($request->all(), [
-                "email" => "required|string|email",
-            ]);
+        $validator = Validator::make($request->all(), [
+            "email" => "required|string|email",
+        ]);
 
-            $emailVal = $validator->errors()->get('email');
-            foreach($emailVal as $em){
-                return response()->json(["success" => false, "msg" => $em, "status" => 400], 400);            
-            }
+        $emailVal = $validator->errors()->get('email');
+        foreach($emailVal as $em){
+            return response()->json(["success" => false, "msg" => $em, "status" => 400], 400);            
+        }
+        try{
             $email = $request->email;
             // Check if email is exist in Database
             $userEmail = User::where('email', $email)->count();
             if($userEmail > 0){
                 $verificationCode = rand(1111, 9999);
                 User::where('email', $email)->update(['verification_code'=>$verificationCode]);
-                Notification::route('mail', $email)->notify(new SendEmailForgotPassword($verificationCode));
+                // Getting the email data from Database
+                $emailData = Email::where('type', 'forgot_password')->first();
+                $emailSubject = $emailData->subject;
+                $emailMessage = $emailData->message;
+                $emailContent = str_replace("[OTP]", $verificationCode, $emailMessage);
+                Notification::route('mail', $email)->notify(new SendEmailForgotPassword($emailSubject, $emailContent));
                 return response(["success"=>true, "msg"=>"OTP has been sent to the given email address", "status"=>200], 200);
             }else{
                 return response(["success"=>false, "msg"=>"Email doesn`t exists", "status"=>400], 400);
             }
         }catch(\Exception $e){
-            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error" => $e->getMessage()], 400);
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error" => $e->getMessage(), "status" => 400], 400);
         }
     }
 

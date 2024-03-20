@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('emails', function (Blueprint $table) {
             $table->id();
             $table->string("subject")->nullable();
-            $table->string("message")->nullable();
+            $table->longText("message")->nullable();
             $table->string("link")->nullable();
             $table->string("type")->nullable();
             $table->timestamps();

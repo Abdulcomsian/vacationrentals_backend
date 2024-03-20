@@ -10,7 +10,7 @@ use App\Models\{
     Subscription,
     Listing,
     Category,
-
+    Email
 };
 use Yajra\DataTables\Contracts\DataTable;
 use DataTables;
@@ -62,7 +62,11 @@ class HomeController extends Controller
     }
     public function emails()
     {
-        return view('emails');
+        $forgotPasswordEmail = Email::where('type', 'forgot_password')->first();
+        $signupEmail = Email::where('type', 'signup_email_verification')->first();
+        $contactUsEmail = Email::where('type', 'contact_us_email')->first();
+        $listingSubmit = Email::where('type', 'listing_submission')->first();
+        return view('emails', compact('forgotPasswordEmail', 'signupEmail', 'contactUsEmail', 'listingSubmit'));
     }
 
     public function categories(){
@@ -112,7 +116,13 @@ class HomeController extends Controller
             $email = $request->email;
             $message = $request->message;
             $toEmail = "peterfischerflorez@gmail.com";
-            Notification::route("mail", $toEmail)->notify(new ContactUsNotification($name, $message, $email));
+            // Getting the Email Content from Database
+            $emailData = Email::where('type', 'contact_us_email')->first();
+            $subject = $emailData->subject;
+            $emailSubject = str_replace("[NAME]", $name, $subject);
+            $emailMessage = $emailData->message;
+            $emailContent = str_replace(["[NAME]", "[EMAIL]", "[MESSAGE]"], [$name, $email, $message], $emailMessage);
+            Notification::route("mail", $toEmail)->notify(new ContactUsNotification($emailSubject, $emailContent));
             return response()->json(["success"=>true, "msg"=>"Your email has been received", "status" => 200], 200);
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "status"=> 400], 400);

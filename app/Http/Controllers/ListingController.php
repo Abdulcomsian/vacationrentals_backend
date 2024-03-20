@@ -375,7 +375,6 @@ class ListingController extends Controller
                     $responseListings[] = $filteredListings;
                 }
 
-
                 return response()->json(["success"=>true, "listings"=>$responseListings, "status"=>200], 200);
             }else{
                 $listings = Listing::leftJoin('plans', 'listings.plan_id', '=', 'plans.id')

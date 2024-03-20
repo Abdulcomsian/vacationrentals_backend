@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class VerifyEmail extends Notification
 {
@@ -14,10 +15,10 @@ class VerifyEmail extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct($emailVerificationToken ,$user_id)
+    public function __construct($emailSubject ,$emailContent)
     {
-        $this->emailVerificationToken = $emailVerificationToken;
-        $this->user_id = $user_id;
+        $this->emailSubject = $emailSubject;
+        $this->emailContent = $emailContent;
     }
 
     /**
@@ -36,13 +37,8 @@ class VerifyEmail extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject("Verify Email")
-                    ->line('Please click the link below to verify email.')
-                    ->action('Verify Email', url('verify-email', [
-                        'user_id' => $this->user_id,
-                        'token' => $this->emailVerificationToken
-                    ]))
-                    ->line('Thank you for using our directory of tools and resources for the vacation rental industry.');
+            ->subject($this->emailSubject)
+            ->line(new HtmlString($this->emailContent));
     }
 
     /**

@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class SendEmailForgotPassword extends Notification
 {
@@ -14,9 +15,10 @@ class SendEmailForgotPassword extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct($verificationCode)
+    public function __construct($emailSubject, $emailContent)
     {
-        $this->verficationCode = $verificationCode;
+        $this->emailSubject = $emailSubject;
+        $this->emailContent = $emailContent;
     }
 
     /**
@@ -35,9 +37,8 @@ class SendEmailForgotPassword extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject('OTP Verification')
-                    ->line('Your Verfication Code is: ' . $this->verficationCode)
-                    ->line('Thank you for using our application!');
+                    ->subject($this->emailSubject)
+                    ->line(new HtmlString($this->emailContent));
     }
 
     /**

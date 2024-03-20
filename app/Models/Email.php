@@ -10,6 +10,11 @@ class Email extends Model
     use HasFactory;
 
     protected $fillable = [
-        
+        'subject',
+        'message',
+        'link',
+        'type',
+        'created_at',
+        'updated_at'
     ];
 }

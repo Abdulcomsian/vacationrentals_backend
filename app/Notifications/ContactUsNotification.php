@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class ContactUsNotification extends Notification
 {
@@ -14,11 +15,10 @@ class ContactUsNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct($name, $message, $email)
+    public function __construct($emailSubject, $emailContent)
     {
-        $this->name = $name;
-        $this->message = $message;
-        $this->email = $email;
+        $this->emailSubject = $emailSubject;
+        $this->emailContent = $emailContent;
     }
 
     /**
@@ -37,10 +37,8 @@ class ContactUsNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject($this->name . " messsaged you")
-                    ->line("Name: " . $this->name)
-                    ->line("Email: " . $this->email)
-                    ->line("Message: " . $this->message);
+                    ->subject($this->emailSubject)
+                    ->line(new HtmlString($this->emailContent));
     }
 
     /**

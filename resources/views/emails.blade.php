@@ -54,7 +54,7 @@
                                             <td>1</td>
                                             <td>Forgot Password</td>
                                             <td>
-                                                <a href="#" class="edit-cat text-success" previewlistener="true" >
+                                                <a href="#" class="edit-cat text-success" id="forgotPassword" previewlistener="true" data-id="forgot_password">
                                                     <i class="las la-pencil-alt fs-20"></i>
                                                 </a>
                                             </td>
@@ -63,7 +63,7 @@
                                             <td>2</td>
                                             <td>Sign Up</td>
                                             <td>
-                                                <a href="#" class="edit-cat text-success" previewlistener="true" >
+                                                <a href="#" class="edit-cat text-success" id="emailVerification" data-id="signup_email_verification" previewlistener="true" >
                                                     <i class="las la-pencil-alt fs-20"></i>
                                                 </a>
                                             </td>
@@ -72,7 +72,7 @@
                                             <td>3</td>
                                             <td>Contact Us</td>
                                             <td>
-                                                <a href="#" class="edit-cat text-success" previewlistener="true" >
+                                                <a href="#" class="edit-cat text-success" id="contactUsEmail" data-id="contact_us_email" previewlistener="true" >
                                                     <i class="las la-pencil-alt fs-20"></i>
                                                 </a>
                                             </td>
@@ -81,12 +81,12 @@
                                             <td>4</td>
                                             <td>Listing Submission</td>
                                             <td>
-                                                <a href="#" class="edit-cat text-success" previewlistener="true" >
+                                                <a href="#" class="edit-cat text-success" id="listingSubmission" data-id="listing_submission" previewlistener="true" >
                                                     <i class="las la-pencil-alt fs-20"></i>
                                                 </a>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        {{-- <tr>
                                             <td>5</td>
                                             <td>Payment</td>
                                             <td>
@@ -94,7 +94,7 @@
                                                     <i class="las la-pencil-alt fs-20"></i>
                                                 </a>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr>
                                             <td>6</td>
                                             <td>Listing Aapproval</td>
@@ -119,65 +119,43 @@
     </div> <!-- end col -->
 </div>
 
-
-<div class="modal fade bs-edit-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="NotificationModalbtn-close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="addtool">
-                    <form action="javascript:void(0);">
-                        <div class="row g-3">
-                            <div class="col-xxl-6">
-                                <div>
-                                    <label class="form-label">Email Subject</label>
-                                    <input type="text" class="form-control" placeholder="Enter Email Subject">
-                                </div>
-                            </div>
-                            <div class="col-xxl-6">
-                                <div>
-                                    <label class="form-label">Button Link</label>
-                                    <input type="text" class="form-control" placeholder="Button Link Here" disabled>
-                                </div>
-                            </div>
-                            <div class="col-xxl-12">
-                                <div>
-                                    <label class="form-label">Overview</label>
-                                    <textarea  class="form-control" name="" id="" cols="30" rows="3">Your one time verification OTP is {OTP Here}.</textarea>
-                                </div>
-                            </div>
-                            <div class="col-xxl-12">
-                                <div>
-                                    <label class="form-label">Email Description</label>
-                                    <textarea  class="form-control" name="" id="" cols="30" rows="10"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="hstack gap-2 justify-content-end">
-                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn" style="background-color: #e30b0b !important;color:#fff;">Update Email Template</button>
-                                </div>
-                            </div>
-                            <!--end col-->
-                        </div>
-                        <!--end row-->
-                    </form>
-                </div>
-            </div>
-
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
-
+@include('modals.forgot_password_modal')
+@include('modals.signup_email_verification')
+@include('modals.contact_us_modal')
+@include('modals.listing_submission_modal')
 @endsection
 @section('script')
 <script>
-    $(document).on("click", ".edit-cat", function(){
-        let id = $(this).attr("data-id");
-        $("#listingId").val(id);
-        $(".bs-edit-modal-center").modal("show");
+    $('.summernote').summernote({
+        height: 300,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline']],
+            ['insert', ['ul', 'ol']]
+        ]
+    });
+
+    $(document).on("click", "#forgotPassword", function(){
+        let type = $(this).attr("data-id");
+        $("#type").val(type);
+        $("#forgot_password_modal").modal("show");
+    });
+
+    $(document).on("click", "#emailVerification", function(){
+        let type = $(this).attr("data-id");
+        $("#signupType").val(type);
+        $("#email_verification_modal").modal("show");
+    });
+    
+    $(document).on("click", "#contactUsEmail", function(){
+        let type = $(this).attr("data-id");
+        $("#contactUsType").val(type);
+        $("#contact_us_modal").modal("show");
+    });
+
+    $(document).on("click", "#listingSubmission", function(){
+        let type = $(this).attr("data-id");
+        $("#listingSubmitType").val(type);
+        $("#listing_submission_modal").modal("show");
     });
 </script>
 @endsection

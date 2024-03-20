@@ -9,6 +9,7 @@ use App\Http\Controllers\{
     HomeController,
     CategoryController,
     ListingController,
+    EmailController,
 };
 Auth::routes();
 
@@ -65,6 +66,9 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
     Route::post('delete-user', [UserController::class, 'deleteUser'])->name('delete.user');
     Route::post('update-admin-profile', [UserController::class, 'updateAdmin'])->name('update.admin.profile');
     Route::post('change-password', [UserController::class, 'changePassword'])->name('change.password');
+
+    // Email Routes
+    Route::post('store-email', [EmailController::class, 'storeEmail'])->name('store.email');
 });
 
 // Admin Routes ends here
