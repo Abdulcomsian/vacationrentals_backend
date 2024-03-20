@@ -358,7 +358,7 @@ class ListingController extends Controller
                 $featuredListings = [];
                 $otherMonthListings = [];
                 foreach ($categoryListing as $listing) {
-                    $listingModel = Listing::where('id', $listing->listing_id)->with(['plan','deals'])->first();                
+                    $listingModel = Listing::where('id', $listing->listing_id)->with(['plan','deals'])->first();           
                     if ($listingModel) {
                         $planType = $listingModel->plan->plan_type;                
                         if ($planType === 'Featured') {
@@ -368,7 +368,7 @@ class ListingController extends Controller
                             }
                             $listingModel->has_deals = $hasMultipleDeals;
                             array_unshift($featuredListings, $listingModel);
-                        } elseif ($planType === 'Monthly' || $planType === 'Yearly') {
+                        } elseif ($planType === 'Monthly' || $planType === 'Yearly' || $planType == 'Admin Plan') {
                             $hasMultipleDeals = false;
                             if(count($listingModel->deals) > 0){
                                 $hasMultipleDeals = true;
