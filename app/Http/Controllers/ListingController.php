@@ -388,7 +388,8 @@ class ListingController extends Controller
 
                 return response()->json(["success"=>true, "listings"=>$responseListings, "status"=>200], 200);
             }else{
-                $listings = Listing::leftJoin('plans', 'listings.plan_id', '=', 'plans.id')
+                $listings = Listing::where('status', '2')
+                ->leftJoin('plans', 'listings.plan_id', '=', 'plans.id')
                 ->orderByRaw('plans.plan_type = "Featured" DESC')
                 ->select("listings.*", "plans.plan_type")
                 ->get();
