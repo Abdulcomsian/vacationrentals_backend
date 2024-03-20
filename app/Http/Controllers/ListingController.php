@@ -358,7 +358,7 @@ class ListingController extends Controller
                 $featuredListings = [];
                 $otherMonthListings = [];
                 foreach ($categoryListing as $listing) {
-                    $listingModel = Listing::where('id', $listing->listing_id)->with(['plan','deals'])->first();           
+                    $listingModel = Listing::where('id', $listing->listing_id)->with(['plan','deals'])->where('status', '2')->first();           
                     if ($listingModel) {
                         $planType = $listingModel->plan->plan_type;                
                         if ($planType === 'Featured') {
