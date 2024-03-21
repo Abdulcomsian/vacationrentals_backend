@@ -239,7 +239,7 @@
             url:"{{ route('listing.datatable') }}",
             data: {
                 _token:'{{csrf_token()}}',
-                ...data
+                userId : data.userId,
             }
         },
         columns: [

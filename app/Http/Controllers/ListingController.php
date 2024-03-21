@@ -121,12 +121,12 @@ class ListingController extends Controller
             // Creating Slug
             $companyName = $request->company_name;
             $slug = strtolower($companyName);
-            $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
-            $slug = trim($slug, '_');
+            $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+            $slug = trim($slug, '-');
             // Checking if slug is already in the database
             $originalSlug = $slug;
             for($i = 1; Listing::where('slug', $slug)->exists(); $i++){
-                $slug = $originalSlug . '_' . $i;
+                $slug = $originalSlug . '-' . $i;
             }
 
             $user_id = Auth::user()->id;
@@ -248,12 +248,12 @@ class ListingController extends Controller
             // Creating Slug
             $companyName = $request->company_name;
             $slug = strtolower($companyName);
-            $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
-            $slug = trim($slug, '_');
+            $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+            $slug = trim($slug, '-');
             // Checking if slug is already in the database
             $originalSlug = $slug;
             for($i = 1; Listing::where('slug', $slug)->exists(); $i++){
-                $slug = $originalSlug . '_' . $i;
+                $slug = $originalSlug . '-' . $i;
             }
 
             $user_id = Auth::user()->id;
@@ -460,12 +460,12 @@ class ListingController extends Controller
             // Creating Slug
             $companyName = $request->companyName;
             $slug = strtolower($companyName);
-            $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
-            $slug = trim($slug, '_');
+            $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+            $slug = trim($slug, '-');
             // Checking if slug is already in the database
             $originalSlug = $slug;
             for($i = 1; Listing::where('slug', $slug)->exists(); $i++){
-                $slug = $originalSlug . '_' . $i;
+                $slug = $originalSlug . '-' . $i;
             }
 
             $user_id = Auth::user()->id;
@@ -566,12 +566,12 @@ class ListingController extends Controller
             // Creating Slug
             $companyName = $request->companyName;
             $slug = strtolower($companyName);
-            $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
-            $slug = trim($slug, '_');
+            $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+            $slug = trim($slug, '-');
             // Checking if slug is already in the database
             $originalSlug = $slug;
             for($i = 1; Listing::where('slug', $slug)->exists(); $i++){
-                $slug = $originalSlug . '_' . $i;
+                $slug = $originalSlug . '-' . $i;
             }
 
             $id = $request->listing_id;
@@ -681,11 +681,13 @@ class ListingController extends Controller
     }
 
     public function listingDataTable(Request $request){
-        if($request->userId){
-            $listings = Listing::with(['getCategories', 'plan'])->where('user_id', $request->userId)->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->get();
+        // dd($request->all());
+        if(isset($request->userId)){
+            $listings = Listing::where('user_id', $request->userId)->with(['getCategories', 'plan'])->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->get();
         }else{
             $listings = Listing::with(['getCategories', 'plan'])->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->get();
         }
+        // dd($listings);
         return Datatables::of($listings)
                     ->addIndexColumn()
                     ->addColumn('company_name', function($listing){
