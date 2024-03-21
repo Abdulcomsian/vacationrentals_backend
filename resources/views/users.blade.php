@@ -86,6 +86,7 @@
                                             <th scope="col">Name</th>
                                             <th scope="col">Email</th>
                                             <th scope="col">Email Verification Status</th>
+                                            <th scope="col">User Status</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
@@ -107,12 +108,27 @@
                                                 @endphp
                                             </td>
                                             <td>
+                                                @php
+                                                if($user->deleted_at != NULL){
+                                                    echo "Inactive";
+                                                }else{
+                                                    echo "Active";
+                                                }
+                                                @endphp
+                                            </td>
+                                            <td>
                                                 {{-- <a href="#" class="edit-cat text-success" previewlistener="true" >
                                                     <i class="las la-pencil-alt fs-20"></i>
                                                 </a> --}}
+                                                @if($user->deleted_at != NULL)
+                                                <a href="#" class="restore-cat text-danger mx-2" data-id="{{$user->id}}">
+                                                    <i class="las la-trash-restore fs-20"></i>
+                                                </a>
+                                                @else                                                
                                                 <a href="#" class="del-cat text-danger mx-2" data-id="{{$user->id}}">
                                                     <i class="lar la-trash-alt fs-20"></i>
                                                 </a>
+                                                @endif
                                             </td>
                                         </tr>
                                         @php
@@ -154,6 +170,33 @@
                         <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
                             <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn w-sm" style="background-color: #e30b0b !important;color:#fff;" id="delete-notification">Yes, Delete It!</button>
+                        </div>
+                    </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade bs-restore-modal-center" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{{route('restore.user')}}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" id="restoreUserId" name="user_id" value="">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="NotificationModalbtn-close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mt-2 text-center">
+                            <img src="{{asset('images/system-solid-18-autorenew.gif')}}" alt="" width="100px" height="100px">
+                            <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                                <h4>Are you sure ?</h4>
+                                <p class="text-muted mx-4 mb-0">Are you sure you want to Restore this User?</p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                            <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn w-sm" style="background-color: #e30b0b !important;color:#fff;" id="delete-notification">Yes, Restore It!</button>
                         </div>
                     </div>
             </form>
@@ -253,5 +296,10 @@
         $("#listingId").val(id);
         $(".bs-edit-modal-center").modal("show");
     });
+    $(document).on("click", ".restore-cat", function(){
+        let id = $(this).attr('data-id');
+        $('#restoreUserId').val(id);
+        $(".bs-restore-modal-center").modal("show");
+    })
 </script>
 @endsection

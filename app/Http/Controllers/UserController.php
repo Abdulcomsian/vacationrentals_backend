@@ -230,16 +230,27 @@ class UserController extends Controller
     public function deleteUser(Request $request){
         try{
             $userId = $request->user_id;
-            $listings = Listing::where('user_id', $userId)->get();
-            foreach($listings as $listing){
-                ListingCategory::where('listing_id', $listing->id)->delete();
-                Deal::where('listing_id', $listing->id)->delete();
-                $listing->delete();
-            }
+            $listings = Listing::where('user_id', $userId)->delete();
             User::where('id', $userId)->delete();
+            // foreach($listings as $listing){
+            //     ListingCategory::where('listing_id', $listing->id)->delete();
+            //     Deal::where('listing_id', $listing->id)->delete();
+            //     $listing->delete();
+            // }
             return redirect()->back()->with(['success' => "User Deleted Successfully"]);
         }catch(\Exception $e){
             return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
+        }
+    }
+
+    public function restoreUser(Request $request){
+        try{
+            $userId = $request->user_id;
+            User::where('id', $userId)->restore();
+            $listing = Listing::where('user_id', $userId)->restore();
+            return redirect()->back()->with(['success'=>"User Restored Successfully"]);
+        }catch(\Exception $e){
+            return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
 
