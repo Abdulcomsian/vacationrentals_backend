@@ -116,15 +116,20 @@ class HomeController extends Controller
             $name = $request->name;
             $email = $request->email;
             $message = $request->message;
-            $toEmail = "peterfischerflorez@gmail.com";
+            // $toEmail = "peterfischerflorez@gmail.com";
+            $toEmail = "abc@getnada.com";
             // Getting the Email Content from Database
             $emailData = Email::where('type', 'contact_us_email')->first();
-            $subject = $emailData->subject;
-            $emailSubject = str_replace("[NAME]", $name, $subject);
-            $emailMessage = $emailData->message;
-            $emailContent = str_replace(["[NAME]", "[EMAIL]", "[MESSAGE]"], [$name, $email, $message], $emailMessage);
-            Notification::route("mail", $toEmail)->notify(new ContactUsNotification($emailSubject, $emailContent));
-            return response()->json(["success"=>true, "msg"=>"Your email has been received", "status" => 200], 200);
+            if(isset($emailData) && count($emailData) > 0){
+                $subject = $emailData->subject;
+                $emailSubject = str_replace("[NAME]", $name, $subject);
+                $emailMessage = $emailData->message;
+                $emailContent = str_replace(["[NAME]", "[EMAIL]", "[MESSAGE]"], [$name, $email, $message], $emailMessage);
+                Notification::route("mail", $toEmail)->notify(new ContactUsNotification($emailSubject, $emailContent));
+                return response()->json(["success"=>true, "msg"=>"Your email has been received", "status" => 200], 200);
+            }else{
+                return response()->json(["success"=>false, "msg"=>"Admin haven`t added email content", "status" => 400], 400);
+            }            
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong","error"=>$e->getMessage(), "line"=>$e->getLine(), "status"=> 400], 400);
         }
