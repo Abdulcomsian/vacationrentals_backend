@@ -120,7 +120,7 @@ class HomeController extends Controller
             $toEmail = "abc@getnada.com";
             // Getting the Email Content from Database
             $emailData = Email::where('type', 'contact_us_email')->first();
-            if(isset($emailData) && count($emailData) > 0){
+            if(isset($emailData)){
                 $subject = $emailData->subject;
                 $emailSubject = str_replace("[NAME]", $name, $subject);
                 $emailMessage = $emailData->message;
