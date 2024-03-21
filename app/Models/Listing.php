@@ -26,6 +26,7 @@ class Listing extends Model
         'company_tagline',
         'short_description',
         'company_logo',
+        'slug',
         'status',
         'plan_id',
     ];
