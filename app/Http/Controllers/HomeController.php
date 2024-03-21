@@ -126,7 +126,7 @@ class HomeController extends Controller
             Notification::route("mail", $toEmail)->notify(new ContactUsNotification($emailSubject, $emailContent));
             return response()->json(["success"=>true, "msg"=>"Your email has been received", "status" => 200], 200);
         }catch(\Exception $e){
-            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "status"=> 400], 400);
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong","error"=>$e->getMessage(), "line"=>$e->getLine(), "status"=> 400], 400);
         }
     }
 }
