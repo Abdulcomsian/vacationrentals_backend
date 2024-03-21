@@ -641,27 +641,27 @@ class ListingController extends Controller
                     $listingCategory->save();
                 }
 
-                $status = $storeListing->status;
-                if($status == "2" || $status == "3"){
+                // $status = $storeListing->status;
+                // if($status == "2" || $status == "3"){
                     // Getting User Email
-                    $user_id = $storeListing->user_id;
-                    $userEmail = User::where('id', $user_id)->value("email");
+                    // $user_id = $storeListing->user_id;
+                    // $userEmail = User::where('id', $user_id)->value("email");
                     // Getting Status
-                    $approvalStatus = "";
-                    if($status == "2"){
-                        $approvalStatus = "Approved";
-                    }elseif($status == "3"){
-                        $approvalStatus = "Rejected";
-                    }
+                    // $approvalStatus = "";
+                    // if($status == "2"){
+                    //     $approvalStatus = "Approved";
+                    // }elseif($status == "3"){
+                    //     $approvalStatus = "Rejected";
+                    // }
                     // Getting the data from database against listing
-                    $emailData = Email::where('type', 'listing_approval')->first();
-                    $subjectEm = $emailData->subject;
-                    $emailSubject = str_replace("[LISTING_APPROVAL]", $approvalStatus, $subjectEm);
-                    $emailMessage = $emailData->message;
-                    $emailContent = str_replace("[LISTING_APPROVAL]", $approvalStatus, $emailMessage);
-                    // Sending email
-                    Notification::route("mail", $userEmail)->notify(new ListingApprovalNotification($emailSubject, $emailContent));
-                }               
+                    // $emailData = Email::where('type', 'listing_approval')->first();
+                    // $subjectEm = $emailData->subject;
+                    // $emailSubject = str_replace("[LISTING_APPROVAL]", $approvalStatus, $subjectEm);
+                    // $emailMessage = $emailData->message;
+                    // $emailContent = str_replace("[LISTING_APPROVAL]", $approvalStatus, $emailMessage);
+                    // // Sending email
+                    // Notification::route("mail", $userEmail)->notify(new ListingApprovalNotification($emailSubject, $emailContent));
+                // }               
                 return redirect()->route('listings')->with(['success'=>"Listing Updated Successfully"]);
             }
         }catch(\Exception $e){

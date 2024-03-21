@@ -95,7 +95,7 @@
                                                 </a>
                                             </td>
                                         </tr> --}}
-                                        <tr>
+                                        {{-- <tr>
                                             <td>6</td>
                                             <td>Listing Approval</td>
                                             <td>
@@ -103,7 +103,7 @@
                                                     <i class="las la-pencil-alt fs-20"></i>
                                                 </a>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                     </tbody>
                                 </table>
                                 <!-- end table -->
