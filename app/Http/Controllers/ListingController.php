@@ -29,8 +29,8 @@ class ListingController extends Controller
     // this function show a listing details against specific listing Id
     public function showListingDetail(Request $request){
         try{
-            $listing_id = $request->listing_id;
-            $listingData = Listing::with(['deals', 'getCategories'])->where('id', $listing_id)->first();
+            $slug = $request->slug;
+            $listingData = Listing::with(['deals', 'getCategories'])->where('slug', $slug)->first();
 
             $categoryIds = [];
             foreach ($listingData['getCategories'] as $category) {
@@ -51,6 +51,7 @@ class ListingController extends Controller
                 'updated_at' => $listingData['updated_at'],
                 'plan_id' => $listingData['plan_id'],
                 'deals' => $listingData['deals'],
+                'slug' => $listingData['slug'],
                 'category_ids' => $categoryIds,
             ];
             if(!empty($listingData)){
@@ -117,16 +118,28 @@ class ListingController extends Controller
             }
             $content = $dom->saveHTML();
             
+            // Creating Slug
+            $companyName = $request->company_name;
+            $slug = strtolower($companyName);
+            $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
+            $slug = trim($slug, '_');
+            // Checking if slug is already in the database
+            $originalSlug = $slug;
+            for($i = 1; Listing::where('slug', $slug)->exists(); $i++){
+                $slug = $originalSlug . '_' . $i;
+            }
+
             $user_id = Auth::user()->id;
             $listingId = $request->id;
             $listing = Listing::where('id', $listingId)->first(); // 0 means draft    
             if(!empty($listing) || isset($listing)){
                 $listing->update([
-                    'company_name' => $request->company_name,
+                    'company_name' => $companyName,
                     'short_description' => $content,
                     'company_tagline' => $request->company_tagline,
                     // 'company_logo' => $fileName,
                     'status' => '2', // 2 means approved by default 
+                    'slug' => $slug,
                 ]);
                 // add categories to the user
                 $categories = json_decode($request->company_categories);
@@ -232,16 +245,28 @@ class ListingController extends Controller
             }
             $content = $dom->saveHTML();
             
+            // Creating Slug
+            $companyName = $request->company_name;
+            $slug = strtolower($companyName);
+            $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
+            $slug = trim($slug, '_');
+            // Checking if slug is already in the database
+            $originalSlug = $slug;
+            for($i = 1; Listing::where('slug', $slug)->exists(); $i++){
+                $slug = $originalSlug . '_' . $i;
+            }
+
             $user_id = Auth::user()->id;
             $listingId = $request->id;
             $listing = Listing::where('id', $listingId)->first(); // 0 means draft    
             if(!empty($listing) || isset($listing)){
                 $listing->update([
-                    'company_name' => $request->company_name,
+                    'company_name' => $companyName,
                     'short_description' => $content,
                     'company_tagline' => $request->company_tagline,
                     // 'company_logo' => $fileName,
                     'status' => '2', // 2 means approved by default
+                    'slug' => $slug,
                 ]);
                 // add categories to the user
                 $categories = json_decode($request->company_categories);
@@ -330,6 +355,7 @@ class ListingController extends Controller
                             'recurring_price' => $listing->plan->recurring_price,
                         ],
                         'status' => $listingStatus,
+                        'slug' => $listing->slug,
                         'has_deals' => $listing->deals->count() > 0,
                     ];
                 });
@@ -431,6 +457,17 @@ class ListingController extends Controller
             "category.required" => "Please select at least one category",
         ]);
         try{
+            // Creating Slug
+            $companyName = $request->companyName;
+            $slug = strtolower($companyName);
+            $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
+            $slug = trim($slug, '_');
+            // Checking if slug is already in the database
+            $originalSlug = $slug;
+            for($i = 1; Listing::where('slug', $slug)->exists(); $i++){
+                $slug = $originalSlug . '_' . $i;
+            }
+
             $user_id = Auth::user()->id;
             $storeListing = new Listing();
             $storeListing->user_id = $user_id;
@@ -441,7 +478,7 @@ class ListingController extends Controller
             //     $file->move($destinationPath, $fileName);
             //     $storeListing->company_logo = $fileName;
             // }
-            $storeListing->company_name = $request->companyName;
+            $storeListing->company_name = $companyName;
             $storeListing->company_tagline = $request->companyTagLine;
 
             // saving summernote content
@@ -481,6 +518,7 @@ class ListingController extends Controller
             }
             $storeListing->status = $saveStatus;
             $storeListing->company_link = $request->websiteLink;
+            $storeListing->slug = $slug;
             if($storeListing->save()){
                 foreach($request->category as $category_id){
                     $listingCategory = new ListingCategory();
@@ -525,6 +563,17 @@ class ListingController extends Controller
             "category.required" => "Please select at least one category",
         ]);
         try{
+            // Creating Slug
+            $companyName = $request->companyName;
+            $slug = strtolower($companyName);
+            $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
+            $slug = trim($slug, '_');
+            // Checking if slug is already in the database
+            $originalSlug = $slug;
+            for($i = 1; Listing::where('slug', $slug)->exists(); $i++){
+                $slug = $originalSlug . '_' . $i;
+            }
+
             $id = $request->listing_id;
             $storeListing = Listing::find($id);
             // if($request->file('companyImage')){
@@ -534,7 +583,7 @@ class ListingController extends Controller
             //     $file->move($destinationPath, $fileName);
             //     $storeListing->company_logo = $fileName;
             // }
-            $storeListing->company_name = $request->companyName;
+            $storeListing->company_name = $companyName;
             $storeListing->company_tagline = $request->companyTagLine;
             
             // saving summernote content
@@ -582,6 +631,7 @@ class ListingController extends Controller
             $storeListing->status = $saveStatus;
             $storeListing->plan_id = $request->plan_id;
             $storeListing->company_link = $request->websiteLink;
+            $storeListing->slug = $slug;
             if($storeListing->save()){
                 $deleteCategory = ListingCategory::where('listing_id', $id)->delete();
                 foreach($request->category as $category_id){

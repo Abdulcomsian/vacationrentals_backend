@@ -37,13 +37,20 @@ class CategoryController extends Controller
             }
 
             // Converting String for Slug
-            $categorySlug = $request->categoryName;
-            $categorySlug = strtolower($categorySlug);
-            $categorySlug = str_replace(' ', '_', $categorySlug);
+            $categoryName = $request->categoryName;
+            $slug = strtolower($categoryName);
+            $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
+            $slug = trim($slug, '_');
+            // Checking if slug is already in the database
+            $originalSlug = $slug;
+            for($i = 1; Category::where('slug', $slug)->exists(); $i++){
+                $slug = $originalSlug . '_' . $i;
+            }
+
 
             $categoryData = new Category();
-            $categoryData->category_name = $request->categoryName;
-            $categoryData->slug = $categorySlug;
+            $categoryData->category_name = $categoryName;
+            $categoryData->slug = $slug;
             $categoryData->category_image = "assets/category_images/". $fileName;
             if($categoryData->save()){
                 return redirect()->back()->with(['success' => "Category Added Succesfully"]);
@@ -74,13 +81,19 @@ class CategoryController extends Controller
             $id = $request->category_id;
 
             // Converting String for Slug
-            $categorySlug = $request->categoryName;
-            $categorySlug = strtolower($categorySlug);
-            $categorySlug = str_replace(' ', '_', $categorySlug);
+            $categoryName = $request->categoryName;
+            $slug = strtolower($categoryName);
+            $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
+            $slug = trim($slug, '_');
+            // Checking if slug is already in the database
+            $originalSlug = $slug;
+            for($i = 1; Category::where('slug', $slug)->exists(); $i++){
+                $slug = $originalSlug . '_' . $i;
+            }
 
             $categoryData = Category::find($id);
-            $categoryData->category_name = $request->categoryName;
-            $categoryData->slug = $categorySlug;
+            $categoryData->category_name = $categoryName;
+            $categoryData->slug = $slug;
             if($request->file('categoryImage')){
                 $file = $request->file('categoryImage');
                 $fileDestination = public_path('assets/category_images');
