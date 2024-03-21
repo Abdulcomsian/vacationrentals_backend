@@ -83,24 +83,3 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
 });
 
 // Admin Routes ends here
-
-
-Route::get('test', function(){
-    $listings = Listing::where('slug', NULL)->get();
-    foreach($listings as $listing){
-        // Creating Slug
-        $companyName = $listing->company_name;
-        $slug = strtolower($companyName);
-        $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
-        $slug = trim($slug, '_');
-        // Checking if slug is already in the database
-        $originalSlug = $slug;
-        for($i = 1; Listing::where('slug', $slug)->exists(); $i++){
-            $slug = $originalSlug . '_' . $i;
-        }
-
-        Listing::where('id', $listing->id)->update(['slug'=> $slug]);
-        echo "succes";
-
-    }
-});
