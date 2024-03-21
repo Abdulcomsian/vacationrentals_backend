@@ -681,13 +681,24 @@ class ListingController extends Controller
     }
 
     public function listingDataTable(Request $request){
-        // dd($request->all());
         if(isset($request->userId)){
-            $listings = Listing::where('user_id', $request->userId)->with(['getCategories', 'plan'])->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->get();
+            $userId = $request->userId;
+            $listings = Listing::where('user_id', $userId)
+                           ->with(['getCategories', 'plan'])
+                           ->where(function($query) {
+                               $query->where('status', '1')
+                                     ->orWhere('status', '2')
+                                     ->orWhere('status', '3');
+                           })
+                           ->get();
         }else{
-            $listings = Listing::with(['getCategories', 'plan'])->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->get();
+            $listings = Listing::with(['getCategories', 'plan'])
+            ->where(function($query){
+                $query->where('status', '1')
+                      ->orWhere('status', '2')
+                      ->orWhere('status', '3');
+            })->get();
         }
-        // dd($listings);
         return Datatables::of($listings)
                     ->addIndexColumn()
                     ->addColumn('company_name', function($listing){

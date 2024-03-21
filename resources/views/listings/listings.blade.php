@@ -257,19 +257,6 @@
         let userId = $(this).find(":selected").val();
         let data = {userId: userId,}
         loadTable(data);
-        // var csrfToken = $('meta[name="csrf-token"]').attr('content');
-        // $.ajax({
-        //     method: "POST",
-        //     url: "{{ route('listing.datatable') }}",
-        //     data: {
-        //         _token: csrfToken,
-        //         userId: userId,
-        //     },
-        //     success: function(res) {
-        //         console.log(res);
-        //         // $("#listing_table").html(res);
-        //     }
-        // });
     })
 
 
