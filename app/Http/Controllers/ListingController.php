@@ -135,7 +135,7 @@ class ListingController extends Controller
 
             //Generating Screenshot image of a given website link
             $method = 'GET';
-            $url = 'https://api.screenshotone.com/take?access_key='.env('SCREENSHOT_ACCESS').'&url='.$listing->company_link.'&viewport_width=1920&viewport_height=1280&device_scale_factor=1&image_quality=80&format=jpg&block_ads=true&block_cookie_banners=true&full_page=false&block_trackers=true&block_banners_by_heuristics=false&delay=0&timeout=60';
+            $url = 'https://api.screenshotone.com/take?access_key='.env('SCREENSHOT_ACCESS').'&url='.$listing->company_link.'&viewport_width=1920&viewport_height=1280&device_scale_factor=1&image_quality=80&format=jpg&block_ads=true&block_cookie_banners=true&full_page=false&block_trackers=true&block_banners_by_heuristics=false&delay=5&timeout=60';
             $options = [
                 'http' => [
                     'method' => $method,
