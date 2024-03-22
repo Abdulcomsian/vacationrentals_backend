@@ -29,6 +29,7 @@ class Listing extends Model
         'slug',
         'status',
         'plan_id',
+        'screenshot_image'
     ];
 
     public function getCategories(){

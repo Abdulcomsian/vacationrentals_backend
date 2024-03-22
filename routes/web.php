@@ -11,6 +11,7 @@ use App\Http\Controllers\{
     ListingController,
     EmailController,
 };
+use Carbon\Carbon;
 use App\Models\{
     User,
     Plan,
@@ -83,3 +84,9 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
 });
 
 // Admin Routes ends here
+
+Route::get('test', function(){
+    $url = "https://apple.com";
+    // $urlnew = urlencode($url);
+                
+});

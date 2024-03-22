@@ -132,6 +132,25 @@ class ListingController extends Controller
             $user_id = Auth::user()->id;
             $listingId = $request->id;
             $listing = Listing::where('id', $listingId)->first(); // 0 means draft    
+
+            //Generating Screenshot image of a given website link
+            $method = 'GET';
+            $url = 'https://api.screenshotone.com/take?access_key='.env('SCREENSHOT_ACCESS').'&url='.$listing->company_link.'&viewport_width=1920&viewport_height=1280&device_scale_factor=1&image_quality=80&format=jpg&block_ads=true&block_cookie_banners=true&full_page=false&block_trackers=true&block_banners_by_heuristics=false&delay=0&timeout=60';
+            $options = [
+                'http' => [
+                    'method' => $method,
+                ],
+            ];
+            
+            $context = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
+            if($result === FALSE){
+                return response()->json(["success"=>false, "msg"=>"Screenshot for given company website is not allowed", "status"=>400], 400);
+            }else{
+                $imageName = rand() . '_' . 'image' .  '.jpg';
+                $imagePath = public_path('assets/screenshot_images/' . $imageName);
+                file_put_contents($imagePath, $result);
+            }
             if(!empty($listing) || isset($listing)){
                 $listing->update([
                     'company_name' => $companyName,
@@ -140,6 +159,7 @@ class ListingController extends Controller
                     // 'company_logo' => $fileName,
                     'status' => '2', // 2 means approved by default 
                     'slug' => $slug,
+                    'screenshot_image' => asset('assets/screenshot_images/' . $imageName)
                 ]);
                 // add categories to the user
                 $categories = json_decode($request->company_categories);

@@ -179,6 +179,8 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
+
+{{-- <img src="https://api.screenshotone.com/take?access_key=mSNI-jbk8LZg7w&url=https://vacationrentals.tools/&viewport_width=500&viewport_height=400&device_scale_factor=1&image_quality=80&format=jpg&block_ads=true&block_cookie_banners=true&full_page=false&block_trackers=true&block_banners_by_heuristics=false&delay=0&timeout=60" alt="Hello how are YOU"> --}}
 <style>
     .addtool form label{
     font-weight: 600;

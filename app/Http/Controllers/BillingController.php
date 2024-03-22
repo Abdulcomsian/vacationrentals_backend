@@ -19,23 +19,22 @@ class BillingController extends Controller
 {
 
     public function checkout(Request $request){
+        $validator = Validator::make($request->all(), [
+            'price_id' => 'required',
+            'website_link' => 'required',
+        ]);
+
+        $price_id = $validator->errors()->get('price_id');
+        $websiteLink = $validator->errors()->get('website_link');
+
+        foreach($price_id as $price){
+            return response()->json(["success" => false, "msg" => $price, "status" => 400], 400); 
+        }
+
+        foreach($websiteLink as $website){
+            return response()->json(["success" => false, "msg" => $website, "status" => 400], 400);
+        }
         try{
-            $validator = Validator::make($request->all(), [
-                'price_id' => 'required',
-                'website_link' => 'required',
-            ]);
-
-            $price_id = $validator->errors()->get('price_id');
-            $websiteLink = $validator->errors()->get('website_link');
-
-            foreach($price_id as $price){
-                return response()->json(["success" => false, "msg" => $price, "status" => 400], 400); 
-            }
-
-            foreach($websiteLink as $website){
-                return response()->json(["success" => false, "msg" => $website, "status" => 400], 400);
-            }
-
             // Stripe Checkout Page Integration Start here
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
             header('Content-Type: application/json');
@@ -94,7 +93,8 @@ class BillingController extends Controller
             return response()->json(["success"=>false, "msg"=>"Something went wrong", "error"=>$e->getMessage(), "status"=>400], 400);
         }
     }
-    
+
+
     public function handleSuccess(Request $request){
         try{
             $sessionId = $request->session_id;
@@ -118,13 +118,13 @@ class BillingController extends Controller
                     'currency' => $checkout_session->currency,
                     'stripe_subscription_id' => $checkout_session->subscription,
                     'invoice_id' => $checkout_session->invoice,
-                    'ends_at' => $expirationDate,
                     'price_id' => $checkout_session->metadata->price_id
                 ]);
 
                 // getting the plan Id from price ID here
                 $price_id = $checkout_session->metadata->price_id;
                 $planId = Plan::where('plan_id', $price_id)->first();
+
                 // Storing tool link
                 $toolLink = new Listing();
                 $toolLink->user_id = $userData->id;
