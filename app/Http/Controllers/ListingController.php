@@ -733,6 +733,7 @@ class ListingController extends Controller
                                      ->orWhere('status', '2')
                                      ->orWhere('status', '3');
                            })
+                           ->orderBy('id', 'DESC')
                            ->get();
         }else{
             $listings = Listing::with(['getCategories', 'plan'])
@@ -740,7 +741,9 @@ class ListingController extends Controller
                 $query->where('status', '1')
                       ->orWhere('status', '2')
                       ->orWhere('status', '3');
-            })->get();
+            })
+            ->orderBy('id', 'DESC')
+            ->get();
         }
         return Datatables::of($listings)
                     ->addIndexColumn()

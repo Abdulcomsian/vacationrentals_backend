@@ -237,6 +237,7 @@
         bInfo: false,
         pagingType: 'full_numbers',
         "bDestroy": true,
+        orderable:false,
         ajax: {
             type: "POST", 
             url:"{{ route('listing.datatable') }}",
@@ -246,12 +247,12 @@
             }
         },
         columns: [
-            {data: 'company_name', name: 'company_name'},
-            {data: 'listing_link', name: 'listing_link'},
-            {data: 'categories', name: 'categories'},
-            {data: 'package', name: 'package'},
-            {data: 'status', name: 'status'},
-            {data: 'screenshot_image', name: 'screenshot_image'},
+            {data: 'company_name', name: 'company_name', orderable: false},
+            {data: 'listing_link', name: 'listing_link', orderable: false},
+            {data: 'categories', name: 'categories', orderable: false},
+            {data: 'package', name: 'package', orderable: false},
+            {data: 'status', name: 'status', orderable: false},
+            {data: 'screenshot_image', name: 'screenshot_image', orderable: false},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
       });
