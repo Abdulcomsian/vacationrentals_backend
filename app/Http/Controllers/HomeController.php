@@ -83,7 +83,7 @@ class HomeController extends Controller
             2 - Approved
             3 - Rejected
         */        
-        $listings = Listing::with(['getCategories', 'plan'])->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->get();
+        $listings = Listing::with(['getCategories', 'plan'])->where('status', '1')->orWhere('status', '2')->orWhere('status', '3')->orderBy('created_at', 'DESC')->get();
         $users = User::where('type', 'user')->get();
         return view('listings/listings', compact('listings', 'users'));
     }
