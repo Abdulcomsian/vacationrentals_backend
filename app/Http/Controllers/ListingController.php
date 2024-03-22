@@ -52,6 +52,7 @@ class ListingController extends Controller
                 'plan_id' => $listingData['plan_id'],
                 'deals' => $listingData['deals'],
                 'slug' => $listingData['slug'],
+                'screenshot_image' => $listingData['screenshot_image'],
                 'category_ids' => $categoryIds,
             ];
             if(!empty($listingData)){
@@ -376,6 +377,7 @@ class ListingController extends Controller
                         ],
                         'status' => $listingStatus,
                         'slug' => $listing->slug,
+                        'screenshot_image' => $listing->screenshot_image,
                         'has_deals' => $listing->deals->count() > 0,
                     ];
                 });
