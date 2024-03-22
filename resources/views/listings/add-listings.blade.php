@@ -17,6 +17,19 @@
 
 
 @section('content')
+<style>
+    .pageLoader{
+        background: url("{{asset('images/loader.gif')}}") no-repeat center center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 9999999;
+        background-color: #ffffff8c;
+        display: none;
+    }
+</style>
 
 @if(session('success'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -37,6 +50,7 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
+                        <div class="pageLoader" id="pageLoader"></div>
                         <form action="{{route('store.listing')}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="card-header align-items-center d-flex">
@@ -166,5 +180,14 @@
             height: 300,
         });
     });
+
+    $(window).on('beforeunload', function(){    
+        $('#pageLoader').show();
+
+    });
+
+    $(function () {
+        $('#pageLoader').hide();
+    })
 </script>
 @endsection
