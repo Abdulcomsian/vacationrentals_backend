@@ -88,6 +88,7 @@
                                             <th scope="col" style="text-wrap: wrap;">Category/ies</th>
                                             <th scope="col">Package</th>
                                             <th scope="col">Status</th>
+                                            <th scope="col">Screenshot Image</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
@@ -250,6 +251,7 @@
             {data: 'categories', name: 'categories'},
             {data: 'package', name: 'package'},
             {data: 'status', name: 'status'},
+            {data: 'screenshot_image', name: 'screenshot_image'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
       });

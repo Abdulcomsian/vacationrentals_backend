@@ -541,6 +541,27 @@ class ListingController extends Controller
             $storeListing->status = $saveStatus;
             $storeListing->company_link = $request->websiteLink;
             $storeListing->slug = $slug;
+
+            //Generating Screenshot image of a given website link
+            $method = 'GET';
+            $url = 'https://api.screenshotone.com/take?access_key='.env('SCREENSHOT_ACCESS').'&url='.$request->websiteLink.'&viewport_width=1920&viewport_height=1280&device_scale_factor=1&image_quality=80&format=jpg&block_ads=true&block_cookie_banners=true&full_page=false&block_trackers=true&block_banners_by_heuristics=false&delay=10&timeout=60';
+            $options = [
+                'http' => [
+                    'method' => $method,
+                ],
+            ];
+            
+            $context = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
+            if($result === FALSE){
+                return response()->json(["success"=>false, "msg"=>"Screenshot for given company website is not allowed", "status"=>400], 400);
+            }else{
+                $imageName = rand() . '_' . 'image' .  '.jpg';
+                $imagePath = public_path('assets/screenshot_images/' . $imageName);
+                file_put_contents($imagePath, $result);
+            }
+
+            $storeListing->screenshot_image = asset('assets/screenshot_images/' . $imageName);
             if($storeListing->save()){
                 foreach($request->category as $category_id){
                     $listingCategory = new ListingCategory();
@@ -758,7 +779,18 @@ class ListingController extends Controller
                         }
                         return $status;
                     })
-
+                    ->addColumn('screenshot_image', function($listing){
+                        if(isset($listing->screenshot_image)){
+                            $imageLink = '
+                            <a href="'.$listing->screenshot_image.'" target="_blank">
+                                    <i class="fa fa-eye fs-15"></i>
+                                </a>
+                            ';
+                        }else{
+                            $imageLink = '';
+                        }
+                        return $imageLink;
+                    })
                     ->addColumn('action', function($listing) {
                         $btns = '
                             <a href="' . url('edit-listing', ["id" => $listing->id]) . '" class="edit-cat text-success">
@@ -771,7 +803,7 @@ class ListingController extends Controller
                         return $btns;
                     })
                     
-                    ->rawColumns(['company_name', 'listing_link', 'categories', 'package', 'status', 'action'])
+                    ->rawColumns(['company_name', 'listing_link', 'categories', 'package', 'status', 'screenshot_image', 'action'])
                     ->make(true);
     }
 }
