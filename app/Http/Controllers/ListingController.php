@@ -191,8 +191,8 @@ class ListingController extends Controller
 
                 // Getting the data from the database against Listing for email
                 $emailData = Email::where('type', 'listing_submission')->first();
-                $emailSubject = $emailData->subject;
-                $emailContent = $emailData->message;
+                $emailSubject = $emailData->subject ?? '';
+                $emailContent = $emailData->message ?? '';
                 // Sending email
                 Notification::route("mail", Auth::user()->email)->notify(new ListingSubmission($emailSubject, $emailContent));
                 return response()->json(["success"=>true, "msg"=>"Listing updated successfully", "status"=>200], 200);
@@ -379,6 +379,7 @@ class ListingController extends Controller
                         'slug' => $listing->slug,
                         'screenshot_image' => $listing->screenshot_image,
                         'subscription_id' => $listing->subscriptions->stripe_subscription_id ?? NULL,
+                        'subscription_status' => $listing->subscription_status,
                         'has_deals' => $listing->deals->count() > 0,
                     ];
                 });
@@ -409,7 +410,7 @@ class ListingController extends Controller
                 $featuredListings = [];
                 $otherMonthListings = [];
                 foreach ($categoryListing as $listing) {
-                    $listingModel = Listing::where('id', $listing->listing_id)->with(['plan','deals'])->where('status', '2')->first();           
+                    $listingModel = Listing::where('id', $listing->listing_id)->with(['plan','deals'])->where('status', '2')->where('subscription_status', 'active')->first();           
                     if ($listingModel) {
                         $planType = $listingModel->plan->plan_type;                
                         if ($planType === 'Featured') {
@@ -431,15 +432,16 @@ class ListingController extends Controller
                 }
 
                 $listings = array_merge($featuredListings, $otherMonthListings);
-                $responseListings = [];
-                foreach($listings as $listing){
-                    $filteredListings = collect($listing)->forget('deals')->toArray();
-                    $responseListings[] = $filteredListings;
-                }
+                // $responseListings = [];
+                // foreach($listings as $listing){
+                //     $filteredListings = collect($listing)->forget('deals')->toArray();
+                //     $responseListings[] = $filteredListings;
+                // }
 
-                return response()->json(["success"=>true, "listings"=>$responseListings, "status"=>200], 200);
+                return response()->json(["success"=>true, "listings"=>$listings, "status"=>200], 200);
             }else{
-                $listings = Listing::where('status', '2')
+                $listings = Listing::with('deals')->where('status', '2')
+                ->where('subscription_status', 'active')
                 ->leftJoin('plans', 'listings.plan_id', '=', 'plans.id')
                 ->orderByRaw('plans.plan_type = "Featured" DESC')
                 ->select("listings.*", "plans.plan_type")

@@ -33,6 +33,7 @@ Route::post('/update-password', [UserController::class, 'updatePassword']);
 Route::middleware(['check.authentication'])->group(function(){
     Route::post('/checkout', [BillingController::class, 'checkout']);
     Route::post('/cancel-subscription', [BillingController::class, 'cancelSubscription']);
+    Route::post('/resume-subscription', [BillingController::class, 'resumeSubscription']);
     // Protected Route Plan API
     Route::get('/show-plans-protected', [PlanController::class, 'showPlans']);
     

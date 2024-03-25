@@ -14,6 +14,7 @@ use App\Models\{
     Subscription,
     Listing,
 };
+use Carbon\Carbon;
 
 class BillingController extends Controller
 {
@@ -161,10 +162,46 @@ class BillingController extends Controller
         try{
             $subscriptionId = $request->subscription_id;
             $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
-            $stripe->subscriptions->cancel($subscriptionId, []);
+            $stripe->subscriptions->update(
+                $subscriptionId,
+                ['pause_collection' => ['behavior' => 'void']]
+              );
+            // Getting the subscription data against subscription Id
+            $subscription = Subscription::where('stripe_subscription_id', $subscriptionId)->first();
+            // Getting the listing Id to update the column subscription status in listings table
+            $listingId = $subscription->listing_id;
+            // updating.....
+            $listing = Listing::where('id', $listingId)->update(["subscription_status" => "cancelled"]);
+            // updating the subscription
+            $subscription->update(['subscription_cancel_date' => Carbon::now()]);
             return response()->json(["success"=>true, "msg"=>"Subcription cancelled successfully", "status"=>200], 200);
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "status"=>400], 400); 
+        }
+    }
+
+    public function resumeSubscription(Request $request){
+        try{
+            $subscriptionId = $request->subscription_id;
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+            \Stripe\Subscription::update(
+            $subscriptionId,
+            [
+                'pause_collection' => '',
+            ]
+            );
+            // Getting the subscription data against subscription Id
+            $subscription = Subscription::where('stripe_subscription_id', $subscriptionId)->first();
+            // Getting the listing Id to update the column subscription status in listings table
+            $listingId = $subscription->listing_id;
+            // updating.....
+            $listing = Listing::where('id', $listingId)->update(["subscription_status" => "active"]);
+            // updating the subscription
+            $subscription->update(['subscription_cancel_date' => NULL]);
+            return response()->json(["success"=>true, "msg"=>"Subcription resumed successfully", "status"=>200], 200);
+        }catch(\Exception $e){
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "status"=>400], 400);
         }
     }
 }
