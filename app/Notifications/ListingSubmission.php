@@ -15,10 +15,11 @@ class ListingSubmission extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct($emailSubject, $emailContent)
+    public function __construct($emailSubject, $emailContent, $adminEmail)
     {
         $this->emailSubject = $emailSubject;
         $this->emailContent = $emailContent;
+        $this->adminEmail = $adminEmail;
     }
 
     /**
@@ -38,6 +39,7 @@ class ListingSubmission extends Notification
     {
         return (new MailMessage)
             ->subject($this->emailSubject)
+            ->cc($this->adminEmail)
             ->line(new HTMLString($this->emailContent));
     }
 

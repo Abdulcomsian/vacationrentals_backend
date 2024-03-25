@@ -5,7 +5,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="NotificationModalbtn-close"></button>
             </div>
             <div class="modal-body">
-                <div class="addtool">
+                    <div class="addtool"><div class="row mb-2">
+                        <div class="col-xxl-2">
+                            <input class="form-control" type="text" value="[LISTING_LINK]" id="listingLinkConstant" onclick="copyListingLinkText()" style="width: 17%; cursor: pointer;" readonly title="Click to copy constant BUTTON LINK">
+                        </div>
+                    </div>
                     <form action="{{route('store.email')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" id="listingSubmitType" value="" name="type">
@@ -44,3 +48,12 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
+
+<script>
+    // to copy the otp constant
+    function copyListingLinkText(){
+        let inputTag = document.getElementById("listingLinkConstant").select();
+        document.execCommand("copy");
+        alert("Text Copied");
+    }
+</script>

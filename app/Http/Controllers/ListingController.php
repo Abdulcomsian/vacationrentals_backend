@@ -189,12 +189,17 @@ class ListingController extends Controller
                     }
                 }
 
+                $listingLink =  '<a href=https://vacationrentals.tools/'.$listing->slug.' target="_blank">View Listing</a>';
                 // Getting the data from the database against Listing for email
                 $emailData = Email::where('type', 'listing_submission')->first();
-                $emailSubject = $emailData->subject ?? '';
-                $emailContent = $emailData->message ?? '';
+                $subjectEm = $emailData->subject ?? '';
+                $emailSubject = str_replace("[LISTING_LINK]", $listingLink, $subjectEm);
+                $emailCon = $emailData->message ?? '';
+                $emailContent = str_replace("[LISTING_LINK]", $listingLink, $emailCon);
+
+                $adminEmail = User::where('type', 'admin')->value("email");
                 // Sending email
-                Notification::route("mail", Auth::user()->email)->notify(new ListingSubmission($emailSubject, $emailContent));
+                Notification::route("mail", Auth::user()->email)->notify(new ListingSubmission($emailSubject, $emailContent, $adminEmail));
                 return response()->json(["success"=>true, "msg"=>"Listing updated successfully", "status"=>200], 200);
             }else{
                 return response()->json(["success"=>false, "msg"=>"Listing has already been created for the selected tool", "status"=>400], 400);
