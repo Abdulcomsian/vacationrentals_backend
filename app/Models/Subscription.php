@@ -24,6 +24,9 @@ class Subscription extends Model
         'price_id',
         'created_at',
         'updated_at',
+        'subscription_renewal_date',
+        'listing_id',
+        'subscription_cancel_date',
     ];
 
     public function user(){

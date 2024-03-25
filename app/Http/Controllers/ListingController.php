@@ -349,7 +349,7 @@ class ListingController extends Controller
     public function showAllListing(){
         try{
             $userId = Auth::user()->id;
-            $listings = Listing::with(['plan', 'deals'])
+            $listings = Listing::with(['plan', 'deals', 'subscriptions'])
                 ->where('user_id', $userId)
                 ->where('deleted_at', '=', null)
                 ->get()
@@ -378,9 +378,12 @@ class ListingController extends Controller
                         'status' => $listingStatus,
                         'slug' => $listing->slug,
                         'screenshot_image' => $listing->screenshot_image,
+                        'subscription_id' => $listing->subscriptions->stripe_subscription_id ?? NULL,
                         'has_deals' => $listing->deals->count() > 0,
                     ];
                 });
+
+                // dd($listings->subscriptions);
 
             if(count($listings) > 0){
                 return response()->json(["success"=>true, "listings"=>$listings, "status"=>200], 200);
@@ -388,7 +391,7 @@ class ListingController extends Controller
                 return response()->json(["success"=>false, "msg"=>"No listings found", "status"=>400], 400);
             }
         }catch(\Exception $e){
-            return response()->json(["success"=>false, "msg"=>"Something went wrong", "status"=>400], 400);
+            return response()->json(["success"=>false, "msg"=>"Something went wrong", "error" => $e->getMessage(), "status"=>400], 400);
         }
         
     }

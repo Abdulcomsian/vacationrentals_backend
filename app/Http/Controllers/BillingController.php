@@ -108,19 +108,6 @@ class BillingController extends Controller
                 $timestamp = $checkout_session->expires_at;
                 $expirationDate = date('Y-m-d H:i:s', $timestamp);
 
-                // Store plan data
-                $subscription = Subscription::create([
-                    'user_id' => $userData->id,
-                    'type' => $checkout_session->mode,
-                    'stripe_id' =>  $checkout_session->id,
-                    'payment_status' => $checkout_session->payment_status,
-                    'stripe_price' => $stripePrice,
-                    'currency' => $checkout_session->currency,
-                    'stripe_subscription_id' => $checkout_session->subscription,
-                    'invoice_id' => $checkout_session->invoice,
-                    'price_id' => $checkout_session->metadata->price_id
-                ]);
-
                 // getting the plan Id from price ID here
                 $price_id = $checkout_session->metadata->price_id;
                 $planId = Plan::where('plan_id', $price_id)->first();
@@ -131,6 +118,20 @@ class BillingController extends Controller
                 $toolLink->company_link = $checkout_session->metadata->website_link;
                 $toolLink->plan_id = $planId->id;
                 $toolLink->save();
+
+                // Store plan data
+                $subscription = Subscription::create([
+                    'user_id' => $userData->id,
+                    'type' => $checkout_session->mode,
+                    'stripe_id' =>  $checkout_session->id,
+                    'payment_status' => $checkout_session->payment_status,
+                    'stripe_price' => $stripePrice,
+                    'currency' => $checkout_session->currency,
+                    'stripe_subscription_id' => $checkout_session->subscription,
+                    'invoice_id' => $checkout_session->invoice,
+                    'price_id' => $checkout_session->metadata->price_id,
+                    'listing_id' => $toolLink->id
+                ]);               
 
                 $is_featured = "false";
                 if($planId->plan_type == 'Featured'){
@@ -153,6 +154,17 @@ class BillingController extends Controller
             return response()->json(["success"=>true, "msg"=>"Sorry your payment has been cancelled. Please try again later"]);
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "status"=>400], 400);
+        }
+    }
+
+    public function cancelSubscription(Request $request){
+        try{
+            $subscriptionId = $request->subscription_id;
+            $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+            $stripe->subscriptions->cancel($subscriptionId, []);
+            return response()->json(["success"=>true, "msg"=>"Subcription cancelled successfully", "status"=>200], 200);
+        }catch(\Exception $e){
+            return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "status"=>400], 400); 
         }
     }
 }

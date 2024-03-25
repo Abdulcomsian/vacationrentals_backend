@@ -29,7 +29,7 @@ class Listing extends Model
         'slug',
         'status',
         'plan_id',
-        'screenshot_image'
+        'screenshot_image',
     ];
 
     public function getCategories(){
@@ -42,5 +42,9 @@ class Listing extends Model
 
     public function deals(){
         return $this->hasMany(Deal::class);
+    }
+
+    public function subscriptions(){
+        return $this->hasOne(Subscription::class);
     }
 }

@@ -116,7 +116,7 @@ class HomeController extends Controller
             $email = $request->email;
             $message = $request->message;
             // $toEmail = "peterfischerflorez@gmail.com";
-            $toEmail = "abc@getnada.com";
+            $toEmail = User::where('type', 'admin')->value("email");
             // Getting the Email Content from Database
             $emailData = Email::where('type', 'contact_us_email')->first();
             if(isset($emailData)){
