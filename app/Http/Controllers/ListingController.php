@@ -757,7 +757,7 @@ class ListingController extends Controller
                         return $companName;
                     })
                     ->addColumn('listing_link', function($listing){
-                        $listingLink = '<a href="'.$listing->company_link.'" target="_blank">
+                        $listingLink = '<a href=https://vacationrentals.tools/'.$listing->slug.' target="_blank">
                         <i class="fa fa-eye"></i>
                     </a>';
                         return $listingLink;
