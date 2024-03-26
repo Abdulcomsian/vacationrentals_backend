@@ -60,14 +60,14 @@
                                 <div class="row">
                                     <input type="hidden" name="admin_id" value="{{$adminDetail->id}}">
                                     <div class="col-lg-6">
-                                        <div class="mb-3">
-                                            @error('full_name')
-                                                <span class="text-danger">{{$message}}</span>
-                                            @enderror
+                                        <div class="mb-3">                                            
                                             <label for="firstnameInput" class="form-label">Full
                                                 Name</label>
                                             <input type="text" class="form-control" id="firstnameInput" name="full_name"
                                                 placeholder="Enter your firstname" value="{{$adminDetail->name}}">
+                                            @error('full_name')
+                                                <span class="text-danger">{{$message}}</span>
+                                            @enderror
                                         </div>
                                     </div>
                                     <!--end col-->
@@ -90,14 +90,14 @@
                                     </div> --}}
                                     <!--end col-->
                                     <div class="col-lg-6">
-                                        <div class="mb-3">
-                                            @error('email')
-                                                <span class="text-danger">{{$message}}</span>
-                                            @enderror
+                                        <div class="mb-3">                                            
                                             <label for="emailInput" class="form-label">Email
                                                 Address</label>
                                             <input type="email" class="form-control" id="emailInput" name="email"
                                                 placeholder="Enter your email" value="{{$adminDetail->email}}">
+                                            @error('email')
+                                                <span class="text-danger">{{$message}}</span>
+                                            @enderror
                                         </div>
                                     </div>
                                     <!--end col-->

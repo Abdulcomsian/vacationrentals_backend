@@ -52,7 +52,7 @@ class EmailController extends Controller
                 );
             }elseif($request->type == "listing_submission"){
                 $email = Email::updateOrCreate(
-                    ['type' => 'contact_us_email'],
+                    ['type' => 'listing_submission'],
                     [
                         'subject' => $request->subject,
                         'message' => $request->email_description,

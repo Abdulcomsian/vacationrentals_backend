@@ -257,7 +257,7 @@ class UserController extends Controller
     public function updateAdmin(Request $request){
         $request->validate([
             "full_name" => "required",
-            "email" => "required|email",
+            "email" => "required|email|unique:users,email",
         ],[
             "full_name.required" => "Name is required.",
             "email.required" => "Email is required.",
@@ -275,7 +275,7 @@ class UserController extends Controller
                 return redirect()->back()->with(['success'=>"Admin Details Updated Successfully"]);
             }
         }catch(\Exception $e){
-            return redirect()->back()->with(['error' => $e->getMessage()]);
+            return redirect()->back()->with(['error' => 'Something Went Wrong. Please try again later']);
         }
     }
 
