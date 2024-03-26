@@ -139,8 +139,8 @@ class BillingController extends Controller
                     $is_featured = "true";
                 }
 
-                // return response()->json(["success"=>true, "msg"=>"Subscription added Successfully"], 200);
-                return redirect('https://vacationrentals.tools/dashboard/addtool?id=' . $toolLink->id . '&featured=' . $is_featured);
+                // return redirect('https://vacationrentals.tools/dashboard/addtool?id=' . $toolLink->id . '&featured=' . $is_featured);
+                return redirect('https://localhost:3000/dashboard/addtool?id=' . $toolLink->id . '&featured=' . $is_featured);
             }else{
                 return response()->json(["success"=>false, "msg"=>"Unauthorized User", "status"=>401],401);
             }
