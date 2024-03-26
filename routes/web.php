@@ -68,6 +68,7 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
     Route::post('update-listing', [ListingController::class, 'updateListing'])->name('update.listing');
     Route::post('delete-listing', [ListingController::class, 'deleteListing'])->name('delete.listing');
     Route::post('listing-datatable', [ListingController::class, 'listingDataTable'])->name('listing.datatable');
+    Route::post('upload-manual-screenshot', [ListingController::class, 'uploadManual'])->name('upload.manual.screenshot');
 
     // Plan or Package Routes
     Route::post('update-plan', [PlanController::class, 'updatePlan'])->name('update.plan');
@@ -78,6 +79,8 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
     Route::post('update-admin-profile', [UserController::class, 'updateAdmin'])->name('update.admin.profile');
     Route::post('change-password', [UserController::class, 'changePassword'])->name('change.password');
     Route::post('restore-user', [UserController::class, 'restoreUser'])->name('restore.user');
+    Route::post('update-user', [UserController::class, 'updateUser'])->name('update.user');
+    Route::post('fetch_user_detail', [UserController::class, 'fetchUser'])->name('fetch.user.detail');
 
     // Email Routes
     Route::post('store-email', [EmailController::class, 'storeEmail'])->name('store.email');

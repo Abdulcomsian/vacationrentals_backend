@@ -117,9 +117,9 @@
                                                 @endphp
                                             </td>
                                             <td>
-                                                {{-- <a href="#" class="edit-cat text-success" previewlistener="true" >
+                                                <a href="#" class="edit-cat text-success" data-id="{{$user->id}}" previewlistener="true" >
                                                     <i class="las la-pencil-alt fs-20"></i>
-                                                </a> --}}
+                                                </a>
                                                 @if($user->deleted_at != NULL)
                                                 <a href="#" class="restore-cat text-danger mx-2" data-id="{{$user->id}}">
                                                     <i class="las la-trash-restore fs-20"></i>
@@ -213,25 +213,26 @@
             </div>
             <div class="modal-body">
                 <div class="addtool">
-                    <form action="javascript:void(0);">
+                    <form action="{{route('update.user')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" id="user_id" name="user_id" value="">
                         <div class="row g-3">
-                            <div class="col-xxl-12 text-center">
+                            <div class="col-xxl-12">
                                 <div>
-                                    <img src="{{ URL::asset('build/images/users/avatar-4.jpg') }}" alt="" class="rounded avatar-md shadow rounded-circle">
-                                    <label for="lastName" class="form-label d-block">User Image</label>
-                                    <input type="file" class="form-control" style="display: none;">
+                                    <label for="lastName" class="form-label">Name</label>
+                                    <input type="text" class="form-control" name="name" id="userName" placeholder="Enter Username" required>
+                                    @error('name')
+                                    <span class="text-danger">{{$message}}</span>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="lastName" class="form-label">User Name</label>
-                                    <input type="text" class="form-control" id="lastName" placeholder="Enter Username">
-                                </div>
-                            </div>
-                            <div class="col-xxl-12">
-                                <div>
-                                    <label for="lastName" class="form-label">User Email</label>
-                                    <input type="text" class="form-control" id="lastName" placeholder="Enter Email">
+                                    <label for="lastName" class="form-label">Email</label>
+                                    <input type="email" class="form-control" name="email" id="userEmail" placeholder="Enter Email" required>
+                                    @error('email')
+                                    <span class="text-danger">{{$message}}</span>
+                                    @enderror
                                 </div>
                             </div>
                             <!--end col-->
@@ -293,8 +294,21 @@
     });
     $(document).on("click", ".edit-cat", function(){
         let id = $(this).attr("data-id");
-        $("#listingId").val(id);
-        $(".bs-edit-modal-center").modal("show");
+        $("#user_id").val(id);
+        $.ajax({
+            method: "POST",
+            url: "{{route('fetch.user.detail')}}",
+            data: {
+                _token: "{{csrf_token()}}",
+                id: id,
+            },
+            success: function(res){
+                let user = res.user;
+                $('#userName').val(user.name);
+                $('#userEmail').val(user.email);
+                $(".bs-edit-modal-center").modal("show");
+            },
+        })
     });
     $(document).on("click", ".restore-cat", function(){
         let id = $(this).attr('data-id');

@@ -127,6 +127,29 @@
                             </div>
                         </form>                        
                     </div>
+
+                    <div class="card">
+                        <div class="card-header align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">Upload Screenshot</h4>
+                        </div><!-- end card header -->
+                        <div class="card-body">
+                            <form action="{{route('upload.manual.screenshot')}}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" value="{{$listingData['id']}}" name="listing_id">
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <label for="">Upload Image</label>
+                                        <input type="file" class="form-control" name="screenshot_image" id="screenshotImage" required>
+                                    </div>
+                                </div>    
+                                <div class="row mt-4 text-right">
+                                    <div class="col-xl-12">
+                                        <button type="submit" class="btn" style="background-color: #e30b0b !important;color:#fff;">Upload Screenshot</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -295,4 +295,35 @@ class UserController extends Controller
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
+
+    public function updateUser(Request $request){
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+        ]);
+        try{
+            $userId = $request->user_id;
+            $name = $request->name;
+            $email = $request->email;
+            $user = User::where('id', $userId)->update([
+                'name' => $name,
+                'email' => $email,
+            ]);
+            if($user){
+                return redirect()->back()->with(['success'=>"User Details Updated Successfully"]);
+            }
+        }catch(\Exception $e){
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function fetchUser(Request $request){
+        try{
+            $id = $request->id;
+            $user = User::where('id', $id)->first();
+            return response()->json(['user'=>$user]);
+        }catch(\Exception $e){
+            dd($e->getMessage());
+        }       
+    }
 }

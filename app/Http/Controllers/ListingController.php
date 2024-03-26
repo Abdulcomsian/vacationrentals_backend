@@ -727,6 +727,27 @@ class ListingController extends Controller
             $storeListing->plan_id = $request->plan_id;
             $storeListing->company_link = $request->websiteLink;
             $storeListing->slug = $slug;
+
+            //Generating Screenshot image of a given website link
+            $method = 'GET';
+            $url = 'https://api.screenshotone.com/take?access_key='.env('SCREENSHOT_ACCESS').'&url='.$request->websiteLink.'&viewport_width=1920&viewport_height=1280&device_scale_factor=1&image_quality=80&format=jpg&block_ads=true&block_cookie_banners=true&full_page=false&block_trackers=true&block_banners_by_heuristics=false&delay=10&timeout=60';
+            $options = [
+                'http' => [
+                    'method' => $method,
+                ],
+            ];
+            
+            $context = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
+            if($result === FALSE){
+                return response()->json(["success"=>false, "msg"=>"Screenshot for given company website is not allowed", "status"=>400], 400);
+            }else{
+                $imageName = rand() . '_' . 'image' .  '.jpg';
+                $imagePath = public_path('assets/screenshot_images/' . $imageName);
+                file_put_contents($imagePath, $result);
+            }
+
+            $storeListing->screenshot_image = asset('assets/screenshot_images/' . $imageName);
             if($storeListing->save()){
                 $deleteCategory = ListingCategory::where('listing_id', $id)->delete();
                 foreach($request->category as $category_id){
@@ -772,6 +793,25 @@ class ListingController extends Controller
             return redirect()->back()->with(['success'=>"Listing deleted Successfully"]);
         }catch(\Exception $e){
             return redirect()->back()->with(['error' => "Something Went Wrong.... Please try again later"]);
+        }
+    }
+
+    public function uploadManual(Request $request){
+        try{
+            $listingId = $request->listing_id;
+            if($request->file('screenshot_image')){
+                $file = $request->file('screenshot_image');
+                $fileName = rand() . '_' . 'image' .  '.' . $file->getClientOriginalExtension();
+                $destinationPath = public_path('assets/manual_screenshot_images');
+                $file->move($destinationPath, $fileName);
+            }
+            $imageName = asset('assets/manual_screenshot_images/' . $fileName);
+            $listing = Listing::where('id', $listingId)->update(["screenshot_image"=>$imageName]);
+            if($listing){
+                return redirect()->back()->with(['success'=>"Screenshot added successfully"]);
+            }
+        }catch(\Exception $e){
+            return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
 
