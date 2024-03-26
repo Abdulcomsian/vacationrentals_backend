@@ -13,5 +13,4 @@ class ListingCategory extends Model
         "listing_id",
         "category_id",
     ];
-
 }

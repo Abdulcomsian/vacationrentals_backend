@@ -417,41 +417,81 @@ class ListingController extends Controller
                 foreach ($categoryListing as $listing) {
                     $listingModel = Listing::where('id', $listing->listing_id)->with(['plan','deals'])->where('status', '2')->where('subscription_status', 'active')->first();           
                     if ($listingModel) {
-                        $planType = $listingModel->plan->plan_type;                
+                        $planType = $listingModel->plan->plan_type;
+                        $hasDeals = $listingModel->deals->isNotEmpty();
+                        $listingModel->has_deals = $hasDeals;
                         if ($planType === 'Featured') {
-                            $hasMultipleDeals = false;
-                            if(count($listingModel->deals) > 0){
-                                $hasMultipleDeals = true;
+                            if ($hasDeals) {
+                                array_unshift($featuredListings, $listingModel);
+                            } else {
+                                $featuredListings[] = $listingModel;
                             }
-                            $listingModel->has_deals = $hasMultipleDeals;
-                            array_unshift($featuredListings, $listingModel);
                         } elseif ($planType === 'Monthly' || $planType === 'Yearly' || $planType == 'Admin Plan') {
-                            $hasMultipleDeals = false;
-                            if(count($listingModel->deals) > 0){
-                                $hasMultipleDeals = true;
-                            }
-                            $listingModel->has_deals = $hasMultipleDeals;
                             $otherMonthListings[] = $listingModel;
                         }
                     }
                 }
 
-                $listings = array_merge($featuredListings, $otherMonthListings);
-                // $responseListings = [];
-                // foreach($listings as $listing){
-                //     $filteredListings = collect($listing)->forget('deals')->toArray();
-                //     $responseListings[] = $filteredListings;
-                // }
+                $mergeListing = array_merge($featuredListings, $otherMonthListings);
+                $finalListing = array_map(function($list){
+                    return [
+                        'id' => $list->id,
+                        'company_name' => $list->company_name,
+                        'screenshot_image' => $list->screenshot_image,
+                        'company_tagline' => $list->company_tagline,
+                        'plan_type' => $list->plan->plan_type,
+                        'has_deals' => $list->deals->count()>0,
+                        'deals' => $list->deals,
+                    ];
+                }, $mergeListing);
 
-                return response()->json(["success"=>true, "listings"=>$listings, "status"=>200], 200);
+                return response()->json(["success"=>true, "listings"=>$finalListing, "status"=>200], 200);
             }else{
-                $listings = Listing::with('deals')->where('status', '2')
+                // Getting the Featured Listing with deals on the top
+                $featuredListings = Listing::with('deals', 'plan')->whereHas('plan' , function($query){
+                    $query->where('plan_type', 'Featured');
+                })
+                ->where('status', '2')
                 ->where('subscription_status', 'active')
-                ->leftJoin('plans', 'listings.plan_id', '=', 'plans.id')
-                ->orderByRaw('plans.plan_type = "Featured" DESC')
-                ->select("listings.*", "plans.plan_type")
                 ->get();
-                return response()->json(["success"=>true, "listings"=>$listings, "status"=>200], 200);
+
+                $featuredListingsWithDeals = $featuredListings->filter(function($listing) {
+                    return $listing->deals->isNotEmpty();
+                });
+
+                $featuredListingsWithoutDeals = $featuredListings->filter(function($listing) {
+                    return $listing->deals->isEmpty();
+                });
+                $sortedFeaturedListings = $featuredListingsWithDeals->merge($featuredListingsWithoutDeals);
+
+
+                // Getting the listing with monthly or yearly package (without Featured)
+                $normalListings = Listing::with('deals', 'plan')
+                ->whereHas('plan', function($query){
+                    $query->where('plan_type', 'Monthly')
+                          ->orWhere('plan_type', 'Yearly')
+                          ->orWhere('plan_type', 'Admin Plan');
+                })
+                ->where('status', '2')
+                ->where('subscription_status', 'active')
+                ->inRandomOrder()
+                ->get();
+
+                $mergeListing = $sortedFeaturedListings->merge($normalListings);
+
+                $finalListing  = $mergeListing->map(function($list){
+                    return [
+                        'id' => $list->id,
+                        'company_name' => $list->company_name,
+                        'screenshot_image' => $list->screenshot_image,
+                        'company_tagline' => $list->company_tagline,
+                        'plan_type' => $list->plan->plan_type,
+                        'has_deals' => $list->deals->count()>0,
+                        'deals' => $list->deals,
+                    ];
+                });
+
+                return response()->json(["success"=>true, "listings"=>$finalListing, "status"=>200], 200);
             }
             
         }catch(\Exception $e){
