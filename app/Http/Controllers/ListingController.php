@@ -474,7 +474,7 @@ class ListingController extends Controller
                 })
                 ->where('status', '2')
                 ->where('subscription_status', 'active')
-                ->inRandomOrder()
+                ->inRandomOrder('company_name')
                 ->get();
 
                 $mergeListing = $sortedFeaturedListings->merge($normalListings);
