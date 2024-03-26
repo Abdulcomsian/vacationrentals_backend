@@ -438,6 +438,7 @@ class ListingController extends Controller
                         'id' => $list->id,
                         'company_name' => $list->company_name,
                         'screenshot_image' => $list->screenshot_image,
+                        'slug' => $list->slug,
                         'company_tagline' => $list->company_tagline,
                         'plan_type' => $list->plan->plan_type,
                         'has_deals' => $list->deals->count()>0,
@@ -483,6 +484,7 @@ class ListingController extends Controller
                     return [
                         'id' => $list->id,
                         'company_name' => $list->company_name,
+                        'slug' => $list->slug,
                         'screenshot_image' => $list->screenshot_image,
                         'company_tagline' => $list->company_tagline,
                         'plan_type' => $list->plan->plan_type,
