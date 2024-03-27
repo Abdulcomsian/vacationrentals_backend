@@ -10,6 +10,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Notifications\SendEmailForgotPassword;
 use App\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Notification;
+use DataTables;
 use App\Models\{
     User,
     Plan,
@@ -325,5 +326,60 @@ class UserController extends Controller
         }catch(\Exception $e){
             dd($e->getMessage());
         }       
+    }
+
+    public function userDatatable(Request $request){
+        $users = User::where('type', 'user')->withTrashed()->get();
+        return Datatables::of($users)
+                    ->addIndexColumn()
+                    ->addColumn('name', function($user){
+                        $name = '<span style="white-space: pre-wrap;">'.$user->name.'</span>';
+                        return $name;
+                    })
+                    ->addColumn('email', function($user){
+                        return $user->email;
+                    })
+                    ->addColumn('email_verification_status', function($user){
+                        $status = '';
+                        if($user->email_verified_at == NULL){
+                            $status = "Pending";
+                        }else{
+                            $status = "Verified";
+                        }
+                        return $status;
+                    })
+                    ->addColumn('user_status', function($user){
+                        $userStatus = '';
+                        if($user->deleted_at != NULL){
+                            $userStatus = 'Inactive';
+                        }else{
+                            $userStatus = 'Active';
+                        }
+                        return $userStatus;
+                    })
+                    ->addColumn('action', function($user) {
+                        $btns = '
+                        <a href="#" class="edit-cat text-success" data-id='.$user->id.' previewlistener="true" >
+                            <i class="las la-pencil-alt fs-20"></i>
+                        </a>
+                        ';
+                        if($user->deleted_at != NULL){
+                            $btns .= '
+                            <a href="#" class="restore-cat text-danger mx-2" data-id='.$user->id.'>
+                                <i class="las la-trash-restore fs-20"></i>
+                            </a>
+                            ';
+                        }else{
+                            $btns .= '
+                            <a href="#" class="del-cat text-danger mx-2" data-id='.$user->id.'>
+                                <i class="lar la-trash-alt fs-20"></i>
+                            </a>
+                            ';
+                        }
+                        return $btns;
+                    })
+                    
+                    ->rawColumns(['name', 'email', 'email_verification_status', 'user_status', 'action'])
+                    ->make(true);
     }
 }

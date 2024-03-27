@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DataTables;
 use App\Models\{
     User,
     Plan,
@@ -135,5 +136,35 @@ class CategoryController extends Controller
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong ... ", "status"=>400], 400);
         }
+    }
+
+    public function categoryDatatble(Request $request){
+        $categories = Category::with('listings')->where('status', 'activate')->where("id", "!=", "1")->get();
+        return Datatables::of($categories)
+                    ->addIndexColumn()
+                    ->addColumn('icon', function($category){
+                        $image = '<img src="' . asset($category->category_image) . '" alt="" class="avatar-xs rounded-circle shadow" />';
+                        return $image;
+                    })
+                    ->addColumn('name', function($category){
+                       return $category->category_name ?? '';
+                    })
+                    ->addColumn('no_of_listing', function($category){
+                        return count($category->listings);
+                    })
+                    ->addColumn('action', function($category){
+                        $btns = '
+                        <a href="#" class="edit-cat text-success" onclick="editModal('.$category->id.')">
+                            <i class="las la-pencil-alt fs-20"></i>
+                        </a>
+                        <a href="#" class="del-cat text-danger mx-2" onclick="deleteModal('.$category->id.')">
+                            <i class="lar la-trash-alt fs-20"></i>
+                        </a>
+                        ';
+
+                        return $btns;
+                    })
+                    ->rawColumns(['icon', 'name', 'no_of_listing', 'action'])
+                    ->make(true);
     }
 }

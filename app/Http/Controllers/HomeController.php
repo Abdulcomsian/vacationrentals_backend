@@ -47,13 +47,11 @@ class HomeController extends Controller
     }
     public function users()
     {
-        $users = User::where('type', 'user')->withTrashed()->get();
-        return view('users', compact('users'));
+        return view('users');
     }
     public function payments()
     {
-        $payments = Subscription::with('user')->get();
-        return view('payments', compact('payments'));
+        return view('payments');
     }
     public function profile()
     {
@@ -71,8 +69,8 @@ class HomeController extends Controller
     }
 
     public function categories(){
-        $categories = Category::with('listings')->where('status', 'activate')->where("id", "!=", "1")->paginate(10);
-        return view('categories', compact('categories'));
+        // $categories = Category::with('listings')->where('status', 'activate')->where("id", "!=", "1")->paginate(10);
+        return view('categories');
     }
     
     public function listings(Request $request){
@@ -132,5 +130,33 @@ class HomeController extends Controller
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong","error"=>$e->getMessage(), "line"=>$e->getLine(), "status"=> 400], 400);
         }
+    }
+
+
+    // data table for payment page
+    public function paymentDatatable(Request $request){
+        $payments = Subscription::with('user', 'plan')->get();
+        return Datatables::of($payments)
+                    ->addIndexColumn()
+                    ->addColumn('subscription_id', function($payment){
+                        return $payment->stripe_subscription_id ?? '';
+                    })
+                    ->addColumn('amount', function($payment){
+                        return $payment->stripe_price ?? '';
+                    })
+                    ->addColumn('package', function($payment){
+                        return $payment->plan->plan_type;
+                    })
+                    ->addColumn('status', function($payment){
+                        return $payment->payment_status ?? '';
+                    })
+                    ->addColumn('date', function($payment) {
+                        return $payment->created_at ?? '';
+                    })
+                    ->addColumn('user', function($payment){
+                        return $payment->user->name ?? '';
+                    })
+                    ->rawColumns(['subscription_id', 'amount', 'package', 'status', 'date', 'user'])
+                    ->make(true);
     }
 }

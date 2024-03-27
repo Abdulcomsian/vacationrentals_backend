@@ -65,7 +65,7 @@
 
                         <div class="card-body">
                             <div class="table-responsive table-card">
-                                <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
+                                <table class="table table-borderless table-centered align-middle table-nowrap mb-0 data-table">
                                     <thead class="text-muted table-light">
                                         <tr>
                                             <th scope="col">Icon</th>
@@ -75,31 +75,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @isset($categories)
-                                        @foreach($categories as $category)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-shrink-0 me-2">
-                                                        <img src="{{ asset($category->category_image) }}" alt="" class="avatar-xs rounded-circle shadow" />
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>{{$category->category_name}}</td>
-                                            <td>
-                                                <span class="text-success">{{count($category->listings)}}</span>
-                                            </td>
-                                            <td>
-                                                <a href="#" class="edit-cat text-success" onclick="editModal({{$category->id}})">
-                                                    <i class="las la-pencil-alt fs-20"></i>
-                                                </a>
-                                                <a href="#" class="del-cat text-danger mx-2" onclick="deleteModal({{$category->id}})">
-                                                    <i class="lar la-trash-alt fs-20"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                        @endisset                  
+                                       
                                     </tbody><!-- end tbody -->
                                 </table><!-- end table -->
                             </div>
@@ -107,11 +83,6 @@
                     </div> <!-- .card-->
                 </div> <!-- .col-->
             </div> <!-- end row-->
-            @if(count($categories) >= 10)
-                <div class="row">
-                    {{$categories->links()}}
-                </div>
-            @endif
         </div> <!-- end .h-100-->
 
     </div> <!-- end col -->
@@ -289,6 +260,7 @@
 
 @section('script')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 <script>
     function deleteModal(id){
         $(".bs-delete-modal-center").modal("show");
@@ -312,5 +284,31 @@
             }
         });
     }
+
+    $(function(){
+        $('.data-table').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        bLengthChange: false,
+        bInfo: false,
+        pagingType: 'full_numbers',
+        "bDestroy": true,
+        orderable:false,
+        ajax: {
+            type: "POST", 
+            url:"{{ route('category.datatable') }}",
+            data: {
+                _token:'{{csrf_token()}}',
+            }
+        },
+        columns: [
+            {data: 'icon', name: 'icon', orderable: false},
+            {data: 'name', name: 'name', orderable: false},
+            {data: 'no_of_listing', name: 'no_of_listing', orderable: false},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+      });
+    });
 </script>
 @endsection

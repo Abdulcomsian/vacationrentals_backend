@@ -79,7 +79,7 @@
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table align-middle mb-0">
+                                <table class="table align-middle mb-0 data-table">
                                     <thead class="table-light">
                                         <tr>
                                             <th scope="col">ID</th>
@@ -91,51 +91,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php $i = 1; @endphp
-                                        @isset($users)
-                                        @foreach($users as $user)
-                                        <tr>
-                                            <td>{{$i}}</td>
-                                            <td>{{$user->name}}</td>
-                                            <td>{{$user->email}}</td>
-                                            <td>
-                                                @php
-                                                    if($user->email_verified_at == NULL){
-                                                        echo "Pending";
-                                                    }else{
-                                                        echo "Verified";
-                                                    }
-                                                @endphp
-                                            </td>
-                                            <td>
-                                                @php
-                                                if($user->deleted_at != NULL){
-                                                    echo "Inactive";
-                                                }else{
-                                                    echo "Active";
-                                                }
-                                                @endphp
-                                            </td>
-                                            <td>
-                                                <a href="#" class="edit-cat text-success" data-id="{{$user->id}}" previewlistener="true" >
-                                                    <i class="las la-pencil-alt fs-20"></i>
-                                                </a>
-                                                @if($user->deleted_at != NULL)
-                                                <a href="#" class="restore-cat text-danger mx-2" data-id="{{$user->id}}">
-                                                    <i class="las la-trash-restore fs-20"></i>
-                                                </a>
-                                                @else                                                
-                                                <a href="#" class="del-cat text-danger mx-2" data-id="{{$user->id}}">
-                                                    <i class="lar la-trash-alt fs-20"></i>
-                                                </a>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @php
-                                            $i++
-                                        @endphp
-                                        @endforeach
-                                        @endisset
                                     </tbody>
                                 </table>
                                 <!-- end table -->
@@ -286,6 +241,7 @@
 @endsection
 @section('script')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 <script>
     $(document).on("click", ".del-cat", function(){
         let id = $(this).attr("data-id");
@@ -315,5 +271,33 @@
         $('#restoreUserId').val(id);
         $(".bs-restore-modal-center").modal("show");
     })
+
+    $(function(){
+        $('.data-table').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        bLengthChange: false,
+        bInfo: false,
+        pagingType: 'full_numbers',
+        "bDestroy": true,
+        orderable:false,
+        ajax: {
+            type: "POST", 
+            url:"{{ route('users.datatable') }}",
+            data: {
+                _token:'{{csrf_token()}}',
+            }
+        },
+        columns: [
+            {data: 'DT_RowIndex', orderable: false, searchable: false},
+            {data: 'name', name: 'name', orderable: false},
+            {data: 'email', name: 'email', orderable: false},
+            {data: 'email_verification_status', name: 'email_verification_status', orderable: false},
+            {data: 'user_status', name: 'user_status', orderable: false},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+      });
+    });
 </script>
 @endsection

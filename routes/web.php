@@ -60,6 +60,7 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
     Route::post('delete-modal', [CategoryController::class, 'deleteCategory'])->name('delete.category');
     Route::post('show-edit-category', [CategoryController::class, 'showEditCategory'])->name('show.edit');
     Route::post('store-edit-category', [CategoryController::class, 'updateCategory'])->name('update.category');
+    Route::post('categories-datatable', [CategoryController::class, 'categoryDatatble'])->name('category.datatable');
 
     // Listing Routes
     Route::get('add-listings', [ListingController::class, 'add_listing']);
@@ -81,9 +82,13 @@ Route::middleware(['auth:web', 'admin'])->group(function(){
     Route::post('restore-user', [UserController::class, 'restoreUser'])->name('restore.user');
     Route::post('update-user', [UserController::class, 'updateUser'])->name('update.user');
     Route::post('fetch_user_detail', [UserController::class, 'fetchUser'])->name('fetch.user.detail');
+    Route::post('users-datatable', [UserController::class, 'userDatatable'])->name('users.datatable');
 
     // Email Routes
     Route::post('store-email', [EmailController::class, 'storeEmail'])->name('store.email');
+
+    // Payment Datatable
+    Route::post('payment-datatable', [HomeController::class, 'paymentDatatable'])->name('payments.datatable');
 });
 
 // Admin Routes ends here

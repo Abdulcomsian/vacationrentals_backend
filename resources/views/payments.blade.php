@@ -41,7 +41,7 @@
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table align-middle mb-0">
+                                <table class="table align-middle mb-0 data-table">
                                     <thead class="table-light">
                                         <tr>
                                             <th scope="col">#</th>
@@ -54,29 +54,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                            $i = 1;
-                                        @endphp
-                                        @isset($payments)
-                                        @foreach($payments as $payment)
-                                        @php
-                                            $paymentPrice = $payment->price_id ?? '';
-                                            $plan = App\Models\Plan::where('plan_id', $paymentPrice)->first();
-                                        @endphp
-                                            <tr>
-                                                <td>{{$i}}</td>
-                                                <td>{{$payment->stripe_subscription_id ?? ''}}</td>
-                                                <td>{{$payment->stripe_price ?? ''}}</td>
-                                                <td>{{$plan->plan_type ?? ''}}</td>
-                                                <td>{{$payment->payment_status ?? ''}}</td>
-                                                <td>{{$payment->created_at ?? ''}}</td>
-                                                <td>{{$payment->user->name ?? ''}}</td>
-                                            </tr>
-                                            @php
-                                                $i++
-                                            @endphp
-                                        @endforeach
-                                        @endisset                                        
                                     </tbody>
                                 </table>
                                 <!-- end table -->
@@ -173,6 +150,7 @@
 @endsection
 @section('script')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 <script>
     $(document).on("click", ".del-cat", function(){
         let id = $(this).attr("data-id");
@@ -183,6 +161,34 @@
         let id = $(this).attr("data-id");
         $("#listingId").val(id);
         $(".bs-edit-modal-center").modal("show");
+    });
+    $(function(){
+        $('.data-table').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        bLengthChange: false,
+        bInfo: false,
+        pagingType: 'full_numbers',
+        "bDestroy": true,
+        orderable:false,
+        ajax: {
+            type: "POST", 
+            url:"{{ route('payments.datatable') }}",
+            data: {
+                _token:'{{csrf_token()}}',
+            }
+        },
+        columns: [
+            {data: 'DT_RowIndex', orderable: false, searchable: false},
+            {data: 'subscription_id', name: 'subscription_id', orderable: false},
+            {data: 'amount', name: 'amount', orderable: false},
+            {data: 'package', name: 'package', orderable: false},
+            {data: 'status', name: 'status', orderable: false},
+            {data: 'date', name: 'date', orderable: false, searchable: false},
+            {data: 'user', name: 'user', orderable: false, searchable: false},
+        ]
+      });
     });
 </script>
 @endsection
