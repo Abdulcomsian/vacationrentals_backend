@@ -69,7 +69,6 @@ class HomeController extends Controller
     }
 
     public function categories(){
-        // $categories = Category::with('listings')->where('status', 'activate')->where("id", "!=", "1")->paginate(10);
         return view('categories');
     }
     
@@ -145,7 +144,7 @@ class HomeController extends Controller
                         return $payment->stripe_price ?? '';
                     })
                     ->addColumn('package', function($payment){
-                        return $payment->plan->plan_type;
+                        return $payment->plan->plan_type ?? '';
                     })
                     ->addColumn('status', function($payment){
                         return $payment->payment_status ?? '';
