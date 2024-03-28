@@ -250,16 +250,16 @@ class ListingController extends Controller
 
 
     public function updateListingUser(Request $request){
-        dd($request->all());
+        // dd($request->all());
         $validator = Validator::make($request->all(),[
             'company_name' => 'required|string',
             'company_categories' => 'required',
             'company_tagline' => 'required',
-            'short_description' => 'required|string',
+            // 'short_description' => 'required|string',
             // 'company_logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $validations = ['company_name', 'company_categories', 'company_tagline', 'short_description'];
+        $validations = ['company_name', 'company_categories', 'company_tagline'];
         $errors = [];
         foreach($validations as $val){
             foreach($validator->errors()->get($val) as $error){
