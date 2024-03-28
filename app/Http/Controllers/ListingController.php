@@ -253,8 +253,8 @@ class ListingController extends Controller
         // dd($request->all());
         $validator = Validator::make($request->all(),[
             'company_name' => 'required|string',
-            'company_categories' => 'required',
-            'company_tagline' => 'required',
+            'company_categories' => 'required|string',
+            'company_tagline' => 'required|string',
             // 'short_description' => 'required|string',
             // 'company_logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
