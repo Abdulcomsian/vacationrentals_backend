@@ -266,7 +266,7 @@ class ListingController extends Controller
             }
         }
         if(!empty($errors)){
-            return response()->json(["success"=>false, "error"=>$errors, "status"=>400], 400);
+            return response()->json(["success"=>false, "msg"=>$errors, "status"=>400], 400);
         }
 
         try{
