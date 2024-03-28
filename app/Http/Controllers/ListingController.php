@@ -26,7 +26,7 @@ use App\Notifications\ListingApprovalNotification;
 class ListingController extends Controller
 {
     // =============== API Functions ======================
-    // this function show a listing details against specific listing Id
+    // this function show a listing details against specific slug
     public function showListingDetail(Request $request){
         try{
             $slug = $request->slug;
@@ -58,7 +58,46 @@ class ListingController extends Controller
             if(!empty($listingData)){
                 return response()->json(["success"=>true, "listingData"=>$structuredListingData, "status" => 200], 200);
             }else{
-                return response()->json(["success"=>false, "msg"=>"No listing found against this . $listing_id", "status" => 400], 400);
+                return response()->json(["success"=>false, "msg"=>"No listing found against this . $slug", "status" => 400], 400);
+            }
+        }catch(\Exception $e){
+            return response()->json(["success"=>false, "msg"=>"Something went wrong", "error"=>$e->getMessage()], 400);
+        }
+    }
+
+    // showing listing details against specific id
+    public function showListingById(Request $request){
+        try{
+            $id = $request->id;
+            $listingData = Listing::with(['deals', 'getCategories'])->where('id', $id)->first();
+
+            $categoryIds = [];
+            foreach ($listingData['getCategories'] as $category) {
+                $categoryIds[] = $category['category_id'];
+            }
+
+            $structuredListingData = [
+                'id' => $listingData['id'],
+                'user_id' => $listingData['user_id'],
+                'company_name' => $listingData['company_name'],
+                'company_link' => $listingData['company_link'],
+                'company_tagline' => $listingData['company_tagline'],
+                'short_description' => $listingData['short_description'],
+                'company_logo' => $listingData['company_logo'],
+                'status' => $listingData['status'],
+                'deleted_at' => $listingData['deleted_at'],
+                'created_at' => $listingData['created_at'],
+                'updated_at' => $listingData['updated_at'],
+                'plan_id' => $listingData['plan_id'],
+                'deals' => $listingData['deals'],
+                'slug' => $listingData['slug'],
+                'screenshot_image' => $listingData['screenshot_image'],
+                'category_ids' => $categoryIds,
+            ];
+            if(!empty($listingData)){
+                return response()->json(["success"=>true, "listingData"=>$structuredListingData, "status" => 200], 200);
+            }else{
+                return response()->json(["success"=>false, "msg"=>"No listing found against this . $id", "status" => 400], 400);
             }
         }catch(\Exception $e){
             return response()->json(["success"=>false, "msg"=>"Something went wrong", "error"=>$e->getMessage()], 400);
@@ -406,47 +445,46 @@ class ListingController extends Controller
     public function showCategoryListing(Request $request){
         try{
             if(isset($request->slug)){
-                // $listingsData = Category::with('categoryList')
-                // ->where('slug' , $slug)
-                // ->first();
                 $slug = $request->slug;
                 $categoryId = Category::where('slug', $slug)->value("id");
-                $categoryListing = ListingCategory::where('category_id', $categoryId)->get();
-                $featuredListings = [];
-                $otherMonthListings = [];
-                foreach ($categoryListing as $listing) {
-                    $listingModel = Listing::where('id', $listing->listing_id)->with(['plan','deals'])->where('status', '2')->where('subscription_status', 'active')->first();           
-                    if ($listingModel) {
-                        $planType = $listingModel->plan->plan_type;
-                        $hasDeals = $listingModel->deals->isNotEmpty();
-                        $listingModel->has_deals = $hasDeals;
-                        if ($planType === 'Featured') {
-                            if ($hasDeals) {
-                                array_unshift($featuredListings, $listingModel);
-                            } else {
-                                $featuredListings[] = $listingModel;
-                            }
-                        } elseif ($planType === 'Monthly' || $planType === 'Yearly' || $planType == 'Admin Plan') {
-                            $otherMonthListings[] = $listingModel;
-                        }
-                    }
-                }
 
-                $mergeListing = array_merge($featuredListings, $otherMonthListings);
-                $finalListing = array_map(function($list){
+                // Getting the featured Listing with deals on TOP
+                $featauredListing = ListingCategory::with('listings.plan', 'listings.deals')->whereHas('listings.plan', function($query){
+                    $query->where('plan_type', 'Featured');
+                })->where('category_id', $categoryId)->get();
+
+                $featuredListingsWithDeals = $featauredListing->filter(function($listing) {
+                    return $listing->listings->deals->isNotEmpty();
+                });
+
+                $featuredListingsWithoutDeals = $featauredListing->filter(function($listing) {
+                    return $listing->listings->deals->isEmpty();
+                });
+                $sortedFeaturedListings = $featuredListingsWithDeals->merge($featuredListingsWithoutDeals);
+
+                $normalListing = ListingCategory::with('listings.plan', 'listings.deals')->whereHas('listings.plan', function($query){
+                    $query->where('plan_type', 'Monthly')
+                    ->orWhere('plan_type', 'Yearly')
+                    ->orWhere('plan_type', 'Admin Plan');
+                })
+                ->where('category_id', $categoryId)
+                ->orderByRaw('RAND()')
+                ->get();
+
+                $mergeListing = $sortedFeaturedListings->merge($normalListing);
+
+                $finalListing = $mergeListing->map(function($list){
                     return [
-                        'id' => $list->id,
-                        'company_name' => $list->company_name,
-                        'screenshot_image' => $list->screenshot_image,
-                        'slug' => $list->slug,
-                        'company_tagline' => $list->company_tagline,
-                        'plan_type' => $list->plan->plan_type,
-                        'has_deals' => $list->deals->count()>0,
-                        'deals' => $list->deals,
+                        'id' => $list->listings->id,
+                        'company_name' => $list->listings->company_name,
+                        'screenshot_image' => $list->listings->screenshot_image,
+                        'slug' => $list->listings->slug,
+                        'company_tagline' => $list->listings->company_tagline,
+                        'plan_type' => $list->listings->plan->plan_type,
+                        'has_deals' => $list->listings->deals->count()>0,
+                        'deals' => $list->listings->deals,
                     ];
-                }, $mergeListing);
-
-                return response()->json(["success"=>true, "listings"=>$finalListing, "status"=>200], 200);
+                });
             }else{
                 // Getting the Featured Listing with deals on the top
                 $featuredListings = Listing::with('deals', 'plan')->whereHas('plan' , function($query){
@@ -493,7 +531,12 @@ class ListingController extends Controller
                     ];
                 });
 
+            }
+
+            if(count($finalListing) > 0){
                 return response()->json(["success"=>true, "listings"=>$finalListing, "status"=>200], 200);
+            }else{
+                return response()->json(["success"=>false, "msg"=>"No Listing Found", "status"=>400], 400);
             }
             
         }catch(\Exception $e){

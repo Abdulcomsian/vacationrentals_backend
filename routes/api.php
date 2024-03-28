@@ -40,8 +40,12 @@ Route::middleware(['check.authentication'])->group(function(){
     // Listing Apis
     Route::post('/add-listing', [ListingController::class, 'addListing']);
     Route::post('/update-listing', [ListingController::class, 'updateListingUser']);
-    Route::get('/show-all-listings', [ListingController::class, 'showAllListing']);
+    Route::get('/show-all-listings', [ListingController::class, 'showAllListing']); 
+    Route::post('/show-listing-by-id', [ListingController::class, 'showListingById']); // fetching listing data by id
     Route::post('/delete-listing', [ListingController::class, 'deleteListingUser']);
+
+    // Webhook API
+    Route::post('/webhook', [BillingController::class, 'webhook']);
 });
 
 // Categories Apis Detail
@@ -49,7 +53,7 @@ Route::get('/show-category', [CategoryController::class, 'showCategory']);
 Route::get('/show-category-element', [CategoryController::class, 'showCategoryElement']);
 
 Route::post('/show-category-listing', [ListingController::class, 'showCategoryListing']);
-Route::post('/listing-detail', [ListingController::class, 'showListingDetail']);
+Route::post('/listing-detail', [ListingController::class, 'showListingDetail']);// fetching listing data by slug
 
 // Unprotected Plans API
 Route::get('/plans', [PlanController::class, 'showPlans']);

@@ -204,4 +204,52 @@ class BillingController extends Controller
             return response()->json(["success"=>false, "msg"=>"Something Went Wrong", "error"=>$e->getMessage(), "status"=>400], 400);
         }
     }
+
+    // Creating a webhook and saving data for that
+    public function webhook(Request $request){
+        // Set your secret key. Remember to switch to your live secret key in production.
+        // See your keys here: https://dashboard.stripe.com/apikeys
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $event = null;
+        $payload = @file_get_contents('php://input');
+        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+        $webhook_secret = '{{STRIPE_WEBHOOK_SECRET}}';
+
+        try {
+        $event = \Stripe\Webhook::constructEvent(
+            $payload, $sig_header, $webhook_secret
+        );
+        } catch(\UnexpectedValueException $e) {
+        // Invalid payload
+        return response()->json(['success' => false, "msg"=>"Something bad happened", "status"=>400], 400);
+        exit();
+        } catch(\Stripe\Exception\SignatureVerificationException $e) {
+        // Invalid signature
+        return response()->json(['success' => false, "msg"=>"Something bad happened", "status"=>400], 400);
+        exit();
+        }
+
+        // Handle the event
+        switch ($event->type) {
+        case 'checkout.session.completed':
+            // Payment is successful and the subscription is created.
+            // You should provision the subscription and save the customer ID to your database.
+            break;
+        case 'invoice.paid':
+            // Continue to provision the subscription as payments continue to be made.
+            // Store the status in your database and check when a user accesses your service.
+            // This approach helps you avoid hitting rate limits.
+            break;
+        case 'invoice.payment_failed':
+            // The payment failed or the customer does not have a valid payment method.
+            // The subscription becomes past_due. Notify your customer and send them to the
+            // customer portal to update their payment information.
+            break;
+        default:
+            // Unhandled event type
+        }
+
+        return response()->json(['success' => false, "msg"=>"Success", "status"=>200], 200);
+    }
 }

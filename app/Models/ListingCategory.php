@@ -13,4 +13,8 @@ class ListingCategory extends Model
         "listing_id",
         "category_id",
     ];
+
+    public function listings(){
+        return $this->belongsTo(Listing::class, 'listing_id')->where('status', '2')->where('subscription_status', 'active');
+    }
 }
