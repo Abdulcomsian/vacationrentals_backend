@@ -250,6 +250,7 @@ class ListingController extends Controller
 
 
     public function updateListingUser(Request $request){
+        dd($request->all());
         $validator = Validator::make($request->all(),[
             'company_name' => 'required|string',
             'company_categories' => 'required',
@@ -258,16 +259,16 @@ class ListingController extends Controller
             // 'company_logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // $validations = ['company_name', 'company_categories', 'company_tagline', 'short_description'];
-        // $errors = [];
-        // foreach($validations as $val){
-        //     foreach($validator->errors()->get($val) as $error){
-        //         $errors[] = $error;
-        //     }
-        // }
-        // if(!empty($errors)){
-        //     return response()->json(["success"=>false, "msg"=>$errors, "status"=>400], 400);
-        // }
+        $validations = ['company_name', 'company_categories', 'company_tagline', 'short_description'];
+        $errors = [];
+        foreach($validations as $val){
+            foreach($validator->errors()->get($val) as $error){
+                $errors[] = $error;
+            }
+        }
+        if(!empty($errors)){
+            return response()->json(["success"=>false, "msg"=>$errors, "status"=>400], 400);
+        }
 
         try{
             // if ($request->file('company_logo')) {
